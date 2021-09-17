@@ -1,5 +1,6 @@
 package esoterum;
 
+import esoterum.content.*;
 import mindustry.mod.*;
 
 public class Esoterum extends Mod{
@@ -9,6 +10,7 @@ public class Esoterum extends Mod{
 
     @Override
     public void loadContent(){
+        new EsoBlocks().load();
     }
 
 }
