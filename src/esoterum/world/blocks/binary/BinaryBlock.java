@@ -59,15 +59,17 @@ public class BinaryBlock extends Block {
         public Seq<BinaryBuild> inputs(){
             Seq<BinaryBuild> inputs = new Seq<>();
 
-            if(left().front() == this && left() instanceof BinaryBuild b){
+            Building left = left(), right = right(), back = back();
+
+            if(left != null && left.front() == this && left instanceof BinaryBuild b){
                 inputs.add(b);
             }
 
-            if(right().front() == this && right() instanceof BinaryBuild b){
+            if(right != null && right.front() == this && right instanceof BinaryBuild b){
                 inputs.add(b);
             }
 
-            if(back().front() == this && back() instanceof BinaryBuild b){
+            if(back != null && back.front() == this && back instanceof BinaryBuild b){
                 inputs.add(b);
             }
 
@@ -85,6 +87,8 @@ public class BinaryBlock extends Block {
 
                 for (int i = 1; i < inputs.size; i++) {
                     BinaryBuild input = inputs.get(i);
+                    if(main == null) break;
+                    if(input.graph == null) continue;
 
                     main.members.addAll(input.graph.members);
                     main.inputs.addAll(input.graph.inputs);
@@ -92,7 +96,9 @@ public class BinaryBlock extends Block {
                 }
             }
 
-            if(front() instanceof BinaryBuild b){
+            if(graph == null) graph = new LogicGraph();
+
+            if(front() instanceof BinaryBuild b && b.graph != null){
                 graph.members.addAll(b.graph.members);
                 graph.inputs.addAll(b.graph.inputs);
                 b.graph = graph;
@@ -107,7 +113,8 @@ public class BinaryBlock extends Block {
         public void draw() {
             super.draw();
 
-            Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
+            //Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
+            if(graph != null) Draw.color(graph.color);
             for(int i = 0; i < 4; i++){
                 if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
@@ -138,7 +145,7 @@ public class BinaryBlock extends Block {
             );
             updateConnections();
 
-            if(inputs().size > 0){
+            if(graph != null && inputs().size > 0){
                 graph.inputs.remove(this);
             }
         }
