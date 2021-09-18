@@ -22,35 +22,16 @@ public class BinaryWire extends BinaryBlock{
         @Override
         public void updateTile() {
             super.updateTile();
-            // retrieving signal from back is unnecessary here, but needed for drawing
-            // (might remove later)
-            lastSignal = nextSignal | getSignal(nb.get(2), this);
-
-            // get input from sides
-            nextSignal = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
+            lastSignal = signal();
         }
 
         @Override
         public boolean signal() {
-            return getSignal(nb.get(2), this) | getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
+            return getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
         }
 
         public boolean signalFront(){
-            // if the block behind is facing the same rotation as this block,
-            // get its signal input directly for instant transmission
-            return (nb.get(2) != null ?
-                nb.get(2).rotation == rotation || !nb.get(2).block.rotate ?
-                    getSignal(nb.get(2), this) :
-                    nextSignal
-                : nextSignal )
-
-                | nextSignal;
-        }
-
-        // sk look here
-        public boolean signalFrontInstant(){
-            // in wire loops, this will eventually loop back to the original caller, causing a crash
-            return getSignal(nb.get(2), this) | getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
+            return signal();
         }
     }
 }

@@ -51,6 +51,10 @@ public class BinaryBlock extends Block {
         public boolean nextSignal;
         public boolean lastSignal;
 
+        // instant signaling moment
+        private float lastFrame;
+        private boolean lastGet;
+
         @Override
         public void draw() {
             super.draw();
@@ -71,6 +75,7 @@ public class BinaryBlock extends Block {
             if(!rotate)rotation(0);
         }
 
+        // connections
         @Override
         public void onProximityUpdate(){
             super.onProximityUpdate();
@@ -87,17 +92,36 @@ public class BinaryBlock extends Block {
         }
 
         public void updateConnections(){
-            for(BinaryBuild b : nb){
-                connections[nb.indexOf(b)] = connectionCheck(b, this);
+            for(int i = 0; i < 4; i++){
+                connections[i] = connectionCheck(nb.get(i), this);
             }
         }
 
+        // emission
         public boolean emits(){
             return emits;
         }
 
         public boolean[] outputs(){
             return outputs;
+        }
+
+        // instant signaling getter and setters
+
+        public float getLastFrame() {
+            return lastFrame;
+        }
+
+        public void setLastFrame(float frameid){
+            lastFrame = frameid;
+        }
+
+        public boolean getLastGet() {
+            return lastGet;
+        }
+
+        public void setLastGet(boolean last){
+            lastGet = last;
         }
     }
 }

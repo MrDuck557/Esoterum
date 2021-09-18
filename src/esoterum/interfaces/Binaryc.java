@@ -1,5 +1,7 @@
 package esoterum.interfaces;
 
+import arc.Core;
+import arc.util.Log;
 import esoterum.util.EsoUtil;
 import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
@@ -49,8 +51,12 @@ public interface Binaryc {
         return false;
     }
 
+    // thanks sk
     default boolean getSignal(Building from, BinaryBlock.BinaryBuild to){
         if(from instanceof BinaryBlock.BinaryBuild b){
+            if(Core.graphics.getFrameId() == to.getLastFrame()) return to.getLastGet();
+            to.setLastFrame(Core.graphics.getFrameId());
+            to.setLastGet(getSignalRelativeTo(b, to));
             return getSignalRelativeTo(b, to);
         }
         return false;
