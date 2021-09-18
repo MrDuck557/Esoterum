@@ -30,6 +30,11 @@ public class BinaryWire extends BinaryBlock{
             nextSignal = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
         }
 
+        @Override
+        public boolean signal() {
+            return getSignal(nb.get(2), this) | getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
+        }
+
         public boolean signalFront(){
             // if the block behind is facing the same rotation as this block,
             // get its signal input directly for instant transmission
@@ -40,6 +45,12 @@ public class BinaryWire extends BinaryBlock{
                 : nextSignal )
 
                 | nextSignal;
+        }
+
+        // sk look here
+        public boolean signalFrontInstant(){
+            // in wire loops, this will eventually loop back to the original caller, causing a crash
+            return getSignal(nb.get(2), this) | getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
         }
     }
 }
