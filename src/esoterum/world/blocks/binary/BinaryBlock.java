@@ -57,6 +57,10 @@ public class BinaryBlock extends Block {
         private float lastFrame;
         private boolean lastGet;
 
+        public boolean connected(BinaryBuild b){
+            return (b.front() == this || b.back() == this);
+        }
+
         @Override
         public void placed() {
             super.placed();
@@ -98,6 +102,13 @@ public class BinaryBlock extends Block {
         }
 
         @Override
+        public void onRemoved() {
+            if(graph != null) graph.members.remove(this);
+
+            super.onRemoved();
+        }
+
+        @Override
         public void draw() {
             super.draw();
 
@@ -115,11 +126,7 @@ public class BinaryBlock extends Block {
         @Override
         public void created() {
             super.created();
-            if(!rotate)rotation(0);
-        }
-
-        public boolean connected(BinaryBuild b){
-            return (b.front() == this || b.back() == this);
+            if(!rotate) rotation(0);
         }
 
         // connections
