@@ -56,56 +56,43 @@ public class BinaryBlock extends Block {
         private float lastFrame;
         private boolean lastGet;
 
-        public Seq<BinaryBuild> inputs(){
-            Seq<BinaryBuild> inputs = new Seq<>();
-
-            Building left = left(), right = right(), back = back();
-
-            if(left != null && left.front() == this && left instanceof BinaryBuild b){
-                inputs.add(b);
-            }
-
-            if(right != null && right.front() == this && right instanceof BinaryBuild b){
-                inputs.add(b);
-            }
-
-            if(back != null && back.front() == this && back instanceof BinaryBuild b){
-                inputs.add(b);
-            }
-
-            return inputs;
-        }
-
         @Override
         public void placed() {
             super.placed();
 
-            Seq<BinaryBuild> inputs = inputs();
-
-            if(inputs.size > 0) {
-                LogicGraph main = inputs.get(0).graph;
-
-                for (int i = 1; i < inputs.size; i++) {
-                    BinaryBuild input = inputs.get(i);
-                    if(main == null) break;
-                    if(input.graph == null) continue;
-
-                    main.members.addAll(input.graph.members);
-                    main.inputs.addAll(input.graph.inputs);
-                    input.graph = main;
-                }
-            }
-
-            if(graph == null) graph = new LogicGraph();
+            graph = new LogicGraph();
+            graph.members.add(this);
 
             if(front() instanceof BinaryBuild b && b.graph != null){
-                graph.members.addAll(b.graph.members);
-                graph.inputs.addAll(b.graph.inputs);
-                b.graph = graph;
+                LogicGraph preGraph = b.graph;
+                preGraph.members.each(e -> {
+                    e.graph = graph;
+                    graph.members.add(e);
+                });
             }
 
-            if(inputs.size == 0){
-                graph.inputs.add(this);
+            if(back() instanceof BinaryBuild b && connected(b) && b.graph != null){
+                LogicGraph preGraph = b.graph;
+                preGraph.members.each(e -> {
+                    e.graph = graph;
+                    graph.members.add(e);
+                });
+            }
+
+            if(right() instanceof BinaryBuild b && connected(b) && b.graph != null){
+                LogicGraph preGraph = b.graph;
+                preGraph.members.each(e -> {
+                    e.graph = graph;
+                    graph.members.add(e);
+                });
+            }
+
+            if(left() instanceof BinaryBuild b && connected(b) && b.graph != null){
+                LogicGraph preGraph = b.graph;
+                preGraph.members.each(e -> {
+                    e.graph = graph;
+                    graph.members.add(e);
+                });
             }
         }
 
@@ -130,6 +117,10 @@ public class BinaryBlock extends Block {
             if(!rotate)rotation(0);
         }
 
+        public boolean connected(BinaryBuild b){
+            return (b.front() == this || b.back() == this);
+        }
+
         // connections
         @Override
         public void onProximityUpdate(){
@@ -144,10 +135,6 @@ public class BinaryBlock extends Block {
                 checkType(right())
             );
             updateConnections();
-
-            if(graph != null && inputs().size > 0){
-                graph.inputs.remove(this);
-            }
         }
 
         public void updateConnections(){
