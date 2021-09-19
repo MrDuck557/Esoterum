@@ -6,6 +6,7 @@ public class BinaryWire extends BinaryBlock{
     public BinaryWire(String name){
         super(name);
         outputs = new boolean[]{true, false, false, false};
+        inputs = new boolean[]{false, true, true, true};
         emits = true;
         rotate = true;
     }
@@ -22,16 +23,23 @@ public class BinaryWire extends BinaryBlock{
         @Override
         public void updateTile() {
             super.updateTile();
-            lastSignal = signal();
+            lastSignal = nextSignal | getSignal(nb.get(2), this);
+            nextSignal = signal();
         }
 
         @Override
         public boolean signal() {
-            return getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
+            return getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
         }
 
         public boolean signalFront(){
-            return signal();
+            return (nb.get(2) != null ?
+                nb.get(2).rotation == rotation || !nb.get(2).block.rotate ?
+                    getSignal(nb.get(2), this) :
+                    nextSignal
+                : nextSignal )
+
+                | nextSignal;
         }
     }
 }

@@ -16,6 +16,7 @@ public class BinaryBlock extends Block {
     public TextureRegion topRegion;
     // in order {front, left, back, right}
     public boolean[] outputs = new boolean[]{false, false, false, false};
+    public boolean[] inputs = new boolean[]{false, false, false, false};
     public boolean emits = false;
 
     public BinaryBlock(String name) {
@@ -50,10 +51,6 @@ public class BinaryBlock extends Block {
 
         public boolean nextSignal;
         public boolean lastSignal;
-
-        // instant signaling moment
-        private float lastFrame;
-        private boolean lastGet;
 
         @Override
         public void draw() {
@@ -105,23 +102,8 @@ public class BinaryBlock extends Block {
         public boolean[] outputs(){
             return outputs;
         }
-
-        // instant signaling getter and setters
-
-        public float getLastFrame() {
-            return lastFrame;
-        }
-
-        public void setLastFrame(float frameid){
-            lastFrame = frameid;
-        }
-
-        public boolean getLastGet() {
-            return lastGet;
-        }
-
-        public void setLastGet(boolean last){
-            lastGet = last;
+        public boolean[] inputs() {
+            return inputs;
         }
     }
 }

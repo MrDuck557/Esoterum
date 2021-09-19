@@ -40,13 +40,10 @@ public interface Binaryc {
     }
 
     // this still hurts me.
-    // check code taken from esoterum v1-1.3 because i don't know how the fuck i did this
     default boolean connectionCheck(Building from, BinaryBlock.BinaryBuild to){
         if(from instanceof BinaryBlock.BinaryBuild b){
-            return !b.block.rotate
-                || (b.front() == to || b.back() == to)
-                || to.front() == b
-                && !(b.back() == this && to.front() != b);
+            return b.outputs()[EsoUtil.relativeDirection(b, to)] & to.inputs()[EsoUtil.relativeDirection(to, b)]
+                || to.outputs()[EsoUtil.relativeDirection(to, b)] & b.inputs()[EsoUtil.relativeDirection(b, to)];
         }
         return false;
     }
@@ -54,9 +51,6 @@ public interface Binaryc {
     // thanks sk
     default boolean getSignal(Building from, BinaryBlock.BinaryBuild to){
         if(from instanceof BinaryBlock.BinaryBuild b){
-            if(Core.graphics.getFrameId() == to.getLastFrame()) return to.getLastGet();
-            to.setLastFrame(Core.graphics.getFrameId());
-            to.setLastGet(getSignalRelativeTo(b, to));
             return getSignalRelativeTo(b, to);
         }
         return false;
