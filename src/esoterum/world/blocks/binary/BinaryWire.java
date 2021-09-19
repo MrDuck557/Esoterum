@@ -1,6 +1,7 @@
 package esoterum.world.blocks.binary;
 
 import arc.Core;
+import mindustry.world.Block;
 
 public class BinaryWire extends BinaryBlock{
     public BinaryWire(String name){
@@ -16,6 +17,12 @@ public class BinaryWire extends BinaryBlock{
         super.load();
         connectionRegion = Core.atlas.find("esoterum-connection-large");
         topRegion = Core.atlas.find("esoterum-wire-top");
+    }
+
+    @Override
+    public boolean canReplace(Block other) {
+        if(other.alwaysReplace) return true;
+        return (other != this || rotate) && other instanceof BinaryBlock && size == other.size;
     }
 
     public class BinaryWireBuild extends BinaryBuild {

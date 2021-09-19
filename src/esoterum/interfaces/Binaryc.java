@@ -48,7 +48,6 @@ public interface Binaryc {
         return false;
     }
 
-    // thanks sk
     default boolean getSignal(Building from, BinaryBlock.BinaryBuild to){
         if(from instanceof BinaryBlock.BinaryBuild b){
             return getSignalRelativeTo(b, to);
