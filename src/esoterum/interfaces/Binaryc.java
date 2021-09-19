@@ -39,7 +39,6 @@ public interface Binaryc {
         };
     }
 
-    // this still hurts me.
     default boolean connectionCheck(Building from, BinaryBlock.BinaryBuild to){
         if(from instanceof BinaryBlock.BinaryBuild b){
             return b.outputs()[EsoUtil.relativeDirection(b, to)] & to.inputs()[EsoUtil.relativeDirection(to, b)]
