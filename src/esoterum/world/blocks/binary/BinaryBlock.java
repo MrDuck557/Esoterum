@@ -45,7 +45,6 @@ public class BinaryBlock extends Block {
     }
 
     public class BinaryBuild extends Building implements Binaryc {
-        public LogicGraph graph;
         public Seq<BinaryBuild> nb = new Seq<>(4);
         public boolean[] connections = new boolean[]{false, false, false, false};
 
@@ -55,53 +54,6 @@ public class BinaryBlock extends Block {
         // instant signaling moment
         private float lastFrame;
         private boolean lastGet;
-
-        public Seq<BinaryBuild> inputs(){
-            Seq<BinaryBuild> inputs = new Seq<>();
-
-            if(left().front() == this && left() instanceof BinaryBuild b){
-                inputs.add(b);
-            }
-
-            if(right().front() == this && right() instanceof BinaryBuild b){
-                inputs.add(b);
-            }
-
-            if(back().front() == this && back() instanceof BinaryBuild b){
-                inputs.add(b);
-            }
-
-            return inputs;
-        }
-
-        @Override
-        public void placed() {
-            super.placed();
-
-            Seq<BinaryBuild> inputs = inputs();
-
-            if(inputs.size > 0) {
-                LogicGraph main = inputs.get(0).graph;
-
-                for (int i = 1; i < inputs.size; i++) {
-                    BinaryBuild input = inputs.get(i);
-
-                    main.members.addAll(input.graph.members);
-                    main.inputs.addAll(input.graph.inputs);
-                    input.graph = main;
-                }
-            }
-
-            if(front() instanceof BinaryBuild b){
-                graph.members.addAll(b.graph.members);
-                graph.inputs.addAll(b.graph.inputs);
-                b.graph = graph;
-            }
-
-            if(inputs.size == 0){
-                graph.inputs.add(this);
-            }
-        }
 
         @Override
         public void draw() {
@@ -137,10 +89,6 @@ public class BinaryBlock extends Block {
                 checkType(right())
             );
             updateConnections();
-
-            if(inputs().size > 0){
-                graph.inputs.remove(this);
-            }
         }
 
         public void updateConnections(){
