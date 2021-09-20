@@ -36,7 +36,7 @@ public class EsoBlocks implements ContentList {
         }};
 
         esoNOT = new LogicGate("NOT", false, true, false){{
-            operation = i -> !i[2];
+            operation = i -> !i[1];
         }};
     }
 }
