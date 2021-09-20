@@ -31,11 +31,11 @@ public class EsoBlocks implements ContentList {
             operation = i -> i[1] && i[2];
         }};
 
-        esoXOR = new LogicGate("AND", false, true, true){{
+        esoXOR = new LogicGate("XOR", false, true, true){{
             operation = i -> i[1] ^ i[2];
         }};
 
-        esoNOT = new LogicGate("AND", false, true, false){{
+        esoNOT = new LogicGate("NOT", false, true, false){{
             operation = i -> !i[2];
         }};
     }
