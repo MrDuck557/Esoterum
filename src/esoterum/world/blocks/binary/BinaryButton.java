@@ -35,6 +35,15 @@ public class BinaryButton extends BinaryBlock{
         offRegion = Core.atlas.find(name + "-off");
     }
 
+    @Override
+    protected TextureRegion[] icons() {
+        return new TextureRegion[]{
+            region,
+            topRegion,
+            offRegion,
+        };
+    }
+
     public class BinaryButtonBuild extends BinaryBuild {
         public float timer;
 

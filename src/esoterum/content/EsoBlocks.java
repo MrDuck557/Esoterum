@@ -7,7 +7,7 @@ import mindustry.world.*;
 public class EsoBlocks implements ContentList {
     public Block
         // Signal distribution
-        esoWire, esoJunction, esoRouter, esoNode,
+        esoWire, esoJunction, esoRouter, esoNode, esoLatch,
         // Signal sources
         esoSwitch, esoButton,
         // Logic gates
@@ -22,6 +22,8 @@ public class EsoBlocks implements ContentList {
         esoRouter = new BinaryRouter("router");
 
         esoNode = new BinaryNode("node", 5);
+
+        esoLatch = new LatchBlock("latch");
 
         esoSwitch = new BinaryButton("switch", true);
 

@@ -33,13 +33,9 @@ public class BinaryBlock extends Block {
 
     public void load() {
         super.load();
-        region = Core.atlas.find(name + "-base");
-        connectionRegion = Core.atlas.find("esoterum-connection");
-        topRegion = Core.atlas.find(name + "-top");
-
-        if(region == null || !region.found()){
-            region = Core.atlas.find("esoterum-base");
-        }
+        region = Core.atlas.find(name + "-base", "esoterum-base");
+        connectionRegion = Core.atlas.find(name + "-connection", "esoterum-connection");
+        topRegion = Core.atlas.find(name + "-top", "esoterum-router-top"); // router supremacy
     }
 
     @Override
