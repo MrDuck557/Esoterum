@@ -45,6 +45,12 @@ public class BinaryBlock extends Block {
         };
     }
 
+    @Override
+    public boolean canReplace(Block other) {
+        if(other.alwaysReplace) return true;
+        return (other != this || rotate) && other instanceof BinaryBlock && size == other.size;
+    }
+
     public class BinaryBuild extends Building implements Binaryc {
         public Seq<BinaryBuild> nb = new Seq<>(4);
         public boolean[] connections = new boolean[]{false, false, false, false};

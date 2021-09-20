@@ -6,7 +6,12 @@ import mindustry.world.*;
 
 public class EsoBlocks implements ContentList {
     public Block
-        esoWire, esoJunction, esoNode, esoSwitch, esoButton, esoAND;
+        // Signal distribution
+        esoWire, esoJunction, esoRouter, esoNode,
+        // Signal sources
+        esoSwitch, esoButton,
+        // Logic gates
+        esoAND, esoXOR, esoNOT;
 
     @Override
     public void load() {
@@ -14,7 +19,9 @@ public class EsoBlocks implements ContentList {
 
         esoJunction = new BinaryJunction("junction");
 
-        esoNode = new BinaryNode("node");
+        esoRouter = new BinaryRouter("router");
+
+        esoNode = new BinaryNode("node", 5);
 
         esoSwitch = new BinaryButton("switch", true);
 
@@ -22,6 +29,14 @@ public class EsoBlocks implements ContentList {
 
         esoAND = new LogicGate("AND", false, true, true){{
             operation = i -> i[1] && i[2];
+        }};
+
+        esoXOR = new LogicGate("AND", false, true, true){{
+            operation = i -> i[1] ^ i[2];
+        }};
+
+        esoNOT = new LogicGate("AND", false, true, false){{
+            operation = i -> !i[2];
         }};
     }
 }
