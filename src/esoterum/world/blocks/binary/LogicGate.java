@@ -1,5 +1,6 @@
 package esoterum.world.blocks.binary;
 
+import arc.Core;
 import arc.func.Boolf;
 
 public class LogicGate extends BinaryBlock{
@@ -13,6 +14,12 @@ public class LogicGate extends BinaryBlock{
         drawArrow = true;
 
         operation = e -> false;
+    }
+
+    @Override
+    public void load() {
+        super.load();
+        region = Core.atlas.find("esoterum-gate-base");
     }
 
     public class LogicGateBuild extends BinaryBuild {
