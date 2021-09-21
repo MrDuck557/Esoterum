@@ -1,4 +1,3 @@
-[![Discord](https://img.shields.io/discord/886635642312880179?color=7289da&label=Esoterum&logo=discord&logoColor=7289da&style=for-the-badge)](https://discord.gg/tz89KuZyTX)
 [![Discord](https://img.shields.io/discord/782583108473978880?color=7289da&label=AVANT%20TEAM&logo=discord&logoColor=7289da&style=for-the-badge)](https://discord.gg/V6ygvgGVqE)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Goobrr/Esoterum/Java%20CI?style=for-the-badge)](https://github.com/Goobrr/Esoterum/actions/workflows/gradle.yml)
 
