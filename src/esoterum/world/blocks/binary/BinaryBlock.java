@@ -3,6 +3,7 @@ package esoterum.world.blocks.binary;
 import arc.Core;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import esoterum.graphics.EsoDrawf;
 import esoterum.interfaces.Binaryc;
@@ -105,6 +106,21 @@ public class BinaryBlock extends Block {
             for(int i = 0; i < 4; i++){
                 connections[i] = connectionCheck(nb.get(i), this);
             }
+        }
+
+        @Override
+        public void displayBars(Table table) {
+            super.displayBars(table);
+            table.table(e -> {
+                Runnable rebuild = () -> {
+                    e.clearChildren();
+                    e.row();
+                    e.left();
+                    e.label(() -> "State: " + (lastSignal ? "1" : "0")).color(Color.lightGray);
+                };
+
+                e.update(rebuild);
+            }).left();
         }
 
         // emission
