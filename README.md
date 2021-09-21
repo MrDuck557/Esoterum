@@ -8,6 +8,8 @@ See [Esoterum-Solutions](https://github.com/Goobrr/Esoterum-Solutions) for build
 
 A small [Mindustry](https://github.com/Anuken/Mindustry) Java mod that adds a wire-based logic system tailored for building circuits.
 
+New content suggestions will be ignored.
+
 Thanks [Glenn](https://github.com/GlennFolker) for setting me off on my journey into eternal pain and suffering through Java modding!
 
 # Building
