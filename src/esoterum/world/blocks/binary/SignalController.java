@@ -31,7 +31,9 @@ public class SignalController extends BinaryRouter{
     @Override
     public void load(){
         super.load();
-
+        
+        // looks better with rounded corners
+        region = Core.atlas.find("esoterum-node-base");
         inputRegion = Core.atlas.find(name + "-in");
         outputRegion = Core.atlas.find(name + "-out");
     }
