@@ -6,10 +6,11 @@ import arc.assets.loaders.MusicLoader;
 import arc.audio.Music;
 import mindustry.Vars;
 
+// no more "musics"
 public class EsoMusic {
-    protected static Music loadMusic(String musicsName) {
+    protected static Music loadMusic(String musicName) {
         if (!Vars.headless) {
-            String name = "musics/" + musicsName;
+            String name = "music/" + musicName;
             String path = Vars.tree.get(name + ".mp3").exists() ? name + ".mp3" : name + ".ogg";
 
             Music music = new Music();
