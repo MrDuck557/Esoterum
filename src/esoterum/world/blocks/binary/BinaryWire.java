@@ -22,6 +22,8 @@ public class BinaryWire extends BinaryBlock{
         emits = true;
         rotate = true;
         drawArrow = true;
+
+        drawConnectionArrows = true;
     }
 
     @Override
@@ -62,43 +64,6 @@ public class BinaryWire extends BinaryBlock{
             super.updateTile();
             lastSignal = nextSignal | getSignal(nb.get(2), this);
             nextSignal = signal();
-        }
-
-        // bad, bad, bad, bad, bad, bad, bad, bad, bad, bad, bad
-        // TODO fix layering without DOING THIS SHIT
-        @Override
-        public void drawSelect(){
-            BinaryBuild b;
-            for(int i = 0; i < 4; i++){
-                if(connections[i]){
-                    b = nb.get(i);
-
-                    Draw.z(Layer.overlayUI);
-                    Lines.stroke(3f);
-                    Draw.color(Pal.gray);
-                    Lines.line(x, y, b.x, b.y);
-                }
-            }
-
-            for(int i = 0; i < 4; i++){
-                if(outputs()[i] && connections[i]){
-                    b = nb.get(i);
-                    Draw.z(Layer.overlayUI + 1);
-                    Drawf.arrow(x, y, b.x, b.y, 2f, 2f, lastSignal ? Pal.accent : Color.white);
-                }
-            }
-
-            for (int i = 0; i < 4; i++){
-                if(connections[i]) {
-                    b = nb.get(i);
-                    Draw.z(Layer.overlayUI + 3);
-                    Lines.stroke(1f);
-                    Draw.color((outputs()[i] ? lastSignal : getSignal(b, this)) ? Pal.accent : Color.white);
-                    Lines.line(x, y, b.x, b.y);
-
-                    Draw.reset();
-                }
-            }
         }
 
         @Override

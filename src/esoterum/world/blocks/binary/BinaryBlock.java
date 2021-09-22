@@ -20,7 +20,8 @@ public class BinaryBlock extends Block {
     public boolean[] outputs = new boolean[]{false, false, false, false};
     /** in order {front, left, back, right} */
     public boolean[] inputs = new boolean[]{false, false, false, false};
-    public boolean emits = false;
+    public boolean emits;
+    public boolean drawConnectionArrows;
 
     public BinaryBlock(String name) {
         super(name);
@@ -75,6 +76,44 @@ public class BinaryBlock extends Block {
             Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
             for(int i = 0; i < 4; i++){
                 if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
+            }
+        }
+
+        // bad, bad, bad, bad, bad, bad, bad, bad, bad, bad, bad
+        // TODO fix layering without DOING THIS SHIT
+        @Override
+        public void drawSelect(){
+            if(!drawConnectionArrows) return;
+            BinaryBuild b;
+            for(int i = 0; i < 4; i++){
+                if(connections[i]){
+                    b = nb.get(i);
+
+                    Draw.z(Layer.overlayUI);
+                    Lines.stroke(3f);
+                    Draw.color(Pal.gray);
+                    Lines.line(x, y, b.x, b.y);
+                }
+            }
+
+            for(int i = 0; i < 4; i++){
+                if(outputs()[i] && connections[i]){
+                    b = nb.get(i);
+                    Draw.z(Layer.overlayUI + 1);
+                    Drawf.arrow(x, y, b.x, b.y, 2f, 2f, lastSignal ? Pal.accent : Color.white);
+                }
+            }
+
+            for (int i = 0; i < 4; i++){
+                if(connections[i]) {
+                    b = nb.get(i);
+                    Draw.z(Layer.overlayUI + 3);
+                    Lines.stroke(1f);
+                    Draw.color((outputs()[i] ? lastSignal : getSignal(b, this)) ? Pal.accent : Color.white);
+                    Lines.line(x, y, b.x, b.y);
+
+                    Draw.reset();
+                }
             }
         }
 

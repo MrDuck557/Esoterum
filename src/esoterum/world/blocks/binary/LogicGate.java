@@ -2,6 +2,9 @@ package esoterum.world.blocks.binary;
 
 import arc.Core;
 import arc.func.Boolf;
+import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
+import mindustry.graphics.Pal;
 
 public class LogicGate extends BinaryBlock{
     public Boolf<boolean[]> operation;
@@ -14,6 +17,8 @@ public class LogicGate extends BinaryBlock{
         drawArrow = true;
 
         operation = e -> false;
+
+        drawConnectionArrows = true;
     }
 
     @Override
@@ -37,6 +42,15 @@ public class LogicGate extends BinaryBlock{
                 getSignal(nb.get(2), this),
                 getSignal(nb.get(3), this)
             });
+        }
+
+        @Override
+        public void draw(){
+            Draw.rect(region, x, y);
+
+            drawConnections();
+            Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
+            Draw.rect(topRegion, x, y, rotate ? rotdeg() : 0f);
         }
 
         @Override
