@@ -16,7 +16,9 @@ public class EsoBlocks implements ContentList{
         // Signal sources
         esoSwitch, esoButton,
         // Logic gates
-        esoAND, esoXOR, esoNOT;
+        esoAND, esoXOR, esoNOT,
+
+        esoManual;
 
     @Override
     public void load(){
@@ -70,5 +72,7 @@ public class EsoBlocks implements ContentList{
             operation = i -> !i[1];
         }};
         // endregion logic gates
+
+        esoManual = new Manual("manual");
     }
 }
