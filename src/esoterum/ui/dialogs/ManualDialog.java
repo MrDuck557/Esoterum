@@ -37,25 +37,32 @@ public class ManualDialog extends BaseDialog{
                 currentPage = 0;
                 currentTopic = 0;
                 build();
-            }).tooltip("Signal Distribution");
+            }).tooltip("Signal Distribution")
+                .visible(ManualPages.topics[0].length != 0);
+
             topics.row();
             topics.button(Icon.production, () -> {
                 currentPage = 0;
                 currentTopic = 1;
                 build();
-            }).tooltip("Signal Sources");
+            }).tooltip("Signal Sources")
+                .visible(ManualPages.topics[1].length != 0);
+
             topics.row();
             topics.button(Icon.settings, () -> {
                 currentPage = 0;
                 currentTopic = 2;
                 build();
-            }).tooltip("Logic Gates");
+            }).tooltip("Logic Gates")
+                .visible(ManualPages.topics[2].length != 0);
+
             topics.row();
             topics.button(Icon.tree, () -> {
                 currentPage = 0;
                 currentTopic = 3;
                 build();
-            }).tooltip("Logic Circuits");
+            }).tooltip("Logic Circuits")
+                .visible(ManualPages.topics[3].length != 0);
         }).top().name("topics");
 
         cont.row();

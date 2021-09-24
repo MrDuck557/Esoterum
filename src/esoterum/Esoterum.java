@@ -4,6 +4,8 @@ import arc.*;
 import arc.audio.*;
 import arc.struct.*;
 import esoterum.content.*;
+import esoterum.ui.ManualPages;
+import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.mod.Mods.*;
