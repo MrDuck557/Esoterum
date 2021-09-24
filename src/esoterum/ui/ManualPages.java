@@ -1,5 +1,6 @@
 package esoterum.ui;
 
+// TODO make an actual manual
 public class ManualPages {
     public static ManualPage[][] topics = new ManualPage[][]{
         // signal distribution

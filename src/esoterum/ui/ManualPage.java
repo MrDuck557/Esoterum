@@ -8,6 +8,7 @@ import arc.util.*;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 
+// TODO fix alignment
 public class ManualPage {
     Table cont;
     Cons<ManualPage> content;
