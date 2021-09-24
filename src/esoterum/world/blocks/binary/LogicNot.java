@@ -2,7 +2,6 @@ package esoterum.world.blocks.binary;
 
 import arc.*;
 
-// TODO merge with LogicGate
 public class LogicNot extends BinaryBlock{
     public LogicNot(String name){
         super(name);
