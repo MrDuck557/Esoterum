@@ -8,7 +8,9 @@ public class ManualPages {
     public static ManualPage[][] topics = new ManualPage[][]{
         // signal distribution
         new ManualPage[]{
-            makePage("Test")
+            makePage("distribution/Wire"),
+            makePage("distribution/Router"),
+            makePage("distribution/Controller")
         },
         // signal sources
         new ManualPage[]{},

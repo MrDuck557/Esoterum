@@ -1,0 +1,11 @@
+[h]Signal Router
+
+[i]esoterum-wire-fig2[t]Fig 1.1. Signal Router IO (Placeholder)
+
+A [accent]signal router[] is used to split incoming signals to multiple directions, it takes inputs from and outputs to all sides.
+
+[i]esoterum-wire-fig2[t]Fig 1.2. A Signal Router Chain (Placeholder)
+
+Due to the behavior of the router, chaining them is [accent]not[] recommended as they will output to eachother and cause a feedback loop that will lock them into a high state, which is what I-03 considers to be - quote - "Heretical".
+
+[#4c4c4c]See the transcript of Meeting 0739-N78C for further details, I-03 seemed to be very passionate against router chaining.[]

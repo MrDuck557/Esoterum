@@ -1,0 +1,13 @@
+[h]Signal Wire
+
+[i]esoterum-wire-fig2[t]Fig 1. Signal Wires in Action (Placeholder)
+
+A [accent]signal wire[] is used to transmit binary signals from its source to other locations, it is the most common component in circuitry.
+Although more effective methods of signal transmission have developed, Corporate urges Engineers to use wires in situations where possible to cut on circuit weight and reduce cost.
+
+[i]esoterum-wire-fig2[t]Fig 2. Signal Wire Inputs
+
+The signal wire has three inputs: left, back and right. If any one of its inputs are high, it will output a high signal to the front.
+
+Wires transmit signals almost instantly, with the only delay being in corners where quantum mechanics pose as a limitation.
+[#4c4c4c]See R&D Document 10872-R28B regarding the accident at Universe R28B for further details[]
