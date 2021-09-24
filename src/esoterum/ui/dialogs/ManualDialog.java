@@ -26,7 +26,7 @@ public class ManualDialog extends BaseDialog{
         cont.table(Tex.button, content -> {
             content.pane(Styles.defaultPane, t -> {
                 ManualPages.topics[currentTopic][currentPage].addContent(t);
-            }).grow();
+            }).grow().fill().top().left();
         }).top().size(600f, 800f).name("content");
 
         // navigation buttons

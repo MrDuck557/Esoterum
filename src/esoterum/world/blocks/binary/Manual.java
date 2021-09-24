@@ -1,5 +1,7 @@
 package esoterum.world.blocks.binary;
 
+import arc.graphics.g2d.Draw;
+import arc.math.Mathf;
 import esoterum.ui.dialogs.ManualDialog;
 import mindustry.gen.Building;
 import mindustry.type.*;
@@ -19,7 +21,19 @@ public class Manual extends Block{
     }
 
     public class ManualBuild extends Building{
+        public float drawRotation;
         ManualDialog manual = new ManualDialog();
+
+        @Override
+        public void placed() {
+            super.placed();
+            drawRotation = Mathf.random(-50, 50);
+        }
+
+        @Override
+        public void draw() {
+            Draw.rect(region, x, y, drawRotation);
+        }
 
         @Override
         public boolean configTapped(){
