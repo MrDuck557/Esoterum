@@ -9,6 +9,8 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
+import esoterum.util.EsoUtil;
+import mindustry.gen.Building;
 import mindustry.graphics.*;
 
 // each side's behavior is configurable.
@@ -88,6 +90,7 @@ public class SignalController extends BinaryRouter{
             return table.table(t -> {
                 TextButton b = t.button(states[configs.get(index)], () -> {
                     configure(index);
+                    updateProximity();
                 }).get();
                 b.update(() -> b.setText(states[configs.get(index)]));
             }).size(40f);
@@ -102,6 +105,26 @@ public class SignalController extends BinaryRouter{
         @Override
         public Object config() {
             return configs;
+        }
+
+        @Override
+        public boolean[] inputs() {
+            return new boolean[]{
+                configs.get(0) == 1,
+                configs.get(1) == 1,
+                configs.get(2) == 1,
+                configs.get(3) == 1,
+            };
+        }
+
+        @Override
+        public boolean[] outputs() {
+            return new boolean[]{
+                configs.get(0) == 2,
+                configs.get(1) == 2,
+                configs.get(2) == 2,
+                configs.get(3) == 2,
+            };
         }
 
         // check if the current side is configured to output
