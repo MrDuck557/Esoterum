@@ -1,5 +1,7 @@
 package esoterum.world.blocks.binary;
 
+import arc.Graphics.*;
+import arc.Graphics.Cursor.*;
 import arc.audio.*;
 import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
@@ -43,18 +45,19 @@ public class Manual extends Block{
     }
 
     public class ManualBuild extends Building{
-        public boolean draw;
+        public boolean landed;
         public float drawRotation;
 
         @Override
         public void created(){
             super.created();
-            if(isValid() || !draw) entryEffect.at(this, 160);
+            if(isValid() || !landed) entryEffect.at(this, 160);
             Time.run(landTime, () -> {
-                if(!isValid() || draw) return;
+                if(!isValid() || landed) return;
                 landEffect.at(this);
+              
                 landSound.at(this, Mathf.random(0.8f, 1.2f));
-                draw = true;
+                landed = true;
             });
         }
 
@@ -66,7 +69,7 @@ public class Manual extends Block{
 
         @Override
         public void draw(){
-            if(!draw) return;
+            if(!landed) return;
             Drawf.shadow(region, x, y - 1f, drawRotation);
             Draw.rect(region, x, y, drawRotation);
         }
@@ -78,11 +81,21 @@ public class Manual extends Block{
         }
 
         @Override
+        public boolean shouldShowConfigure(Player player){
+            return landed;
+        }
+
+        @Override
+        public Cursor getCursor(){
+            return !landed ? SystemCursor.arrow : super.getCursor();
+        }
+
+        @Override
         public void write(Writes write) {
             super.write(write);
 
             write.f(drawRotation);
-            write.bool(draw);
+            write.bool(landed);
         }
 
         @Override
@@ -93,7 +106,7 @@ public class Manual extends Block{
                 drawRotation = read.f();
             }
             if(revision >= 2){
-                draw = read.bool();
+                landed = read.bool();
             }
         }
 
