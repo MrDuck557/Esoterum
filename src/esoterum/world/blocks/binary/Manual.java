@@ -51,7 +51,7 @@ public class Manual extends Block{
         @Override
         public void created(){
             super.created();
-            if(isValid() || !landed) entryEffect.at(this, 160);
+            if(isValid() && !landed) entryEffect.at(this, 160);
             Time.run(landTime, () -> {
                 if(!isValid() || landed) return;
                 landEffect.at(this);
