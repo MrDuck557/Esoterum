@@ -49,22 +49,18 @@ public class Manual extends Block{
         public float drawRotation;
 
         @Override
-        public void created(){
-            super.created();
-            if(isValid() && !landed) entryEffect.at(this, 160);
-            Time.run(landTime, () -> {
-                if(!isValid() || landed) return;
-                landEffect.at(this);
-              
-                landSound.at(this, Mathf.random(0.8f, 1.2f));
-                landed = true;
-            });
-        }
-
-        @Override
         public void placed(){
             super.placed();
             drawRotation = Mathf.random(-50, 50);
+
+            if(!landed) entryEffect.at(this, 160);
+            Time.run(landTime, () -> {
+                if(!isValid() || landed) return;
+                landEffect.at(this);
+
+                landSound.at(this, Mathf.random(0.8f, 1.2f));
+                landed = true;
+            });
         }
 
         @Override
