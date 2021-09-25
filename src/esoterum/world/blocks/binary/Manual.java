@@ -18,13 +18,13 @@ import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.meta.BuildVisibility;
 
+import static esoterum.Esoterum.manual;
+
 public class Manual extends Block{
     public Effect landEffect = EsoFx.manualLand;
     public Effect entryEffect = EsoFx.manualEntry;
     public float landTime = -1f;
     public Sound landSound = Sounds.bang;
-
-    ManualDialog manual;
 
     public Manual(String name){
         super(name);
@@ -41,7 +41,6 @@ public class Manual extends Block{
     @Override
     public void init(){
         super.init();
-        if(!Vars.headless) manual = new ManualDialog();
         if(landTime < 0) landTime = entryEffect.lifetime;
     }
 
