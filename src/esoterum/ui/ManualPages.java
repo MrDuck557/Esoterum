@@ -1,8 +1,8 @@
 package esoterum.ui;
 
-import arc.files.Fi;
-import arc.util.Log;
-import mindustry.Vars;
+import arc.files.*;
+import arc.util.*;
+import mindustry.*;
 
 public class ManualPages {
     public static ManualPage[][] topics = new ManualPage[][]{

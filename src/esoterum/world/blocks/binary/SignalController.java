@@ -1,16 +1,14 @@
 package esoterum.world.blocks.binary;
 
-import arc.Core;
+import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
-import arc.math.geom.Vec2;
+import arc.math.geom.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
-import esoterum.util.EsoUtil;
-import mindustry.gen.Building;
 import mindustry.graphics.*;
 
 // each side's behavior is configurable.

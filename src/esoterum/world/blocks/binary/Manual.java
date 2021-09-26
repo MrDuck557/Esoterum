@@ -3,22 +3,19 @@ package esoterum.world.blocks.binary;
 import arc.Graphics.*;
 import arc.Graphics.Cursor.*;
 import arc.audio.*;
-import arc.graphics.g2d.Draw;
-import arc.math.Mathf;
+import arc.graphics.g2d.*;
+import arc.math.*;
 import arc.util.*;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
+import arc.util.io.*;
 import esoterum.content.*;
-import esoterum.ui.dialogs.ManualDialog;
-import mindustry.*;
 import mindustry.entities.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.type.*;
-import mindustry.world.Block;
-import mindustry.world.meta.BuildVisibility;
+import mindustry.world.*;
+import mindustry.world.meta.*;
 
-import static esoterum.Esoterum.manual;
+import static esoterum.Esoterum.*;
 
 public class Manual extends Block{
     public Effect landEffect = EsoFx.manualLand;
