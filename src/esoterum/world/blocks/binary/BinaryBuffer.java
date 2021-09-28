@@ -1,21 +1,46 @@
 package esoterum.world.blocks.binary;
 
-import arc.math.Mathf;
+import arc.Core;
+import arc.graphics.*;
+import arc.graphics.g2d.*;
+import arc.math.*;
+import arc.scene.ui.layout.*;
+import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
+import mindustry.gen.*;
+import mindustry.graphics.*;
+import mindustry.ui.*;
 
-public class BinaryBuffer extends LogicGate{
+public class BinaryBuffer extends BinaryBlock{
+    public TextureRegion outputRegion;
     public BinaryBuffer(String name){
         super(name);
-        single = true;
+        emits = true;
+        rotate = true;
+        drawArrow = true;
+        configurable = saveConfig = true;
+
+        inputs = new boolean[]{false, true, true, true};
+        outputs = new boolean[]{true, false, false, false};
+
+        config(IntSeq.class, (BinaryBufferBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
     }
 
-    public class BinaryBufferBuild extends LogicGateBuild{
+    @Override
+    public void load() {
+        super.load();
+        outputRegion = Core.atlas.find("esoterum-connection");
+        connectionRegion = Core.atlas.find("esoterum-connection-large");
+    }
+
+    public class BinaryBufferBuild extends BinaryBuild{
         public float delayTimer = 0f;
 
-        // 0.5 seconds
-        // TODO make configurable
-        public float delay = 30;
+        public float delay = 5f;
+
+        // Direction, Multiplier
+        public IntSeq configs = IntSeq.with(1, 1);
 
         @Override
         public void updateTile() {
@@ -26,14 +51,34 @@ public class BinaryBuffer extends LogicGate{
             }
 
             // this looks terrible
-            if(delayTimer > delay){
+            if(delayTimer > trueDelay()){
                 lastSignal  = true;
-                delayTimer = delay;
+                delayTimer = trueDelay();
             }
             if(delayTimer < 0f){
                 lastSignal = false;
                 delayTimer = 0f;
             }
+        }
+
+        public float trueDelay(){
+            return delay * configs.peek();
+        }
+
+        @Override
+        public void draw() {
+            Draw.rect(region, x, y);
+
+            Draw.color(lastSignal ? Pal.accent : Color.white);
+            Draw.rect(outputRegion, x, y, rotdeg());
+            drawConnections();
+            Draw.color(Color.white, Pal.accent, delayTimer / trueDelay());
+            Draw.rect(topRegion, x, y, rotdeg() + 90 * configs.first());
+        }
+
+        public void drawConnections(){
+            Draw.color(lastSignal ? Pal.accent : Color.white);
+            Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
         }
 
         @Override
@@ -47,12 +92,61 @@ public class BinaryBuffer extends LogicGate{
         }
 
         @Override
+        public void displayBars(Table table) {
+            super.displayBars(table);
+            table.row();
+            table.table(e -> {
+                Runnable rebuild = () -> {
+                    e.clearChildren();
+                    e.row();
+                    e.left();
+                    e.label(() -> "Delay: " + Mathf.floor(trueDelay()) + " ticks").color(Color.lightGray);
+                };
+
+                e.update(rebuild);
+            }).left();
+        }
+
+        @Override
+        public void buildConfiguration(Table table){
+            table.setBackground(Styles.black5);
+            table.button(Icon.rotate, () -> {
+                configs.incr(0, 1);
+                if(configs.first() + 1 > 4){
+                    configs.set(0, 1);
+                }
+                configure(configs);
+            }).size(40f);
+            table.table(Tex.button, t -> {
+                t.left();
+                t.button(Icon.settingsSmall, Styles.emptyi, () -> {
+                    configs.incr(1, 1);
+                    if(configs.peek() + 1 > 13){
+                        configs.set(1, 1);
+                    }
+                    configure(configs);
+                }).size(40f).left();
+                t.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
+                    .labelAlign(Align.left)
+                    .growX()
+                    .left();
+            }).size(110f, 40f);
+        }
+
+        @Override
+        public Object config() {
+            return configs;
+        }
+
+        @Override
         public void read(Reads read, byte revision) {
             super.read(read, revision);
 
             if(revision >= 1){
                 delayTimer = read.f();
-                Log.info(delayTimer);
+            }
+            if(revision >= 2){
+                configs = IntSeq.with(read.i(), read.i());
             }
         }
 
@@ -61,11 +155,13 @@ public class BinaryBuffer extends LogicGate{
             super.write(write);
 
             write.f(delayTimer);
+            write.i(configs.get(0));
+            write.i(configs.get(1));
         }
 
         @Override
         public byte version() {
-            return 1;
+            return 2;
         }
     }
 }
