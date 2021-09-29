@@ -91,7 +91,7 @@ public class NoteBlock extends BinaryBlock{
 
         @Override
         public boolean signalFront() {
-            return lastSignal;
+            return configs.first() == 2 ? signal() : lastSignal;
         }
 
         @Override
