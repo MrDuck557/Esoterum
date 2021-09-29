@@ -19,17 +19,12 @@ public class EsoSounds{
         return sound;
     }
 
-    public static Sound[] loadNotes(String soundName, int minOct, int maxOct){
-        int len = maxOct + 1 - minOct;
-        Sound[] out = new Sound[len];
-        for(int i = 0; i < len; i++){
-            out[i] = loadSound(soundName + (minOct + i));
+    public static Sound[] loadNotes(String soundName){
+        Sound[] out = new Sound[5];
+        for(int i = 0; i < 5; i++){
+            out[i] = loadSound(soundName + (2 + i));
         }
         return out;
-    }
-
-    public static Sound[] loadNotes(String soundName){
-        return loadNotes(soundName, 2, 6);
     }
 
     public static Sound[]
