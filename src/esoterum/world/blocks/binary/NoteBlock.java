@@ -60,10 +60,9 @@ public class NoteBlock extends BinaryBlock{
 
         @Override
         public void updateTile(){
-            boolean prev = lastSignal;
-            lastSignal = nextSignal | getSignal(nb.get(2), this);
+            lastSignal = nextSignal;
             nextSignal = signal();
-            if(lastSignal & prev != lastSignal) playSound();
+            if(nextSignal && !lastSignal) playSound();
         }
 
         @Override
