@@ -85,12 +85,12 @@ public class NoteBlock extends BinaryBlock{
         }
 
         @Override
-        public boolean signal() {
+        public boolean signal(){
             return getSignal(nb.get(configs.first()), this);
         }
 
         @Override
-        public boolean signalFront() {
+        public boolean signalFront(){
             return configs.first() == 2 ? signal() : lastSignal;
         }
 
