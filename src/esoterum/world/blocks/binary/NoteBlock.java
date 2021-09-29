@@ -56,7 +56,7 @@ public class NoteBlock extends BinaryBlock{
 
     public class NoteBlockBuild extends BinaryBuild{
         /** Direction, Pitch, Octave, Volume, Note Sample */
-        public IntSeq configs = IntSeq.with(1, 0, 2, 10, 0);
+        public IntSeq configs = IntSeq.with(2, 0, 2, 10, 0);
 
         @Override
         public void updateTile(){

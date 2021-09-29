@@ -33,7 +33,7 @@ public class BinaryBuffer extends BinaryBlock{
         public float delay = 5f;
 
         /** Direction, Multiplier */
-        public IntSeq configs = IntSeq.with(1, 1);
+        public IntSeq configs = IntSeq.with(2, 1);
 
         @Override
         public void updateTile() {
