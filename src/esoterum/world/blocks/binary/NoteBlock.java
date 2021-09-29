@@ -20,7 +20,8 @@ public class NoteBlock extends BinaryBlock{
     public NoteSample[] samples = {
         new NoteSample(EsoSounds.bells, "Bells"),
         new NoteSample(EsoSounds.bass, "Bass"),
-        new NoteSample(EsoSounds.saw, "Saw")
+        new NoteSample(EsoSounds.saw, "Saw"),
+        new NoteSample(EsoSounds.organ, "Organ")
     };
 
     public String[] noteNames = new String[]{
