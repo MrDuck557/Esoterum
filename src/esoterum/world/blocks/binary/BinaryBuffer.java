@@ -14,6 +14,7 @@ import mindustry.ui.*;
 
 public class BinaryBuffer extends BinaryBlock{
     public TextureRegion outputRegion;
+
     public BinaryBuffer(String name){
         super(name);
         emits = true;
@@ -39,7 +40,7 @@ public class BinaryBuffer extends BinaryBlock{
 
         public float delay = 5f;
 
-        // Direction, Multiplier
+        /** Direction, Multiplier */
         public IntSeq configs = IntSeq.with(1, 1);
 
         @Override
@@ -62,11 +63,11 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         public float trueDelay(){
-            return delay * configs.peek();
+            return delay * configs.get(1);
         }
 
         @Override
-        public void draw() {
+        public void draw(){
             Draw.rect(region, x, y);
 
             Draw.color(lastSignal ? Pal.accent : Color.white);
@@ -111,9 +112,9 @@ public class BinaryBuffer extends BinaryBlock{
         public void buildConfiguration(Table table){
             table.setBackground(Styles.black5);
             table.button(Icon.rotate, () -> {
-                configs.incr(0, 1);
-                if(configs.first() + 1 > 4){
-                    configs.set(0, 1);
+                configs.incr(0, -1);
+                if(configs.first() < 1){
+                    configs.set(0, 3);
                 }
                 configure(configs);
             }).size(40f);
@@ -121,7 +122,7 @@ public class BinaryBuffer extends BinaryBlock{
                 t.left();
                 t.button(Icon.settingsSmall, Styles.emptyi, () -> {
                     configs.incr(1, 1);
-                    if(configs.peek() + 1 > 13){
+                    if(configs.get(1) >= 13){
                         configs.set(1, 1);
                     }
                     configure(configs);
@@ -139,6 +140,15 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         @Override
+        public void write(Writes write) {
+            super.write(write);
+
+            write.f(delayTimer);
+            write.i(configs.get(0));
+            write.i(configs.get(1));
+        }
+
+        @Override
         public void read(Reads read, byte revision) {
             super.read(read, revision);
 
@@ -148,15 +158,6 @@ public class BinaryBuffer extends BinaryBlock{
             if(revision >= 2){
                 configs = IntSeq.with(read.i(), read.i());
             }
-        }
-
-        @Override
-        public void write(Writes write) {
-            super.write(write);
-
-            write.f(delayTimer);
-            write.i(configs.get(0));
-            write.i(configs.get(1));
         }
 
         @Override
