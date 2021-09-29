@@ -13,7 +13,6 @@ import mindustry.graphics.*;
 import mindustry.ui.*;
 
 public class BinaryBuffer extends BinaryBlock{
-    public TextureRegion outputRegion;
 
     public BinaryBuffer(String name){
         super(name);
@@ -26,13 +25,6 @@ public class BinaryBuffer extends BinaryBlock{
         outputs = new boolean[]{true, false, false, false};
 
         config(IntSeq.class, (BinaryBufferBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
-    }
-
-    @Override
-    public void load() {
-        super.load();
-        outputRegion = Core.atlas.find("esoterum-connection");
-        connectionRegion = Core.atlas.find("esoterum-connection-large");
     }
 
     public class BinaryBufferBuild extends BinaryBuild{
@@ -71,10 +63,10 @@ public class BinaryBuffer extends BinaryBlock{
             Draw.rect(region, x, y);
 
             Draw.color(lastSignal ? Pal.accent : Color.white);
-            Draw.rect(outputRegion, x, y, rotdeg());
+            Draw.rect(connectionRegion, x, y, rotdeg());
             drawConnections();
             Draw.color(Color.white, Pal.accent, delayTimer / trueDelay());
-            Draw.rect(topRegion, x, y, rotdeg() + 90 * configs.first());
+            Draw.rect(topRegion, x, y, rotdeg());
         }
 
         public void drawConnections(){
