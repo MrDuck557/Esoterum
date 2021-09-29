@@ -22,15 +22,17 @@ public class EsoSounds{
     public static Sound[] loadNotes(String soundName){
         Sound[] out = new Sound[5];
         for(int i = 0; i < 5; i++){
-            out[i] = loadSound(soundName + (2 + i));
+            out[i] = loadSound(soundName + "/" + soundName + "C" + (2 + i));
         }
         return out;
     }
 
     public static Sound[]
-        bells;
+        bells, bass, saw;
 
     public static void load(){
-        bells = loadNotes("bells/bellC");
+        bells = loadNotes("bell");
+        bass = loadNotes("bass");
+        saw = loadNotes("saw");
     }
 }

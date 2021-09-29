@@ -18,7 +18,9 @@ import mindustry.ui.*;
 
 public class NoteBlock extends BinaryBlock{
     public NoteSample[] samples = {
-        new NoteSample(EsoSounds.bells, "Bell")
+        new NoteSample(EsoSounds.bells, "Bells"),
+        new NoteSample(EsoSounds.bass, "Bass"),
+        new NoteSample(EsoSounds.saw, "Saw")
     };
 
     public String[] noteNames = new String[]{
@@ -158,23 +160,35 @@ public class NoteBlock extends BinaryBlock{
             }).growX().get().background(Tex.underline);
             table.row();
             table.table(s -> {
-                s.button("-", () -> {
+                s.label(() -> {
+                    if(configs.get(4) - 1 >= 0){
+                        return samples[configs.get(4) - 1].name;
+                    }
+                    return "";
+                }).color(Color.lightGray).labelAlign(Align.center).right().size(60f, 40f);
+                s.button("<", () -> {
                     configs.incr(4, -1);
                     if(configs.get(4) < 0){
                         configs.set(4, 0);
                     }
                     configure(configs);
                     playSound();
-                }).size(48f);
-                s.label(() -> samples[configs.get(4)].name);
-                s.button("+", () -> {
+                }).size(40f).right();
+                s.label(() -> samples[configs.get(4)].name).center().labelAlign(Align.center).size(80f, 40f);
+                s.button(">", () -> {
                     configs.incr(4, 1);
                     if(configs.get(4) >= samples.length){
                         configs.set(4, samples.length - 1);
                     }
                     configure(configs);
                     playSound();
-                }).size(48f);
+                }).size(40f).left();
+                s.label(() -> {
+                    if(configs.get(4) + 1 < samples.length){
+                        return samples[configs.get(4) + 1].name;
+                    }
+                    return "";
+                }).color(Color.lightGray).labelAlign(Align.center).left().size(60f, 40f);
             }).growX().get().background(Tex.underline);
             table.row();
             table.table(v -> {
