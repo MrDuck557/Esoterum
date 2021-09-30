@@ -12,6 +12,7 @@ import arc.util.*;
 import arc.util.io.*;
 import esoterum.content.*;
 import esoterum.util.*;
+import mindustry.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
@@ -81,7 +82,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public void playSound(){
-            samples[configs.peek()].octaves[configs.get(2)].play((float)configs.get(3) / 10f, EsoUtil.notePitch(configs.get(1)), 0);
+            if(!Vars.headless) samples[configs.peek()].octaves[configs.get(2)].play((float)configs.get(3) / 10f, EsoUtil.notePitch(configs.get(1)), 0);
         }
 
         @Override
