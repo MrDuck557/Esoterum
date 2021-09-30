@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: 16
       - name: Set Version
-        run: sed -i "\$s/$/-PR/" mod.hjson
+        run: sed -i "\$s/$/-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")PR/" mod.hjson
       - name: Build mod jar
         run: ./gradlew deploy
       - name: Upload built jar file
