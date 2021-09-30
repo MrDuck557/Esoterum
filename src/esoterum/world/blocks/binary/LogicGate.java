@@ -57,7 +57,7 @@ public class LogicGate extends BinaryBlock{
 
         @Override
         public void buildConfiguration(Table table){
-            table.button(Icon.rotate, () -> configure(nextConfig)).size(40f);
+            table.button(Icon.rotate, () -> configure(nextConfig)).size(40f).tooltip("Rotate Input" + (single ? "" : "s"));
         }
 
         @Override

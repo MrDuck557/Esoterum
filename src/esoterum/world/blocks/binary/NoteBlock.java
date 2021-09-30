@@ -145,9 +145,9 @@ public class NoteBlock extends BinaryBlock{
                     b.button("-", () -> {
                         configs.incr(1, -1);
                         if(configs.get(1) < 0){
-                            if (configs.get(2) == 0){
+                            if(configs.get(2) == 0){
                                 configs.set(1, 0);
-                            } else { //wrap around
+                            }else{ //wrap around
                                 configs.set(1, 11);
                                 configs.incr(2, -1);
                             }
@@ -158,9 +158,9 @@ public class NoteBlock extends BinaryBlock{
                     b.button("+", () -> {
                         configs.incr(1, 1);
                         if(configs.get(1) > 11){
-                            if (configs.get(2) == 4){
+                            if(configs.get(2) == 4){
                                 configs.set(1, 11);
-                            } else {
+                            }else{
                                 configs.set(1, 0);
                                 configs.incr(2, 1);
                             }
@@ -242,7 +242,7 @@ public class NoteBlock extends BinaryBlock{
                         configs.set(0, 3);
                     }
                     configure(configs);
-                }).size(40f);
+                }).size(40f).tooltip("Rotate Input");
                 b.button("Play", this::playSound).size(120f, 40f);
             });
         }

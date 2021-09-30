@@ -112,7 +112,7 @@ public class BinaryBuffer extends BinaryBlock{
                         configs.set(0, 3);
                     }
                     configure(configs);
-                }).size(40f).tooltip("Rotate");
+                }).size(40f).tooltip("Rotate Input");
                 t.table(Tex.button, label -> {
                     label.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
                         .growX()

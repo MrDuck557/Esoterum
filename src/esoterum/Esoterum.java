@@ -20,13 +20,10 @@ public class Esoterum extends Mod{
 
     public Esoterum(){
         if(!headless){
-            LoadedMod eso = mods.locateMod("esoterum");
-
             Events.on(EventType.FileTreeInitEvent.class, h -> EsoSounds.load());
-
             Events.on(ClientLoadEvent.class, e -> manual = new ManualDialog());
-
             Events.on(WorldLoadEvent.class, e -> {
+                LoadedMod eso = mods.locateMod("esoterum");
                 boolean isEso = state.map.mod != null && state.map.mod == eso;
 
                 if(isEso != lastMapEso){
