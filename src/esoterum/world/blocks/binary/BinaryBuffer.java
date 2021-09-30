@@ -123,10 +123,12 @@ public class BinaryBuffer extends BinaryBlock{
             table.table(Tex.button, t -> {
                 t.slider(0, 12, 1, configs.get(1),i -> {
                     configs.set(1, (int) i);
+                    configure(configs);
                 }).height(40f).growX().left();
                 t.row();
                 t.slider(0, 5, 1, configs.get(2),i -> {
                     configs.set(2, (int) i);
+                    configure(configs);
                 }).height(40f).growX().left();
             });
         }
