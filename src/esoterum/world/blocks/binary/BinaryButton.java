@@ -50,9 +50,15 @@ public class BinaryButton extends BinaryBlock{
         @Override
         public void updateTile() {
             super.updateTile();
+            if (enabled){
+                lastSignal = true;
+            } else {
+                lastSignal = false;
+            }
             if(!continuous){
                 if((timer -= delta()) <= 0){
                     lastSignal = false;
+                    enabled = false;
                 }
             }
         }
@@ -60,8 +66,10 @@ public class BinaryButton extends BinaryBlock{
         @Override
         public boolean configTapped(){
             if(continuous){
+                enabled = !enabled;
                 configure(!lastSignal);
             }else{
+                enabled = true;
                 configure(true);
             }
             return false;
