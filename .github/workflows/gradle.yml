@@ -3,7 +3,7 @@ name: Test Commit
 on: [push, workflow_dispatch]
 
 jobs:
-  buildJar:
+  testPush:
     runs-on: ubuntu-latest
 
     steps:

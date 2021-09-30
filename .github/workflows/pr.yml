@@ -3,7 +3,7 @@ name: Test Pull Request
 on: [pull_request, workflow_dispatch]
 
 jobs:
-  buildJar:
+  testPR:
     runs-on: ubuntu-latest
 
     steps:
