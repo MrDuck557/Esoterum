@@ -16,7 +16,7 @@ jobs:
       with:
         java-version: 16
     - name: Set Version
-      run: sed -i "\$s/$/-$(git rev-list --count master)/" mod.hjson
+      run: sed -i "\$s/$/-$(git rev-list --count --branches)Test/" mod.hjson
     - name: Build mod jar
       run: ./gradlew deploy
     - name: Upload built jar file
