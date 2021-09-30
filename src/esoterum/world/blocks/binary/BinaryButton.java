@@ -49,6 +49,7 @@ public class BinaryButton extends BinaryBlock{
 
         @Override
         public void updateTile() {
+            enabledControlTime = 9999;
             super.updateTile();
             if (enabled){
                 lastSignal = true;
