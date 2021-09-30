@@ -8,9 +8,9 @@ import arc.struct.*;
 import mindustry.*;
 
 // no more "musics"
-public class EsoMusic {
+public class EsoMusic{
     protected static Music loadMusic(String musicName, boolean ambient, boolean dark){
-        if (!Vars.headless) {
+        if (!Vars.headless){
             String name = "music/" + musicName;
             String path = Vars.tree.get(name + ".mp3").exists() ? name + ".mp3" : name + ".ogg";
 
@@ -22,7 +22,7 @@ public class EsoMusic {
             if(ambient) esoAmbientMusic.add(music);
             if(dark) esoDarkMusic.add(music);
             return music;
-        } else {
+        }else{
             return new Music();
         }
     }
@@ -34,7 +34,7 @@ public class EsoMusic {
     public static Music
         Eso1;
 
-    public void load() {
+    public void load(){
         Eso1 = loadMusic("Eso1", true, true);
     }
 }
