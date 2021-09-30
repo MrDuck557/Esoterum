@@ -1,13 +1,13 @@
 name: Test Commit
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
-  buildJar:
+  testPush:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Set up PATH
       run: |
         echo "${ANDROID_HOME}/build-tools/30.0.1" >> $GITHUB_PATH
