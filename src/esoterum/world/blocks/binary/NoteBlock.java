@@ -242,7 +242,7 @@ public class NoteBlock extends BinaryBlock{
                         configs.set(0, 3);
                     }
                     configure(configs);
-                }).size(40f);
+                }).size(40f).tooltip("Rotate Input");
                 b.button("Play", this::playSound).size(120f, 40f);
             });
         }
