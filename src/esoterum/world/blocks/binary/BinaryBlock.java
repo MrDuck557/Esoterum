@@ -12,6 +12,8 @@ import mindustry.graphics.*;
 import mindustry.type.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
+import mindustry.logic.*;
+import mindustry.core.*;
 
 public class BinaryBlock extends Block {
     public TextureRegion connectionRegion;
@@ -195,6 +197,38 @@ public class BinaryBlock extends Block {
         @Override
         public byte version() {
             return 1;
+        }
+
+        @Override
+        public double sense(LAccess sensor){
+            return switch(sensor){
+                case x -> World.conv(x);
+                case y -> World.conv(y);
+                case dead -> !isValid() ? 1 : 0;
+                case team -> team.id;
+                case health -> health;
+                case maxHealth -> maxHealth;
+                case efficiency -> efficiency();
+                case timescale -> timeScale;
+                case range -> 0;
+                case rotation -> rotation;
+                case totalItems -> items == null ? 0 : items.total();
+                case totalLiquids -> liquids == null ? 0 : liquids.total();
+                case totalPower -> power == null || !block.consumes.hasPower() ? 0 : power.status * (block.consumes.getPower().buffered ? block.consumes.getPower().capacity : 1f);
+                case itemCapacity -> block.hasItems ? block.itemCapacity : 0;
+                case liquidCapacity -> block.hasLiquids ? block.liquidCapacity : 0;
+                case powerCapacity -> block.consumes.hasPower() ? block.consumes.getPower().capacity : 0f;
+                case powerNetIn -> power == null ? 0 : power.graph.getLastScaledPowerIn() * 60;
+                case powerNetOut -> power == null ? 0 : power.graph.getLastScaledPowerOut() * 60;
+                case powerNetStored -> power == null ? 0 : power.graph.getLastPowerStored();
+                case powerNetCapacity -> power == null ? 0 : power.graph.getLastCapacity();
+                //sensing capability
+                case enabled -> lastSignal ? 1 : 0;
+                case controlled -> 0;
+                case payloadCount -> getPayload() != null ? 1 : 0;
+                case size -> block.size;
+                default -> Float.NaN;
+            };
         }
     }
 }
