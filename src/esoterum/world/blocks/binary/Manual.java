@@ -9,6 +9,7 @@ import arc.util.*;
 import arc.util.io.*;
 import esoterum.content.*;
 import mindustry.entities.*;
+import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.type.*;
@@ -46,17 +47,22 @@ public class Manual extends Block{
         public float drawRotation;
 
         @Override
-        public void placed(){
-            super.placed();
+        public Building init(Tile tile, Team team, boolean shouldAdd, int rotation){
+            Building b = super.init(tile, team, shouldAdd, rotation);
+
             drawRotation = Mathf.random(-50, 50);
 
-            if(!landed) entryEffect.at(this, drawRotation);
-            Time.run(landTime, () -> {
-                if(!isValid() || landed) return;
-                landEffect.at(this);
-                landSound.at(this, Mathf.random(0.8f, 1.2f));
-                landed = true;
-            });
+            if(!landed){
+                entryEffect.at(this, drawRotation);
+                Time.run(landTime, () -> {
+                    if(!isValid()) return;
+                    landEffect.at(this);
+                    landSound.at(this, Mathf.random(0.8f, 1.2f));
+                    landed = true;
+                });
+            }
+
+            return b;
         }
 
         @Override
