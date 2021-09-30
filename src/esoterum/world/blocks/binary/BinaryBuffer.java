@@ -13,7 +13,6 @@ import mindustry.graphics.*;
 import mindustry.ui.*;
 
 public class BinaryBuffer extends BinaryBlock{
-
     public BinaryBuffer(String name){
         super(name);
         emits = true;
@@ -72,7 +71,7 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         public void drawConnections(){
-            Draw.color(lastSignal ? Pal.accent : Color.white);
+            Draw.color(signal() ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
         }
 
