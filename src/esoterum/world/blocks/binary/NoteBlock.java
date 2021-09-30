@@ -82,7 +82,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public void playSound(){
-            if(!Vars.headless) samples[configs.peek()].octaves[configs.get(2)].play((float)configs.get(3) / 10f, EsoUtil.notePitch(configs.get(1)), 0);
+            if(!Vars.headless) samples[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 10f, EsoUtil.notePitch(configs.get(1)), 0);
         }
 
         @Override
