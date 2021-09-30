@@ -7,6 +7,7 @@ import arc.math.geom.*;
 import arc.util.*;
 import arc.util.io.*;
 import esoterum.graphics.*;
+import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.world.*;
@@ -31,6 +32,8 @@ public class BinaryNode extends BinaryBlock{
         config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> tile.link = Point2.pack(i.x + tile.tileX(), i.y + tile.tileY()));
         //integer is not
         config(Integer.class, (BinaryNodeBuild tile, Integer i) -> tile.link = i);
+
+        configClear((BinaryNodeBuild tile) -> tile.link = -1);
     }
 
     public BinaryNode(String name){
@@ -69,7 +72,7 @@ public class BinaryNode extends BinaryBlock{
             BinaryNodeBuild c = linkedNode();
             lastSignal = c != null && c.signal();
             if(c != null && c.link != pos()){
-                configure(-1);
+                configure(null);
             }
         }
 
@@ -132,7 +135,7 @@ public class BinaryNode extends BinaryBlock{
             if(linkValid(tile, other.tile)){
                 disconnect();
                 if(other.pos() == link){
-                    configure(-1);
+                    configure(null);
                 }else if(other != self()){
                     ((BinaryNodeBuild)other).disconnect();
                     getLink(other.pos()).configure(pos());
@@ -145,9 +148,9 @@ public class BinaryNode extends BinaryBlock{
 
         public void disconnect(){
             if(linkedNode() != null){
-                linkedNode().configure(-1);
+                linkedNode().configure(null);
             }
-            configure(-1);
+            configure(null);
         }
 
         @Override

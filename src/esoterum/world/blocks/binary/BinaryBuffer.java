@@ -13,7 +13,6 @@ import mindustry.graphics.*;
 import mindustry.ui.*;
 
 public class BinaryBuffer extends BinaryBlock{
-
     public BinaryBuffer(String name){
         super(name);
         emits = true;
@@ -31,9 +30,10 @@ public class BinaryBuffer extends BinaryBlock{
         public float delayTimer = 0f;
 
         public float delay = 5f;
+        public float ticks = 1f;
 
         /** Direction, Multiplier */
-        public IntSeq configs = IntSeq.with(2, 1);
+        public IntSeq configs = IntSeq.with(2, 1, 0);
 
         @Override
         public void updateTile() {
@@ -55,7 +55,8 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         public float trueDelay(){
-            return delay * configs.get(1);
+            float temp = delay * configs.get(1) + ticks * configs.get(2);
+            return temp == 0 ? 1f : temp;
         }
 
         @Override
@@ -70,7 +71,7 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         public void drawConnections(){
-            Draw.color(lastSignal ? Pal.accent : Color.white);
+            Draw.color(signal() ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
         }
 
@@ -103,27 +104,32 @@ public class BinaryBuffer extends BinaryBlock{
         @Override
         public void buildConfiguration(Table table){
             table.setBackground(Styles.black5);
-            table.button(Icon.rotate, () -> {
-                configs.incr(0, -1);
-                if(configs.first() < 1){
-                    configs.set(0, 3);
-                }
-                configure(configs);
-            }).size(40f);
-            table.table(Tex.button, t -> {
-                t.left();
-                t.button(Icon.settingsSmall, Styles.emptyi, () -> {
-                    configs.incr(1, 1);
-                    if(configs.get(1) >= 13){
-                        configs.set(1, 1);
+            table.table(t -> {
+                t.button(Icon.rotate, () -> {
+                    configs.incr(0, -1);
+                    if(configs.first() < 1){
+                        configs.set(0, 3);
                     }
                     configure(configs);
-                }).size(40f).left();
-                t.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
-                    .labelAlign(Align.left)
-                    .growX()
-                    .left();
-            }).size(110f, 40f);
+                }).size(40f).tooltip("Rotate Input");
+                t.table(Tex.button, label -> {
+                    label.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
+                        .growX()
+                        .left();
+                }).growX().left();;
+            }).height(40f).growX();
+            table.row();
+            table.table(Tex.button, t -> {
+                t.slider(0, 12, 1, configs.get(1),i -> {
+                    configs.set(1, (int) i);
+                    configure(configs);
+                }).height(40f).growX().left();
+                t.row();
+                t.slider(0, 5, 1, configs.get(2),i -> {
+                    configs.set(2, (int) i);
+                    configure(configs);
+                }).height(40f).growX().left();
+            });
         }
 
         @Override
@@ -138,6 +144,7 @@ public class BinaryBuffer extends BinaryBlock{
             write.f(delayTimer);
             write.i(configs.get(0));
             write.i(configs.get(1));
+            write.i(configs.get(2));
         }
 
         @Override
@@ -150,11 +157,15 @@ public class BinaryBuffer extends BinaryBlock{
             if(revision >= 2){
                 configs = IntSeq.with(read.i(), read.i());
             }
+            if(revision >= 3){
+                configs.setSize(3);
+                configs.set(2, read.i());
+            }
         }
 
         @Override
         public byte version() {
-            return 2;
+            return 3;
         }
     }
 }

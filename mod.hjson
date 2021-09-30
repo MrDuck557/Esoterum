@@ -2,12 +2,12 @@ displayName: "Esoterum"
 
 name: "esoterum"
 
-author: "Goober"
+author: "Goober, Meep, Python"
 
 main: "esoterum.Esoterum"
-
-version: 2.0
 
 minGameVersion: 130
 
 java: true
+
+version: 2.0

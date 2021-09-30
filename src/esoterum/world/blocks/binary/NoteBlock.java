@@ -12,6 +12,7 @@ import arc.util.*;
 import arc.util.io.*;
 import esoterum.content.*;
 import esoterum.util.*;
+import mindustry.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
@@ -81,7 +82,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public void playSound(){
-            samples[configs.peek()].octaves[configs.get(2)].play((float)configs.get(3) / 10f, EsoUtil.notePitch(configs.get(1)), 0);
+            if(!Vars.headless) samples[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 10f, EsoUtil.notePitch(configs.get(1)), 0);
         }
 
         @Override
@@ -242,7 +243,7 @@ public class NoteBlock extends BinaryBlock{
                         configs.set(0, 3);
                     }
                     configure(configs);
-                }).size(40f);
+                }).size(40f).tooltip("Rotate Input");
                 b.button("Play", this::playSound).size(120f, 40f);
             });
         }
