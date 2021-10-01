@@ -16,6 +16,7 @@ import mindustry.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
+import mindustry.logic.*;
 
 public class NoteBlock extends BinaryBlock{
     public NoteSample[] samples = {
@@ -271,6 +272,32 @@ public class NoteBlock extends BinaryBlock{
             super.read(read, revision);
 
             configs = IntSeq.with(read.i(), read.i(), read.i(), read.i(), read.i());
+        }
+
+        @Override
+        public void control(LAccess type, double p1, double p2, double p3, double p4){
+            if(type == LAccess.config){
+                //controlling capability
+                if (p1 < 0 || p1 >= 5){ //octave invalid
+                    configs.set(1, 0);
+                    configs.set(2, 2);
+                    configure(configs);
+                    return;
+                }
+                double rem = p1;
+                int whole = (int) p1; //octave
+                rem -= whole; // pitch
+                rem *= 100;
+                if (rem > 11){ // pitch invalid
+                    configs.set(1, 0);
+                    configs.set(2, 2);
+                    configure(configs);
+                    return;
+                }
+                configs.set(1, (int) rem);
+                configs.set(2, whole);
+                configure(configs);
+            }
         }
     }
 

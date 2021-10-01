@@ -11,6 +11,7 @@ import arc.util.io.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
+import mindustry.logic.*;
 
 public class BinaryBuffer extends BinaryBlock{
     public BinaryBuffer(String name){
@@ -166,6 +167,23 @@ public class BinaryBuffer extends BinaryBlock{
         @Override
         public byte version() {
             return 3;
+        }
+
+        @Override
+        public void control(LAccess type, double p1, double p2, double p3, double p4){
+            if(type == LAccess.config){
+                //controlling capability
+                int p = (int) p1;
+                if (p <= 0){
+                    configs.set(1, 0);
+                    configs.set(2, 1);
+                    configure(configs);
+                    return;
+                }
+                configs.set(1, p/5);
+                configs.set(2, p%5);
+                configure(configs);
+            }
         }
     }
 }
