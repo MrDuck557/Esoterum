@@ -76,7 +76,7 @@ public class LogicGate extends BinaryBlock{
 
         @Override
         public boolean signalFront() {
-            return single && configs.first() == 2 ? signal() : lastSignal;
+            return configs.first() == 2 ? signal() : lastSignal;
         }
 
         @Override
