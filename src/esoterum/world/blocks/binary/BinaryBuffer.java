@@ -33,14 +33,17 @@ public class BinaryBuffer extends BinaryBlock{
         public float delay = 5f;
         public float ticks = 1f;
 
-        /** Direction, Multiplier */
-        public IntSeq configs = IntSeq.with(2, 1, 0);
+        /** Direction, Multiplier, Multiplier, Persistent */
+        public IntSeq configs = IntSeq.with(2, 1, 0, 1);
 
         @Override
         public void updateTile() {
             if(signal()){
                 delayTimer += Time.delta;
             }else{
+                if(configs.get(3) == 0){
+                    delayTimer = 0;
+                }
                 delayTimer -= Time.delta;
             }
 
@@ -95,7 +98,8 @@ public class BinaryBuffer extends BinaryBlock{
                     e.clearChildren();
                     e.row();
                     e.left();
-                    e.label(() -> "Delay: " + Mathf.floor(trueDelay()) + " ticks").color(Color.lightGray);
+                    e.label(() -> "Delay: " + Mathf.floor(trueDelay()) + " ticks" + (configs.get(3) == 1 ? " (Persistent)" : ""))
+                        .color(Color.lightGray);
                 };
 
                 e.update(rebuild);
@@ -113,11 +117,15 @@ public class BinaryBuffer extends BinaryBlock{
                     }
                     configure(configs);
                 }).size(40f).tooltip("Rotate Input");
+                t.button(Icon.settings, () -> {
+                    configs.set(3, 1 - configs.get(3));
+                    configure(configs);
+                }).size(40f).tooltip("Signal persistence");
                 t.table(Tex.button, label -> {
                     label.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
                         .growX()
                         .left();
-                }).growX().left();;
+                }).growX().left();
             }).height(40f).growX();
             table.row();
             table.table(Tex.button, t -> {
@@ -146,6 +154,7 @@ public class BinaryBuffer extends BinaryBlock{
             write.i(configs.get(0));
             write.i(configs.get(1));
             write.i(configs.get(2));
+            write.i(configs.get(3));
         }
 
         @Override
@@ -162,11 +171,15 @@ public class BinaryBuffer extends BinaryBlock{
                 configs.setSize(3);
                 configs.set(2, read.i());
             }
+            if(revision >= 4){
+                configs.setSize(4);
+                configs.set(3, read.i());
+            }
         }
 
         @Override
         public byte version() {
-            return 3;
+            return 4;
         }
 
         @Override
