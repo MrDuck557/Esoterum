@@ -160,7 +160,6 @@ public class BinaryBuffer extends BinaryBlock{
         @Override
         public void read(Reads read, byte revision) {
             super.read(read, revision);
-            configs.setSize(4);
 
             if(revision >= 1){
                 delayTimer = read.f();
