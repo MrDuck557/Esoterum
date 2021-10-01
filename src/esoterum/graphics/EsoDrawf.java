@@ -13,7 +13,7 @@ public class EsoDrawf{
 
     public static void curvedLine(float x, float y, float tx, float ty, float w){
         float dst = dst(x, y, tx, ty);
-        int seg = (int)(dst / 2f);
+        int seg = Mathf.ceil(dst / 2f);
         float ang = angle(x, y, tx, ty) - 90f;
 
         for(int i = 0; i < seg; i++){
@@ -28,7 +28,7 @@ public class EsoDrawf{
     }
 
     public static void arc(float x, float y, float rad, float angle, float arc){
-        int seg = (int)(circleVertices(rad) * (arc / 360f));
+        int seg = Mathf.ceil(circleVertices(rad) * (arc / 360f));
         float a = -arc / seg;
 
         for(int i = 0; i < seg; i++){

@@ -71,11 +71,10 @@ public class BinaryClock extends BinaryBlock{
                         if(!(stage != null && stage.getKeyboardFocus() == iField))
                             iField.setText(configs.first() + "t");
                     });
-                    Slider iSlider = s.slider(2, maxInterval, 1, configs.first(), i -> {
+                    s.slider(2, maxInterval, 1, configs.first(), i -> {
                         configs.set(0, (int)i);
                         configure(configs);
                     }).height(40f).growX().left().get();
-                    iSlider.update(() -> iSlider.setValue(configs.first()));
                 }).padTop(8);
             }).growX().get().background(Tex.underline);
             table.row();
