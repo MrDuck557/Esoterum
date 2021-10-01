@@ -8,6 +8,7 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
+import arc.util.io.*;
 import esoterum.graphics.*;
 import esoterum.util.*;
 import mindustry.gen.*;
@@ -158,6 +159,29 @@ public class BinaryClock extends BinaryBlock{
         @Override
         public boolean signalRight() {
             return lastSignal;
+        }
+
+        @Override
+        public void write(Writes write){
+            super.write(write);
+
+            write.i(configs.first());
+            write.i(configs.get(1));
+            write.i(configs.get(2));
+        }
+
+        @Override
+        public void read(Reads read, byte revision){
+            super.read(read, revision);
+
+            if(revision >= 2){
+                configs = IntSeq.with(read.i(), read.i(), read.i());
+            }
+        }
+
+        @Override
+        public byte version(){
+            return 2;
         }
     }
 }
