@@ -52,7 +52,8 @@ public class LogicGate extends BinaryBlock{
         @Override
         public void updateTile(){
             super.updateTile();
-            lastSignal = signal();
+            lastSignal = nextSignal;
+            nextSignal = signal();
         }
 
         @Override
