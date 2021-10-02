@@ -9,8 +9,6 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
-import mindustry.entities.units.BuildPlan;
-import mindustry.gen.Unit;
 import mindustry.graphics.*;
 
 // each side's behavior is configurable.
@@ -44,6 +42,7 @@ public class SignalController extends BinaryRouter{
     }
 
     public class ControllerBuild extends BinaryRouterBuild{
+        public boolean rotInit = false;
         /** IO configuration:
          * 0 = ignore/do nothing |
          * 1 = input |
@@ -52,6 +51,18 @@ public class SignalController extends BinaryRouter{
 
         @Override
         public void updateTile(){
+            if(!rotInit){
+                for(int i = 0; i < rotation; i++){
+                    configs = IntSeq.with(
+                        configs.get(3),
+                        configs.get(0),
+                        configs.get(1),
+                        configs.get(2)
+                    );
+                }
+                rotInit = true;
+                rotation(0);
+            }
             lastSignal = false;
             for(int i = 0; i < 4; i++){
                 // check if the current side is configured to accept input
@@ -107,20 +118,6 @@ public class SignalController extends BinaryRouter{
         @Override
         public Object config() {
             return configs;
-        }
-
-        @Override
-        public void configured(Unit builder, Object value) {
-            super.configured(builder, value);
-            for(int i = 0; i < rotation; i++){
-                configs = IntSeq.with(
-                    configs.get(3),
-                    configs.get(0),
-                    configs.get(1),
-                    configs.get(2)
-                );
-            }
-            rotation(0);
         }
 
         @Override
