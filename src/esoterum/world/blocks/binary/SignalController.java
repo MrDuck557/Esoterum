@@ -9,6 +9,7 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
+import mindustry.gen.Tex;
 import mindustry.graphics.*;
 
 // each side's behavior is configurable.
@@ -88,6 +89,7 @@ public class SignalController extends BinaryRouter{
         // i don't know how to arrange the buttons, so i just did this
         @Override
         public void buildConfiguration(Table table){
+            table.setBackground(Tex.clear);
             table.table().size(40);
             addConfigButton(table, 1).align(Align.center);
             table.row();
@@ -104,7 +106,8 @@ public class SignalController extends BinaryRouter{
                 TextButton b = t.button(states[configs.get(index)], () -> {
                     configure(index);
                     updateProximity();
-                }).get();
+                }).size(40f).get();
+
                 b.update(() -> b.setText(states[configs.get(index)]));
             }).size(40f);
         }
