@@ -27,11 +27,21 @@ public class ManualDialog extends BaseDialog{
         cont.table(t -> t.button(Icon.exit, this::hide)).top();
 
         // build main table
-        cont.table(Tex.button, content -> {
-            content.pane(Styles.defaultPane, t -> {
-                ManualPages.topics[currentTopic][currentPage].addContent(t);
-            }).grow().fill().top().left();
-        }).top().size(Core.scene.getWidth() * 0.6f, Core.scene.getHeight() * 0.8f).name("content");
+        cont.table(main -> {
+
+            // page contents
+            main.table(Tex.button, content -> {
+                content.pane(Styles.defaultPane, t -> {
+                    ManualPages.topics[currentTopic][currentPage].addContent(t);
+                }).grow().fill().top().left();
+            }).top().size(Core.scene.getWidth() * 0.6f, Core.scene.getHeight() * 0.8f).name("content");
+
+            // page number
+            main.row();
+            main.table(page -> {
+                page.add((currentPage + 1) + "/" + ManualPages.topics[currentTopic].length).color(Pal.darkishGray).align(Align.center).labelAlign(Align.center);
+            }).center();
+        });
 
         // navigation buttons
         // topic buttons
@@ -68,11 +78,6 @@ public class ManualDialog extends BaseDialog{
             }).tooltip("Logic Circuits")
                 .visible(ManualPages.topics[3].length != 0);
         }).top().name("topics");
-
-        cont.row();
-        cont.table(page -> {
-            page.add((currentPage + 1) + "/" + ManualPages.topics[currentTopic].length).color(Pal.darkishGray).align(Align.center).labelAlign(Align.center);
-        }).center();
 
         // page buttons
         buttons.button(Icon.left, () -> {
