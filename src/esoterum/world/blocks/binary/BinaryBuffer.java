@@ -83,6 +83,13 @@ public class BinaryBuffer extends BinaryBlock{
                 Draw.color(EsoPal.esoDark);
                 Fill.circle(x, y, 0.8f);
             }
+            Draw.color(Color.white);
+            float triSize = 1f;
+            Fill.tri(
+                x + Mathf.cosDeg(rotdeg()) * triSize, y + Mathf.sinDeg(rotdeg()) * triSize,
+                x + Mathf.cosDeg(rotdeg() + 120) * triSize, y + Mathf.sinDeg(rotdeg() + 120) * triSize,
+                x + Mathf.cosDeg(rotdeg() - 120) * triSize, y + Mathf.sinDeg(rotdeg() - 120) * triSize
+            );
         }
 
         public void drawConnections(){
