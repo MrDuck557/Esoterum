@@ -1,5 +1,6 @@
 package esoterum.world.blocks.binary;
 
+import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
@@ -14,6 +15,8 @@ import mindustry.ui.*;
 import mindustry.logic.*;
 
 public class BinaryBuffer extends BinaryBlock{
+    public TextureRegion centerRegion;
+
     public BinaryBuffer(String name){
         super(name);
         emits = true;
@@ -25,6 +28,13 @@ public class BinaryBuffer extends BinaryBlock{
         outputs = new boolean[]{true, false, false, false};
 
         config(IntSeq.class, (BinaryBufferBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+    }
+
+    @Override
+    public void load(){
+        super.load();
+
+        centerRegion = Core.atlas.find(name + "-center");
     }
 
     public class BinaryBufferBuild extends BinaryBuild{
@@ -84,12 +94,7 @@ public class BinaryBuffer extends BinaryBlock{
                 Fill.circle(x, y, 0.8f);
             }
             Draw.color(Color.white);
-            float triSize = 1f;
-            Fill.tri(
-                x + Mathf.cosDeg(rotdeg()) * triSize, y + Mathf.sinDeg(rotdeg()) * triSize,
-                x + Mathf.cosDeg(rotdeg() + 120) * triSize, y + Mathf.sinDeg(rotdeg() + 120) * triSize,
-                x + Mathf.cosDeg(rotdeg() - 120) * triSize, y + Mathf.sinDeg(rotdeg() - 120) * triSize
-            );
+            Draw.rect(centerRegion, x, y, rotdeg());
         }
 
         public void drawConnections(){
