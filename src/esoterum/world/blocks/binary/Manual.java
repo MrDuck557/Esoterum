@@ -34,6 +34,8 @@ public class Manual extends Block{
 
         buildVisibility = BuildVisibility.shown;
         category = Category.logic;
+
+        config(Boolean.class, (ManualBuild tile, Boolean b) -> tile.landed = b);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class Manual extends Block{
                     if(!isValid()) return;
                     landEffect.at(this);
                     landSound.at(this, Mathf.random(0.8f, 1.2f));
-                    landed = true;
+                    configure(true);
                 });
             }
         }
