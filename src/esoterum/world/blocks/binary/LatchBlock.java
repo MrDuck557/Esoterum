@@ -71,7 +71,7 @@ public class LatchBlock extends BinaryBlock{
         public void read(Reads read, byte revision) {
             super.read(read, revision);
 
-            if(revision >= 1){
+            if(revision >= 2){
                 store = read.bool();
             }
         }
@@ -85,7 +85,7 @@ public class LatchBlock extends BinaryBlock{
 
         @Override
         public byte version() {
-            return 1;
+            return 2;
         }
     }
 }
