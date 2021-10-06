@@ -187,7 +187,7 @@ public class BinaryBlock extends Block {
             super.read(read, revision);
 
             if(revision >= 1){
-                lastSignal = read.bool();
+                nextSignal = lastSignal = read.bool();
             }
         }
 
