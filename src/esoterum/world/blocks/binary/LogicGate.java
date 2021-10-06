@@ -45,6 +45,7 @@ public class LogicGate extends BinaryBlock{
         region = Core.atlas.find("esoterum-gate-base");
     }
 
+    // TODO fix weird signaling behavior on world reload
     public class LogicGateBuild extends BinaryBuild{
         public IntSeq configs = single ? IntSeq.with(2) : IntSeq.with(3, 2);
         public int nextConfig = 1;
