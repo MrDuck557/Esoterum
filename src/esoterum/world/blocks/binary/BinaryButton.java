@@ -4,7 +4,9 @@ import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.util.io.*;
+import arc.math.*;
 import mindustry.graphics.*;
+import mindustry.logic.*;
 
 public class BinaryButton extends BinaryBlock{
     // whether the button emits continuously (like a switch).
@@ -128,6 +130,14 @@ public class BinaryButton extends BinaryBlock{
         @Override
         public byte version() {
             return 1;
+        }
+
+        @Override
+        public void control(LAccess type, double p1, double p2, double p3, double p4){
+            if(type == LAccess.enabled){
+                //controlling capability
+                lastSignal = !Mathf.zero((float)p1);
+            }
         }
     }
 }

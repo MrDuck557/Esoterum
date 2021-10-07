@@ -14,7 +14,7 @@ public class EsoBlocks implements ContentList{
         // Signal distribution
         esoWire, esoJunction, esoRouter, esoNode, esoLatch, esoController, esoBuffer,
         // Signal sources
-        esoSwitch, esoButton,
+        esoSwitch, esoButton, esoClock,
         // Logic gates
         esoAND, esoXOR, esoNOT,
         // Logic outputs
@@ -61,6 +61,8 @@ public class EsoBlocks implements ContentList{
         esoSwitch = new BinaryButton("switch", true);
 
         esoButton = new BinaryButton("button", false);
+
+        esoClock = new BinaryClock("clock");
         // endregion sources
 
         // region logic gates

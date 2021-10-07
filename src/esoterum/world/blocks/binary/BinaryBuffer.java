@@ -1,6 +1,5 @@
 package esoterum.world.blocks.binary;
 
-import arc.Core;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
@@ -8,9 +7,11 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
+import esoterum.graphics.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
+import mindustry.logic.*;
 
 public class BinaryBuffer extends BinaryBlock{
     public BinaryBuffer(String name){
@@ -32,14 +33,17 @@ public class BinaryBuffer extends BinaryBlock{
         public float delay = 5f;
         public float ticks = 1f;
 
-        /** Direction, Multiplier */
-        public IntSeq configs = IntSeq.with(2, 1, 0);
+        /** Direction, Multiplier, Multiplier (but smol), Persistent */
+        public IntSeq configs = IntSeq.with(2, 1, 0, 1);
 
         @Override
         public void updateTile() {
             if(signal()){
                 delayTimer += Time.delta;
             }else{
+                if(configs.get(3) == 0){
+                    delayTimer = 0;
+                }
                 delayTimer -= Time.delta;
             }
 
@@ -66,8 +70,19 @@ public class BinaryBuffer extends BinaryBlock{
             Draw.color(lastSignal ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg());
             drawConnections();
-            Draw.color(Color.white, Pal.accent, delayTimer / trueDelay());
-            Draw.rect(topRegion, x, y, rotdeg());
+            drawBuffer();
+        }
+
+        public void drawBuffer(){
+            Draw.color(Color.white);
+            Lines.stroke(0.5f);
+            Lines.circle(x, y, 1.5f);
+            Draw.color(Pal.accent);
+            EsoDrawf.arc(x, y, 1.85f, rotdeg() - 180, 360 * (delayTimer / trueDelay()));
+            if(configs.get(3) != 1){
+                Draw.color(EsoPal.esoDark);
+                Fill.circle(x, y, 0.8f);
+            }
         }
 
         public void drawConnections(){
@@ -94,7 +109,8 @@ public class BinaryBuffer extends BinaryBlock{
                     e.clearChildren();
                     e.row();
                     e.left();
-                    e.label(() -> "Delay: " + Mathf.floor(trueDelay()) + " ticks").color(Color.lightGray);
+                    e.label(() -> "Delay: " + Mathf.floor(trueDelay()) + " ticks" + (configs.get(3) == 1 ? " (Persistent)" : ""))
+                        .color(Color.lightGray);
                 };
 
                 e.update(rebuild);
@@ -112,11 +128,15 @@ public class BinaryBuffer extends BinaryBlock{
                     }
                     configure(configs);
                 }).size(40f).tooltip("Rotate Input");
+                t.button(Icon.settings, () -> {
+                    configs.set(3, 1 - configs.get(3));
+                    configure(configs);
+                }).size(40f).tooltip("Signal persistence");
                 t.table(Tex.button, label -> {
                     label.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
                         .growX()
                         .left();
-                }).growX().left();;
+                }).growX().left();
             }).height(40f).growX();
             table.row();
             table.table(Tex.button, t -> {
@@ -145,6 +165,7 @@ public class BinaryBuffer extends BinaryBlock{
             write.i(configs.get(0));
             write.i(configs.get(1));
             write.i(configs.get(2));
+            write.i(configs.get(3));
         }
 
         @Override
@@ -155,17 +176,37 @@ public class BinaryBuffer extends BinaryBlock{
                 delayTimer = read.f();
             }
             if(revision >= 2){
-                configs = IntSeq.with(read.i(), read.i());
+                configs.set(0, read.i());
+                configs.set(1, read.i());
             }
             if(revision >= 3){
-                configs.setSize(3);
                 configs.set(2, read.i());
+            }
+            if(revision >= 4){
+                configs.set(3, read.i());
             }
         }
 
         @Override
         public byte version() {
-            return 3;
+            return 4;
+        }
+
+        @Override
+        public void control(LAccess type, double p1, double p2, double p3, double p4){
+            if(type == LAccess.config){
+                //controlling capability
+                int p = (int) p1;
+                if (p <= 0){
+                    configs.set(1, 0);
+                    configs.set(2, 1);
+                    configure(configs);
+                    return;
+                }
+                configs.set(1, p/5);
+                configs.set(2, p%5);
+                configure(configs);
+            }
         }
     }
 }

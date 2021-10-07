@@ -12,6 +12,8 @@ import mindustry.graphics.*;
 import mindustry.type.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
+import mindustry.logic.*;
+import mindustry.core.*;
 
 public class BinaryBlock extends Block {
     public TextureRegion connectionRegion;
@@ -21,6 +23,7 @@ public class BinaryBlock extends Block {
     /** in order {front, left, back, right} */
     public boolean[] inputs = new boolean[]{false, false, false, false};
     public boolean emits;
+    public boolean allOutputs;
     public boolean drawConnectionArrows;
     public boolean drawRot = true;
 
@@ -175,6 +178,9 @@ public class BinaryBlock extends Block {
         public boolean[] inputs() {
             return inputs;
         }
+        public boolean allOutputs(){
+            return allOutputs;
+        }
 
         @Override
         public void read(Reads read, byte revision) {
@@ -195,6 +201,12 @@ public class BinaryBlock extends Block {
         @Override
         public byte version() {
             return 1;
+        }
+
+        @Override
+        public double sense(LAccess sensor){
+            if(sensor == LAccess.enabled) return lastSignal ? 1 : 0;
+            return super.sense(sensor);
         }
     }
 }

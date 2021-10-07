@@ -47,9 +47,8 @@ public class Manual extends Block{
         public float drawRotation;
 
         @Override
-        public Building init(Tile tile, Team team, boolean shouldAdd, int rotation){
-            Building b = super.init(tile, team, shouldAdd, rotation);
-
+        public void placed() {
+            super.placed();
             drawRotation = Mathf.random(-50, 50);
 
             if(!landed){
@@ -61,8 +60,6 @@ public class Manual extends Block{
                     landed = true;
                 });
             }
-
-            return b;
         }
 
         @Override

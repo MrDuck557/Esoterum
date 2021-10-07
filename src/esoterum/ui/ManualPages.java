@@ -4,6 +4,9 @@ import arc.files.*;
 import arc.util.*;
 import mindustry.*;
 
+/**
+ * @author Goobrr
+ */
 public class ManualPages {
     public static ManualPage[][] topics = new ManualPage[][]{
         // signal distribution
