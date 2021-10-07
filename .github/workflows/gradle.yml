@@ -8,6 +8,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with: {fetch-depth: 0}
     - name: Set up PATH
       run: |
         echo "${ANDROID_HOME}/build-tools/30.0.1" >> $GITHUB_PATH
