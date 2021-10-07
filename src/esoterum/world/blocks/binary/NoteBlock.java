@@ -26,13 +26,6 @@ public class NoteBlock extends BinaryBlock{
         new NoteSample(EsoSounds.organ, "Organ")
     };
 
-    public String[] noteNames = new String[]{
-        "C%o", "C%o#", "D%o",
-        "D%o#", "E%o", "F%o",
-        "F%o#", "G%o", "G%o#",
-        "A%o", "A%o#", "B%o"
-    };
-
     public TextureRegion outputRegion;
 
     public NoteBlock(String name){
@@ -255,7 +248,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public String noteString(){
-            return String.format(noteNames[configs.get(1)], configs.get(2) + 2 + (configs.get(1) >= 9 ? 1 : 0));
+            return String.format(samples[configs.get(4)].noteNames[configs.get(1)], configs.get(2) + 2 + (configs.get(1) >= 9 ? 1 : 0));
         }
 
         @Override
@@ -307,6 +300,13 @@ public class NoteBlock extends BinaryBlock{
         Sound[] octaves;
         /** Used in config to display the name of the sample */
         String name;
+        /** Used to display the name of notes */
+        public String[] noteNames = new String[]{
+            "C%o", "C%o#", "D%o",
+            "D%o#", "E%o", "F%o",
+            "F%o#", "G%o", "G%o#",
+            "A%o", "A%o#", "B%o"
+        };
 
         public NoteSample(Sound[] octaves, String name){
             this.octaves = octaves;
