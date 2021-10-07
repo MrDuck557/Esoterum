@@ -23,14 +23,18 @@ public class NoteBlock extends BinaryBlock{
         new NoteSample(EsoSounds.bells, "Bells"),
         new NoteSample(EsoSounds.bass, "Bass"),
         new NoteSample(EsoSounds.saw, "Saw"),
-        new NoteSample(EsoSounds.organ, "Organ")
-    };
+        new NoteSample(EsoSounds.organ, "Organ"),
+        new NoteSample(EsoSounds.drums, "Drum Kit"){{
+            noteNames = new String[]{
+                "%o C", "%o C#", "%o D",
+                "%o D#", "%o E", "%o F",
+                "%o F#", "%o G", "%o G#",
+                "%o A", "%o A#", "%o B"
+            };
 
-    public String[] noteNames = new String[]{
-        "C%o", "C%o#", "D%o",
-        "D%o#", "E%o", "F%o",
-        "F%o#", "G%o", "G%o#",
-        "A%o", "A%o#", "B%o"
+            String[] drums = new String[]{"?", "Kick", "Snare", "Hi-hat", "?"};
+            titleProcessor = (o, p) -> drums[o];
+        }}
     };
 
     public TextureRegion outputRegion;
@@ -117,8 +121,7 @@ public class NoteBlock extends BinaryBlock{
             table.setBackground(Styles.black5);
             table.table(n -> {
                 n.add("Note: ").right();
-                Label noteLabel = n.add(noteString()).left().get();
-                noteLabel.update(() -> noteLabel.setText(noteString()));
+                n.label(this::noteString).left();
                 n.row();
                 n.add("Octave: ").right();
                 n.table(b -> {
@@ -255,7 +258,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public String noteString(){
-            return String.format(noteNames[configs.get(1)], configs.get(2) + 2 + (configs.get(1) >= 9 ? 1 : 0));
+            return samples[configs.get(4)].noteString(configs.get(2), configs.get(1));
         }
 
         @Override
@@ -307,10 +310,27 @@ public class NoteBlock extends BinaryBlock{
         Sound[] octaves;
         /** Used in config to display the name of the sample */
         String name;
+        /** Used to display the name of notes */
+        public String[] noteNames = new String[]{
+            "C%o", "C%o#", "D%o",
+            "D%o#", "E%o", "F%o",
+            "F%o#", "G%o", "G%o#",
+            "A%o", "A%o#", "B%o"
+        };
+        /** Processes octave and pitch to create name */
+        public Notef titleProcessor = (o, p) -> String.valueOf(o + 2 + (p >= 9 ? 1 : 0));
 
         public NoteSample(Sound[] octaves, String name){
             this.octaves = octaves;
             this.name = name;
         }
+
+        public String noteString(int octave, int pitch){
+            return String.format(noteNames[pitch], titleProcessor.title(octave, pitch));
+        }
+    }
+
+    public interface Notef{
+        String title(int octave, int pitch);
     }
 }

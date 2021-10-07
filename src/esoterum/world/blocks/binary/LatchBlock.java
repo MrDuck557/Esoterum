@@ -3,6 +3,8 @@ package esoterum.world.blocks.binary;
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import mindustry.graphics.*;
 
 public class LatchBlock extends BinaryBlock{
@@ -63,6 +65,27 @@ public class LatchBlock extends BinaryBlock{
         @Override
         public boolean signalFront() {
             return store;
+        }
+
+        @Override
+        public void read(Reads read, byte revision) {
+            super.read(read, revision);
+
+            if(revision >= 2){
+                store = read.bool();
+            }
+        }
+
+        @Override
+        public void write(Writes write) {
+            super.write(write);
+
+            write.bool(store);
+        }
+
+        @Override
+        public byte version() {
+            return 2;
         }
     }
 }
