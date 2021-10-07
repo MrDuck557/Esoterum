@@ -16,9 +16,8 @@ jobs:
       with:
         java-version: 16
     - name: Set Version
-      env:
-        LAST_TAG: git describe --abbrev=0 --tags
-      run: sed -i "\$s/$/-$(git rev-list LAST_TAG.. --count)/" mod.hjson
+      #run: sed -i "\$s/$/-$(git rev-list $(git describe --abbrev=0 --tags).. --count)/" mod.hjson
+      run: sed -i "\$s/$/-$(git rev-list --count master)/" mod.hjson
     - name: Build mod jar
       run: ./gradlew deploy
     - name: Upload built jar file
