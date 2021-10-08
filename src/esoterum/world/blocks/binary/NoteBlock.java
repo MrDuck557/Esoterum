@@ -23,7 +23,7 @@ public class NoteBlock extends BinaryBlock{
         new NoteSample(EsoSounds.bells, "Bells"),
         new NoteSample(EsoSounds.bass, "Bass"),
         new NoteSample(EsoSounds.saw, "Saw"),
-        new NoteSample(EsoSounds.organ, "Organ"),
+        new NoteSample(EsoSounds.organ, "Organ")/*,
         new NoteSample(EsoSounds.drums, "Drum Kit"){{
             noteNames = new String[]{
                 "%s C", "%s C#", "%s D",
@@ -34,7 +34,7 @@ public class NoteBlock extends BinaryBlock{
 
             String[] drums = new String[]{"?", "Kick", "Snare", "Hi-hat", "?"};
             titleProcessor = (o, p) -> drums[o];
-        }}
+        }}*/
     };
 
     public TextureRegion outputRegion;

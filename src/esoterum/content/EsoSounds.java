@@ -35,6 +35,6 @@ public class EsoSounds{
         bass = loadNotes("bass");
         saw = loadNotes("saw");
         organ = loadNotes("organ");
-        drums = loadNotes("drums");
+        //drums = loadNotes("drums");
     }
 }
