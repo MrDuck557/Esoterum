@@ -8,7 +8,7 @@ description: "adds a redstone-like wire-based logic system, tailored for making 
 
 main: "esoterum.Esoterum"
 
-minGameVersion: 130
+minGameVersion: 131
 
 java: true
 
