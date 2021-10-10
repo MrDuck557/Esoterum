@@ -1,5 +1,6 @@
 package esoterum.graphics;
 
+import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.math.geom.*;
@@ -39,6 +40,15 @@ public class EsoDrawf{
                 x + v1.x, y + v1.y,
                 x + v2.x, y + v2.y
             );
+        }
+    }
+
+    public static void spotlight(float x, float y, float rad, float angle, float arc, Color color, int shades){
+        float step = rad / shades;
+        for(int i = 0; i < (shades == 0 ? 1 : shades); i++){
+            Draw.color(color);
+            Draw.alpha(((float) i / shades) * 0.4f);
+            arc(x, y, rad - step * i, angle, arc);
         }
     }
 }

@@ -1,10 +1,13 @@
 package esoterum.content;
 
 import esoterum.world.blocks.binary.*;
+import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.environment.*;
 import mindustry.ctype.*;
+import mindustry.entities.bullet.*;
 import mindustry.world.*;
 import mindustry.world.blocks.environment.*;
+import mindustry.world.meta.BuildVisibility;
 
 public class EsoBlocks implements ContentList{
     public static Block
@@ -19,6 +22,8 @@ public class EsoBlocks implements ContentList{
         esoAND, esoXOR, esoNOT,
         // Logic outputs
         noteBlock, togglerBlock,
+        // Defense
+        smallSentry,
 
         esoManual;
 
@@ -85,6 +90,21 @@ public class EsoBlocks implements ContentList{
 
         togglerBlock = new Toggler("toggler");
         // endregion logic outputs
+
+        // region defense
+        smallSentry = new SentryTurret("small-sentry"){{
+            reloadTime = 6f;
+            range = 45f;
+            buildVisibility = BuildVisibility.shown;
+            powerUse = 2f;
+            shootCone = 45f;
+
+            shootType = new BasicBulletType(16f, 20){{
+                width = 2f;
+                height = 10f;
+            }};
+        }};
+        // endregion defense
 
         esoManual = new Manual("manual");
     }
