@@ -18,7 +18,7 @@ public class EsoBlocks implements ContentList{
         // Logic gates
         esoAND, esoXOR, esoNOT,
         // Logic outputs
-        noteBlock,
+        noteBlock, togglerBlock,
 
         esoManual;
 
@@ -82,6 +82,8 @@ public class EsoBlocks implements ContentList{
 
         // region logic outputs
         noteBlock = new NoteBlock("note-block");
+
+        togglerBlock = new Toggler("toggler");
         // endregion logic outputs
 
         esoManual = new Manual("manual");
