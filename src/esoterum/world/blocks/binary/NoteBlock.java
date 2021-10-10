@@ -5,7 +5,6 @@ import arc.audio.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import arc.scene.*;
 import arc.scene.event.Touchable;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
@@ -141,7 +140,6 @@ public class NoteBlock extends BinaryBlock{
 
         @Override
         public void buildConfiguration(Table table){
-            Runnable updateKeys;
             table.table(Styles.black5, t -> {
                 // top table
                 t.table(m -> {
