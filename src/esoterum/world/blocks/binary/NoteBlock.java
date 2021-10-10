@@ -85,7 +85,7 @@ public class NoteBlock extends BinaryBlock{
 
     public class NoteBlockBuild extends BinaryBuild{
         /** Direction, Pitch, Octave, Volume, Note Sample */
-        public IntSeq configs = IntSeq.with(2, 0, 2, 100, 0);
+        public IntSeq configs = IntSeq.with(2, 0, 3, 100, 0);
 
         @Override
         public void updateTile(){
@@ -207,7 +207,7 @@ public class NoteBlock extends BinaryBlock{
                         i.table(b -> {
                             b.bottom();
                             b.button(Icon.leftSmall, Styles.emptyi, () -> {
-                                if ((configs.get(4) - 1) < 0) return;
+                                if ((configs.get(4) - 1) < 0) configs.set(4, samples.length);
                                 configs.incr(4, -1);
                                 configure(configs);
                                 getSampleImage.run();
@@ -218,7 +218,7 @@ public class NoteBlock extends BinaryBlock{
                                 .fontScale(0.8f).get().setAlignment(Align.center);
 
                             b.button(Icon.rightSmall, Styles.emptyi, () -> {
-                                if ((configs.get(4) + 1) >= samples.length) return;
+                                if ((configs.get(4) + 1) >= samples.length) configs.set(4, -1);
                                 configs.incr(4, 1);
                                 configure(configs);
                                 getSampleImage.run();
@@ -312,8 +312,7 @@ public class NoteBlock extends BinaryBlock{
 
                 // currently using -1 as the lowest octave for backwards compatibility
                 // this will be replaced with a 0-indexed system later
-                // untested
-                if (p1 < -1.0 || p1 >= 5.9){ //octave invalid
+                if (p1 < -1.12 || p1 >= 5.9){ //octave invalid
                     configs.set(1, 0);
                     configs.set(2, 3);
                     configure(configs);
@@ -323,9 +322,12 @@ public class NoteBlock extends BinaryBlock{
                 int whole = (int) p1; //octave
                 rem -= whole; // pitch
                 rem *= 100;
+                if (rem < 0){
+                    rem = -rem;
+                }
                 if (rem > 11.1){ // pitch invalid
                     configs.set(1, 0);
-                    configs.set(2, 2);
+                    configs.set(2, 3);
                     configure(configs);
                     return;
                 }
