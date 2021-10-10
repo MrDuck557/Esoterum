@@ -150,8 +150,8 @@ public class NoteBlock extends BinaryBlock{
                     }).size(48f).growX();
                     b.button("+", () -> {
                         configs.incr(2, 1);
-                        if(configs.get(2) > 4){
-                            configs.set(2, 4);
+                        if(configs.get(2) > 6){
+                            configs.set(2, 6);
                             configs.set(1, 11);
                         }
                         configure(configs);
@@ -177,7 +177,7 @@ public class NoteBlock extends BinaryBlock{
                     b.button("+", () -> {
                         configs.incr(1, 1);
                         if(configs.get(1) > 11){
-                            if(configs.get(2) == 4){
+                            if(configs.get(2) == 6){
                                 configs.set(1, 11);
                             }else{
                                 configs.set(1, 0);
@@ -289,15 +289,25 @@ public class NoteBlock extends BinaryBlock{
             super.read(read, revision);
 
             configs = IntSeq.with(read.i(), read.i(), read.i(), read.i(), read.i());
+            if(revision < 2) configs.incr(2, 1);
+        }
+
+        @Override
+        public byte version() {
+            return 2;
         }
 
         @Override
         public void control(LAccess type, double p1, double p2, double p3, double p4){
             if(type == LAccess.config){
                 //controlling capability
-                if (p1 < 0.0 || p1 >= 4.9){ //octave invalid
+
+                // currently using -1 as the lowest octave for backwards compatibility
+                // this will be replaced with a 0-indexed system later
+                // untested
+                if (p1 < -1.0 || p1 >= 5.9){ //octave invalid
                     configs.set(1, 0);
-                    configs.set(2, 2);
+                    configs.set(2, 3);
                     configure(configs);
                     return;
                 }
@@ -313,7 +323,7 @@ public class NoteBlock extends BinaryBlock{
                 }
                 rem += 0.5; //forces typecast to work
                 configs.set(1, (int) rem);
-                configs.set(2, whole);
+                configs.set(2, whole + 1);
                 configure(configs);
             } else if (type == LAccess.color){
                 // r is instrument, b is volume, g does absolutely nothing
@@ -352,7 +362,7 @@ public class NoteBlock extends BinaryBlock{
     }
 
     public static class NoteSample{
-        /** Array of sounds. Should contain C2, C3, C4, C5, and C6 */
+        /** Array of sounds. Should contain C1, C2, C3, C4, C5, C6, and C7 */
         Sound[] octaves;
         /** Used in config to display the name of the sample */
         String name;
@@ -364,7 +374,7 @@ public class NoteBlock extends BinaryBlock{
             "A%s", "A%s#", "B%s"
         };
         /** Processes octave and pitch to create name */
-        public Notef titleProcessor = (o, p) -> String.valueOf(o + 2 + (p >= 9 ? 1 : 0));
+        public Notef titleProcessor = (o, p) -> String.valueOf(o + 1 + (p >= 12 ? 1 : 0));
 
         public NoteSample(Sound[] octaves, String name){
             this.octaves = octaves;
