@@ -28,13 +28,14 @@ public class EsoSounds{
     }
 
     public static Sound[]
-        bells, bass, saw, organ, drums;
+        bells, bass, saw, organ, drums, BIGSHOT;
 
     public static void load(){
         bells = loadNotes("bell");
         bass = loadNotes("bass");
         saw = loadNotes("saw");
         organ = loadNotes("organ");
+        BIGSHOT = loadNotes("BIGSHOT");
         //drums = loadNotes("drums");
     }
 }

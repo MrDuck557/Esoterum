@@ -31,10 +31,11 @@ public class NoteBlock extends BinaryBlock{
         "A#", "B"
     };
     public NoteSample[] samples = {
-        new NoteSample(EsoSounds.bells, "Bells"),
+        new NoteSample(EsoSounds.bells, "Bell"),
         new NoteSample(EsoSounds.bass, "Bass"),
         new NoteSample(EsoSounds.saw, "Saw"),
-        new NoteSample(EsoSounds.organ, "Organ")/*,
+        new NoteSample(EsoSounds.organ, "Organ"),
+        new NoteSample(EsoSounds.BIGSHOT, "BIG SHOT")/*,
         new NoteSample(EsoSounds.drums, "Drum Kit"){{
             noteNames = new String[]{
                 "%s C", "%s C#", "%s D",
@@ -193,31 +194,37 @@ public class NoteBlock extends BinaryBlock{
                     // instruments
                     m.table(Tex.button, i -> {
                         // sample icon
-                        i.table(s -> {
-                            String inst = samples[configs.get(4)].name.replaceAll("\\s", "-");
-                            s.image(Core.atlas.find("esoterum-instrument-" + inst, "esoterum-instrument-BIG-SHOT")).fill();
-                        }).fill().grow();
+                        Table imgt = i.table().size(80).get();
                         i.row();
+
+                        Runnable getSampleImage = () -> {
+                            imgt.clearChildren();
+                            String inst = samples[configs.get(4)].name.replaceAll("\\s", "-").toLowerCase();
+                            imgt.image(() -> Core.atlas.find("esoterum-instrument-" + inst, "esoterum-instrument-big-shot")).fill();
+                        };
 
                         // buttons & sample name
                         i.table(b -> {
                             b.bottom();
                             b.button(Icon.leftSmall, Styles.emptyi, () -> {
-                                if((configs.get(4) - 1) < 0) return;
+                                if ((configs.get(4) - 1) < 0) return;
                                 configs.incr(4, -1);
                                 configure(configs);
-                            }).size(8).bottom().left().growX();
+                                getSampleImage.run();
+                            }).size(10).bottom().left().growX();
 
                             b.label(() -> samples[configs.get(4)].name)
                                 .bottom().center().growX()
                                 .fontScale(0.8f).get().setAlignment(Align.center);
 
                             b.button(Icon.rightSmall, Styles.emptyi, () -> {
-                                if((configs.get(4) + 1) >= samples.length) return;
+                                if ((configs.get(4) + 1) >= samples.length) return;
                                 configs.incr(4, 1);
                                 configure(configs);
-                            }).size(8).bottom().right().growX();
+                                getSampleImage.run();
+                            }).size(10).bottom().right().growX();
                         }).bottom().growX();
+                        getSampleImage.run();
                     }).size(120f);
                 });
                 t.row();
@@ -228,10 +235,10 @@ public class NoteBlock extends BinaryBlock{
                     Table whites = new Table(w -> {
                         for(int i = 0; i < 7; i++){
                             int offset = whiteOffsets[i];
-                            w.button("\n\n\n\n\n" + notes[offset], EsoStyle.pianoWhite, () -> {
+                            w.button("\n\n\n\n\n\n" + notes[offset], EsoStyle.pianoWhite, () -> {
                                 configs.set(1, offset);
                                 configure(configs);
-                                playSound();
+                                if(!Vars.state.isPaused())playSound();
                             }).size(50, 160).checked(b -> configs.get(1) == offset);
                         }
                     });
@@ -242,7 +249,7 @@ public class NoteBlock extends BinaryBlock{
                             b.button(notes[offset], EsoStyle.pianoBlack, () -> {
                                 configs.set(1, offset);
                                 configure(configs);
-                                playSound();
+                                if(!Vars.state.isPaused())playSound();
                             }).padLeft(5).padRight(5).size(40, 100).checked(bt -> configs.get(1) == offset).visible(i != 2);
                         }
                     }).top();
