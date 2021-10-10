@@ -6,12 +6,14 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.scene.*;
+import arc.scene.event.Touchable;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
 import esoterum.content.*;
+import esoterum.ui.EsoStyle;
 import esoterum.util.*;
 import mindustry.*;
 import mindustry.gen.*;
@@ -22,6 +24,13 @@ import mindustry.world.*;
 import mindustry.world.meta.*;
 
 public class NoteBlock extends BinaryBlock{
+    public int[] whiteOffsets = {0, 2, 4, 5, 7, 9, 11};
+    public int[] blackOffsets = {1, 3, 0, 6, 8, 10};
+    public String[] notes = {
+        "C", "C#", "D", "D#", "E",
+        "F", "F#", "G", "G#", "A",
+        "A#", "B"
+    };
     public NoteSample[] samples = {
         new NoteSample(EsoSounds.bells, "Bells"),
         new NoteSample(EsoSounds.bass, "Bass"),
@@ -76,7 +85,7 @@ public class NoteBlock extends BinaryBlock{
 
     public class NoteBlockBuild extends BinaryBuild{
         /** Direction, Pitch, Octave, Volume, Note Sample */
-        public IntSeq configs = IntSeq.with(2, 0, 2, 10, 0);
+        public IntSeq configs = IntSeq.with(2, 0, 2, 100, 0);
 
         @Override
         public void updateTile(){
@@ -101,7 +110,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public void playSound(){
-            if(!Vars.headless) samples[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 10f, EsoUtil.notePitch(configs.get(1)), 0);
+            if(!Vars.headless) samples[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 100f, EsoUtil.notePitch(configs.get(1)), 0);
         }
 
         @Override
@@ -132,137 +141,130 @@ public class NoteBlock extends BinaryBlock{
 
         @Override
         public void buildConfiguration(Table table){
-            table.setBackground(Styles.black5);
-            table.table(n -> {
-                n.add("Note: ").right();
-                n.label(this::noteString).left();
-                n.row();
-                n.add("Octave: ").right();
-                n.table(b -> {
-                    b.button("-", () -> {
-                        configs.incr(2, -1);
-                        if(configs.get(2) < 0){
-                            configs.set(2, 0);
-                            configs.set(1, 0);
+            Runnable updateKeys;
+            table.table(Styles.black5, t -> {
+                // top table
+                t.table(m -> {
+                    // settings
+                    m.table(Tex.button, s -> {
+
+                        // octave
+                        s.table(o -> {
+                            Label value = new Label("C" + (configs.get(2) + 1), Styles.outlineLabel);
+                            Slider slider = new Slider(0, 6, 1, false);
+                            slider.setValue(configs.get(2));
+
+                            Table content = new Table(c -> {
+                                c.add("Octave", Styles.outlineLabel).padLeft(10f).left().growX().wrap();
+                                c.add(value).padRight(10f).right();
+                            });
+                            content.touchable = Touchable.disabled;
+
+                            slider.changed(() -> {
+                                configs.set(2, (int)slider.getValue());
+                                value.setText("C" + (configs.get(2) + 1));
+                                configure(configs);
+                            });
+
+                            o.stack(slider, content).growX();
+                        }).size(220f, 60f);
+                        s.row();
+
+                        // volume
+                        s.table(v -> {
+                            Label value = new Label(String.valueOf(configs.get(3)), Styles.outlineLabel);
+                            Slider slider = new Slider(0, 100, 2, false);
+                            slider.setValue(configs.get(3));
+
+                            Table content = new Table(c -> {
+                                c.add("Volume", Styles.outlineLabel).padLeft(10f).left().growX().wrap();
+                                c.add(value).padRight(10f).right();
+                            });
+                            content.touchable = Touchable.disabled;
+
+                            slider.changed(() -> {
+                                configs.set(3, (int)slider.getValue());
+                                value.setText(String.valueOf(configs.get(3)));
+                                configure(configs);
+                            });
+
+                            v.stack(slider, content).growX();
+                        }).size(220f, 60f);
+                    }).height(120f).left();
+
+                    // instruments
+                    m.table(Tex.button, i -> {
+                        // sample icon
+                        i.table(s -> {
+                            String inst = samples[configs.get(4)].name.replaceAll("\\s", "-");
+                            s.image(Core.atlas.find("esoterum-instrument-" + inst, "esoterum-instrument-BIG-SHOT")).fill();
+                        }).fill().grow();
+                        i.row();
+
+                        // buttons & sample name
+                        i.table(b -> {
+                            b.bottom();
+                            b.button(Icon.leftSmall, Styles.emptyi, () -> {
+                                if((configs.get(4) - 1) < 0) return;
+                                configs.incr(4, -1);
+                                configure(configs);
+                            }).size(8).bottom().left().growX();
+
+                            b.label(() -> samples[configs.get(4)].name)
+                                .bottom().center().growX()
+                                .fontScale(0.8f).get().setAlignment(Align.center);
+
+                            b.button(Icon.rightSmall, Styles.emptyi, () -> {
+                                if((configs.get(4) + 1) >= samples.length) return;
+                                configs.incr(4, 1);
+                                configure(configs);
+                            }).size(8).bottom().right().growX();
+                        }).bottom().growX();
+                    }).size(120f);
+                });
+                t.row();
+
+                // keyboard
+                // idea from sk
+                t.table(k -> {
+                    Table whites = new Table(w -> {
+                        for(int i = 0; i < 7; i++){
+                            int offset = whiteOffsets[i];
+                            w.button("\n\n\n\n\n" + notes[offset], EsoStyle.pianoWhite, () -> {
+                                configs.set(1, offset);
+                                configure(configs);
+                                playSound();
+                            }).size(50, 160).checked(b -> configs.get(1) == offset);
                         }
-                        configure(configs);
-                        playSound();
-                    }).size(48f).growX();
-                    b.button("+", () -> {
-                        configs.incr(2, 1);
-                        if(configs.get(2) > 6){
-                            configs.set(2, 6);
-                            configs.set(1, 11);
-                        }
-                        configure(configs);
-                        playSound();
-                    }).size(48f).growX();
-                }).left();
-                n.row();
-                n.add("Pitch: ").right();
-                n.table(b -> {
-                    b.button("-", () -> {
-                        configs.incr(1, -1);
-                        if(configs.get(1) < 0){
-                            if(configs.get(2) == 0){
-                                configs.set(1, 0);
-                            }else{ //wrap around
-                                configs.set(1, 11);
-                                configs.incr(2, -1);
-                            }
-                        }
-                        configure(configs);
-                        playSound();
-                    }).size(48f).growX();
-                    b.button("+", () -> {
-                        configs.incr(1, 1);
-                        if(configs.get(1) > 11){
-                            if(configs.get(2) == 6){
-                                configs.set(1, 11);
-                            }else{
-                                configs.set(1, 0);
-                                configs.incr(2, 1);
-                            }
-                        }
-                        configure(configs);
-                        playSound();
-                    }).size(48f).growX();
-                }).left();
-            }).growX().get().background(Tex.underline);
-            table.row();
-            table.table(s -> {
-                s.label(() -> {
-                    if(configs.get(4) - 1 >= 0){
-                        return samples[configs.get(4) - 1].name;
-                    }
-                    return "";
-                }).color(Color.lightGray).labelAlign(Align.center).right().size(60f, 40f);
-                s.button("<", () -> {
-                    configs.incr(4, -1);
-                    if(configs.get(4) < 0){
-                        configs.set(4, 0);
-                    }
-                    configure(configs);
-                    playSound();
-                }).size(40f).right();
-                s.label(() -> samples[configs.get(4)].name).center().labelAlign(Align.center).size(80f, 40f);
-                s.button(">", () -> {
-                    configs.incr(4, 1);
-                    if(configs.get(4) >= samples.length){
-                        configs.set(4, samples.length - 1);
-                    }
-                    configure(configs);
-                    playSound();
-                }).size(40f).left();
-                s.label(() -> {
-                    if(configs.get(4) + 1 < samples.length){
-                        return samples[configs.get(4) + 1].name;
-                    }
-                    return "";
-                }).color(Color.lightGray).labelAlign(Align.center).left().size(60f, 40f);
-            }).growX().get().background(Tex.underline);
-            table.row();
-            table.table(v -> {
-                v.add("Volume: ").right();
-                v.table(b -> {
-                    b.button("-", () -> {
-                        configs.incr(3, -1);
-                        if(configs.get(3) < 0){
-                            configs.set(3, 0);
-                        }
-                        configure(configs);
-                        playSound();
-                    }).size(48f);
-                    TextField vField = b.field(String.valueOf((float)configs.get(3) / 10), vol -> {
-                        vol = EsoUtil.extractNumber(vol);
-                        if(!vol.isEmpty()){
-                            configs.set(3, Math.max((int)(Float.parseFloat(vol) * 10), 0));
-                            configure(configs);
-                            playSound();
-                        }
-                    }).labelAlign(Align.center).fillX().size(80, 40).get();
-                    vField.update(() -> {
-                        Scene stage = vField.getScene();
-                        if(!(stage != null && stage.getKeyboardFocus() == vField))
-                            vField.setText(String.valueOf((float)configs.get(3) / 10f));
                     });
-                    b.button("+", () -> {
-                        configs.incr(3, 1);
+
+                    Table blacks = new Table(b -> {
+                        for(int i = 0; i < 6; i++){
+                            int offset = blackOffsets[i];
+                            b.button(notes[offset], EsoStyle.pianoBlack, () -> {
+                                configs.set(1, offset);
+                                configure(configs);
+                                playSound();
+                            }).padLeft(5).padRight(5).size(40, 100).checked(bt -> configs.get(1) == offset).visible(i != 2);
+                        }
+                    }).top();
+
+                    k.stack(whites, blacks);
+                    k.row();
+                    k.label(() -> samples[configs.get(4)].noteString(configs.get(2), configs.get(1))).center().growX();
+                });
+
+                t.row();
+                t.table(b -> {
+                    b.button(Icon.rotate, () -> {
+                        configs.incr(0, -1);
+                        if (configs.first() < 1) {
+                            configs.set(0, 3);
+                        }
                         configure(configs);
-                        playSound();
-                    }).size(48f);
-                }).left();
-            }).growX().get().background(Tex.underline);
-            table.row();
-            table.table(b -> {
-                b.button(Icon.rotate, () -> {
-                    configs.incr(0, -1);
-                    if(configs.first() < 1){
-                        configs.set(0, 3);
-                    }
-                    configure(configs);
-                }).size(40f).tooltip("Rotate Input");
-                b.button("Play", this::playSound).size(120f, 40f);
+                    }).size(40f).tooltip("Rotate Input");
+                    b.button("Play", this::playSound).size(120f, 40f);
+                });
             });
         }
 
@@ -290,11 +292,12 @@ public class NoteBlock extends BinaryBlock{
 
             configs = IntSeq.with(read.i(), read.i(), read.i(), read.i(), read.i());
             if(revision < 2) configs.incr(2, 1);
+            if(revision < 3) configs.mul(3, 10);
         }
 
         @Override
         public byte version() {
-            return 2;
+            return 3;
         }
 
         @Override

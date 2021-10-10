@@ -4,6 +4,7 @@ import arc.*;
 import arc.audio.*;
 import arc.struct.*;
 import esoterum.content.*;
+import esoterum.ui.*;
 import esoterum.ui.dialogs.*;
 import mindustry.game.*;
 import mindustry.game.EventType.*;
@@ -21,7 +22,10 @@ public class Esoterum extends Mod{
     public Esoterum(){
         if(!headless){
             Events.on(EventType.FileTreeInitEvent.class, h -> EsoSounds.load());
-            Events.on(ClientLoadEvent.class, e -> manual = new ManualDialog());
+            Events.on(ClientLoadEvent.class, e -> {
+                manual = new ManualDialog();
+                EsoStyle.init();
+            });
             Events.on(WorldLoadEvent.class, e -> {
                 LoadedMod eso = mods.locateMod("esoterum");
                 boolean isEso = state.map.mod != null && state.map.mod == eso;
