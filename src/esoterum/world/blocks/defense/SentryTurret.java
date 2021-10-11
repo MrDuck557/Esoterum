@@ -103,8 +103,8 @@ public class SentryTurret extends PowerTurret {
 
         @Override
         public void updateTile(){
-            super.updateTile();
             maxRange = getObstacle();
+            super.updateTile();
             if((target != null) && !wasLocked) onDetect();
             wasLocked = (target != null);
             if(target == null){
@@ -136,7 +136,7 @@ public class SentryTurret extends PowerTurret {
 
             if(
                 target != null && (!Angles.within(angleTo(target), rotation, detectionCone / 2)
-                || maxRange < Mathf.dst(x, y, target.x(), target.y()))
+                || maxRange < dst(target))
             ) target = null;
         }
 
