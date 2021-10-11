@@ -8,6 +8,7 @@ import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import esoterum.graphics.EsoDrawf;
 import mindustry.entities.Units;
+import mindustry.game.Team;
 import mindustry.graphics.Pal;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 
@@ -34,9 +35,14 @@ public class SentryTurret extends PowerTurret {
             Draw.blend(Blending.additive);
             EsoDrawf.spotlight(x, y, range, rotation + detectionCone / 2, detectionCone, Pal.accent, (int) range / 8);
             Draw.blend();
+            Draw.color(Color.white);
             if(target != null){
                 Lines.stroke(2);
                 Lines.circle(target.x(), target.y(), 5);
+                Lines.lineAngle(x, y, angleTo(target), range);
+                Lines.lineAngle(x, y, 0, range);
+                Draw.color(Color.red);
+                Lines.lineAngle(x, y, Angles.angleDist(angleTo(target), 0), range);
             }
         }
 
@@ -50,7 +56,13 @@ public class SentryTurret extends PowerTurret {
         }
 
         @Override
+        protected boolean validateTarget(){
+            return !Units.invalidateTarget(target, canHeal() ? Team.derelict : team, x, y, range) || isControlled() || logicControlled();
+        }
+
+        @Override
         protected void findTarget() {
+            if(target != null)return;
             if(targetAir && !targetGround){
                 target = Units.bestEnemy(team, x, y, range, e -> !e.dead() && !e.isGrounded(), unitSort);
             }else{
@@ -61,7 +73,7 @@ public class SentryTurret extends PowerTurret {
                 }
             }
 
-            if(target != null && Angles.within(angleTo(target), rotation, detectionCone / 2f)) target = null;
+            if(target != null && Angles.angleDist(angleTo(target), startAngle) > detectionCone / 2) target = null;
         }
     }
 }
