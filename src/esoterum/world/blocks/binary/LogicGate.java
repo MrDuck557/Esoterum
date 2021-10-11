@@ -20,8 +20,11 @@ public class LogicGate extends BinaryBlock{
         outputs = new boolean[]{true, false, false, false};
         emits = true;
         rotate = true;
+        rotatedBase = true;
         drawArrow = true;
         configurable = saveConfig = true;
+
+        baseType = 0;
 
         operation = e -> false;
 
@@ -77,15 +80,6 @@ public class LogicGate extends BinaryBlock{
         @Override
         public boolean signalFront() {
             return configs.first() == 2 ? signal() : lastSignal;
-        }
-
-        @Override
-        public void draw() {
-            Draw.rect(region, x, y);
-
-            drawConnections();
-            Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
-            Draw.rect(topRegion, x, y, rotate ? rotdeg() : 0f);
         }
 
         @Override

@@ -16,7 +16,10 @@ public class LatchBlock extends BinaryBlock{
         inputs = new boolean[]{false, true, true, true};
         emits = true;
         rotate = true;
+        rotatedBase = true;
         drawArrow = true;
+
+        baseType = 1;
         
         config(Boolean.class, (LatchBuild l, Boolean b) -> {
             l.store = b;

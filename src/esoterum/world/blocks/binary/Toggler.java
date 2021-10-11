@@ -10,9 +10,13 @@ public class Toggler extends BinaryBlock{
     public Toggler(String name){
         super(name);
         rotate = true;
+        rotatedBase = true;
+        baseType = 1;
         emits = true;
         outputs = new boolean[]{true, false, false, false};
         inputs = new boolean[]{false, true, true, true};
+
+
     }
 
     public class TogglerBuild extends BinaryBuild {

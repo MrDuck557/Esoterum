@@ -16,6 +16,7 @@ import mindustry.logic.*;
 
 public class BinaryBlock extends Block {
     public TextureRegion topRegion, connectionRegion;
+    public TextureRegion[] baseRegions = new TextureRegion[4];
     /** in order {front, left, back, right} */
     public boolean[] outputs = new boolean[]{false, false, false, false};
     public boolean[] inputs = new boolean[]{false, false, false, false};
@@ -23,6 +24,8 @@ public class BinaryBlock extends Block {
     public boolean allOutputs;
     public boolean drawConnectionArrows;
     public boolean drawRot = true;
+    public int baseType = -1;
+    public boolean rotatedBase = false;
 
     public BinaryBlock(String name) {
         super(name);
@@ -37,7 +40,14 @@ public class BinaryBlock extends Block {
 
     public void load() {
         super.load();
-        region = Core.atlas.find(name + "-base", "esoterum-base");
+        if(baseType != -1){
+            region = Core.atlas.find("esoterum-base-" + baseType, "esoterum-base");
+        }else{
+            region = Core.atlas.find(name + "-base", "esoterum-base");
+        }
+        for(int i = 0; i < 4; i++){
+            baseRegions[i] = Core.atlas.find("esoterum-base-" + baseType + "-" + i, "esoterum-base");
+        }
         connectionRegion = Core.atlas.find(name + "-connection", "esoterum-connection");
         topRegion = Core.atlas.find(name + "-top", "esoterum-router-top"); // router supremacy
     }
@@ -45,7 +55,7 @@ public class BinaryBlock extends Block {
     @Override
     protected TextureRegion[] icons() {
         return new TextureRegion[]{
-            region,
+            rotate && rotatedBase ? baseRegions[0] : region,
             topRegion
         };
     }
@@ -119,7 +129,11 @@ public class BinaryBlock extends Block {
 
         @Override
         public void draw(){
-            super.draw();
+            if(!rotate || !rotatedBase){
+                Draw.rect(region, x, y);
+            }else{
+                Draw.rect(baseRegions[rotation], x, y);
+            }
 
             drawConnections();
             Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);

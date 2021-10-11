@@ -23,6 +23,7 @@ public class SignalController extends BinaryRouter{
         configurable = saveConfig = true;
         allOutputs = true;
         rotate = true;
+        rotatedBase = false;
 
         config(IntSeq.class, (ControllerBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
 

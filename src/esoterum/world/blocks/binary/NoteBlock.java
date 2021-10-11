@@ -56,6 +56,8 @@ public class NoteBlock extends BinaryBlock{
         configurable = saveConfig = true;
         emits = true;
         rotate = true;
+        rotatedBase = true;
+        baseType = 0;
         drawRot = false;
         group = BlockGroup.logic;
 
@@ -92,16 +94,6 @@ public class NoteBlock extends BinaryBlock{
             lastSignal = nextSignal;
             nextSignal = signal();
             if(nextSignal && !lastSignal) playSound();
-        }
-
-        @Override
-        public void draw(){
-            Draw.rect(region, x, y);
-
-            Draw.color(lastSignal ? Pal.accent : Color.white);
-            Draw.rect(outputRegion, x, y, rotdeg());
-            drawConnections();
-            Draw.rect(topRegion, x, y);
         }
 
         public void drawConnections(){
