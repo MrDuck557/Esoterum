@@ -7,11 +7,15 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Mathf;
+import arc.scene.ui.layout.Table;
 import arc.util.Time;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import esoterum.graphics.EsoDrawf;
 import mindustry.Vars;
 import mindustry.entities.Units;
 import mindustry.game.Team;
+import mindustry.gen.Icon;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
@@ -23,7 +27,11 @@ public class SentryTurret extends PowerTurret {
     public float swayMag = 0f;
     public SentryTurret(String name){
         super(name);
+        configurable = true;
         consumesPower = true;
+        targetInterval = 5;
+
+        config(Float.class, (SentryBuild t, Float f) -> t.startAngle = f );
     }
 
     @Override
@@ -37,9 +45,37 @@ public class SentryTurret extends PowerTurret {
         public float startAngle = 0f;
         public boolean wasLocked = false;
 
+        // config
+        @Override
+        public void buildConfiguration(Table table) {
+            table.button(Icon.rotate, () -> {
+                startAngle += 45f;
+                startAngle = Mathf.mod(startAngle, 360f);
+                configure(startAngle);
+            });
+        }
+
+        @Override
+        public void drawConfigure() {
+            super.drawConfigure();
+            Draw.color(Pal.gray);
+            Lines.stroke(3f);
+            drawDetectionCone();
+            Draw.color(Pal.accent);
+            Lines.stroke(1.2f);
+            drawDetectionCone();
+        }
+
+        @Override
+        public Object config() {
+            return startAngle;
+        }
+
+        // turret stuff
         @Override
         public void draw(){
             super.draw();
+            if(!enabled || !consValid())return;
             Draw.z(Layer.turret - 1);
 
             Draw.blend(Blending.additive);
@@ -47,8 +83,16 @@ public class SentryTurret extends PowerTurret {
             Lines.stroke(1);
             if(target == null){
                 Lines.lineAngle(x, y, size * 4,rotation, range);
+            }else{
+                Lines.lineAngle(x, y, Angles.angleDist(angleTo(target), rotation), range);
             }
             Draw.blend();
+        }
+
+        public void drawDetectionCone(){
+            Lines.lineAngle(x, y, size * 4f + 1f, startAngle + swayMag, range - (size * 4f + 1f));
+            Lines.lineAngle(x, y, size * 4f + 1f, startAngle - swayMag, range - (size * 4f + 1f));
+            //Lines.swirl(x, y, range, ((swayMag * 2f) / 360f) + 0.02f, startAngle - swayMag);
         }
 
         @Override
@@ -83,7 +127,27 @@ public class SentryTurret extends PowerTurret {
                 }
             }
 
-            if(target != null && Angles.angleDist(angleTo(target), rotation + startAngle + Mathf.sin(swayScl, swayMag)) > detectionCone / 2) target = null;
+            if(target != null && !Angles.within(angleTo(target), rotation, detectionCone / 2)) target = null;
+        }
+
+        // saving
+        @Override
+        public void read(Reads read, byte revision) {
+            super.read(read, revision);
+
+            if(revision >= 1) startAngle = read.f();
+        }
+
+        @Override
+        public void write(Writes write) {
+            super.write(write);
+
+            write.f(startAngle);
+        }
+
+        @Override
+        public byte version() {
+            return 1;
         }
     }
 }
