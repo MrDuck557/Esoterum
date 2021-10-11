@@ -24,6 +24,7 @@ import mindustry.gen.Icon;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.type.Category;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 
@@ -38,7 +39,13 @@ public class SentryTurret extends PowerTurret {
         consumesPower = true;
         targetInterval = 5;
 
+        category = Category.turret;
+
         config(Float.class, (SentryBuild t, Float f) -> t.startAngle = f );
+    }
+
+    public void onDetect(){
+
     }
 
     @Override
@@ -111,10 +118,6 @@ public class SentryTurret extends PowerTurret {
             if(target == null){
                 turnToTarget(startAngle + Mathf.sin(swayScl, swayMag));
             }
-        }
-
-        public void onDetect(){
-
         }
 
         @Override
