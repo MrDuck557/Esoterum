@@ -20,6 +20,7 @@ public class BinaryWire extends BinaryBlock{
         outputs = new boolean[]{true, false, false, false};
         inputs = new boolean[]{false, true, true, true};
         emits = true;
+        transmits = true;
         rotate = true;
         drawArrow = true;
 
@@ -60,10 +61,16 @@ public class BinaryWire extends BinaryBlock{
 
     public class BinaryWireBuild extends BinaryBuild{
         @Override
-        public void updateTile(){
-            super.updateTile();
-            lastSignal = nextSignal | getSignal(nb.get(2), this);
-            nextSignal = signal();
+        public void updateSignal(int depth){
+            if(depth < depthLimit){
+                if(nb.get(1) != null && connectionCheck(nb.get(1), this))
+                    nb.get(1).updateSignal(depth + 1);
+                if(nb.get(2) != null && connectionCheck(nb.get(2), this))
+                    nb.get(2).updateSignal(depth + 1);
+                if(nb.get(3) != null && connectionCheck(nb.get(3), this))
+                    nb.get(3).updateSignal(depth + 1);
+            }
+            signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
         }
 
         @Override
@@ -74,21 +81,6 @@ public class BinaryWire extends BinaryBlock{
                     Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
                 }
             }
-        }
-
-        @Override
-        public boolean signal() {
-            return getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
-        }
-
-        public boolean signalFront(){
-            return (nb.get(2) != null ?
-                nb.get(2).rotation == rotation || !nb.get(2).block.rotate || nb.get(2).allOutputs() ?
-                    getSignal(nb.get(2), this) :
-                    nextSignal
-                : nextSignal )
-
-                | nextSignal;
         }
     }
 }

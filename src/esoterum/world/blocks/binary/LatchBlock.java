@@ -18,11 +18,11 @@ public class LatchBlock extends BinaryBlock{
         rotate = true;
         rotatedBase = true;
         drawArrow = true;
-
+        transmits = false;
         baseType = 1;
         
         config(Boolean.class, (LatchBuild l, Boolean b) -> {
-            l.store = b;
+            l.signal[0] = b;
         });
     }
 
@@ -42,32 +42,27 @@ public class LatchBlock extends BinaryBlock{
     }
 
     public class LatchBuild extends BinaryBuild {
-        public boolean store;
         @Override
-        public void updateTile() {
-            super.updateTile();
-            lastSignal = signal();
+        public void updateSignal(int depth) {
+            if(depth < depthLimit){
+                if(nb.get(1) != null && connectionCheck(nb.get(1), this))
+                    nb.get(1).updateSignal(depth + 1);
+                if(nb.get(2) != null && connectionCheck(nb.get(2), this))
+                    nb.get(2).updateSignal(depth + 1);
+                if(nb.get(3) != null && connectionCheck(nb.get(3), this))
+                    nb.get(3).updateSignal(depth + 1);
+            }
             if(getSignal(nb.get(2), this)){
                 configure(getSignal(nb.get(1), this) | getSignal(nb.get(3), this));
             }
         }
 
         @Override
-        public boolean signal() {
-            return getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
-        }
-
-        @Override
         public void draw() {
             super.draw();
 
-            Draw.color(store ? Pal.accent : Color.white);
+            Draw.color(signal[0] ? Pal.accent : Color.white);
             Draw.rect(latchRegion, x, y);
-        }
-
-        @Override
-        public boolean signalFront() {
-            return store;
         }
 
         @Override
@@ -75,7 +70,7 @@ public class LatchBlock extends BinaryBlock{
             super.read(read, revision);
 
             if(revision >= 2){
-                store = read.bool();
+                signal[0] = read.bool();
             }
         }
 
@@ -83,7 +78,7 @@ public class LatchBlock extends BinaryBlock{
         public void write(Writes write) {
             super.write(write);
 
-            write.bool(store);
+            write.bool(signal[0]);
         }
 
         @Override
