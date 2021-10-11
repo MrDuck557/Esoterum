@@ -31,6 +31,7 @@ public class SentryTurret extends PowerTurret {
     public float detectionCone = 45f;
     public float swayScl = 15f;
     public float swayMag = 0f;
+    public boolean targetBuildings = false;
     public SentryTurret(String name){
         super(name);
         configurable = true;
@@ -103,7 +104,7 @@ public class SentryTurret extends PowerTurret {
 
         @Override
         public void updateTile(){
-            maxRange = getObstacle();
+            maxRange = getObstacle(rotation);
             super.updateTile();
             if((target != null) && !wasLocked) onDetect();
             wasLocked = (target != null);
@@ -127,26 +128,22 @@ public class SentryTurret extends PowerTurret {
             if(targetAir && !targetGround){
                 target = Units.bestEnemy(team, x, y, range, e -> !e.dead() && !e.isGrounded(), unitSort);
             }else{
-                target = Units.bestTarget(team, x, y, range, e -> !e.dead() && (e.isGrounded() || targetAir) && (!e.isGrounded() || targetGround), b -> true, unitSort);
-
-                if(target == null && canHeal()){
-                    target = Units.findAllyTile(team, x, y, range, b -> b.damaged() && b != this);
-                }
+                target = Units.bestTarget(team, x, y, range, e -> !e.dead() && (e.isGrounded() || targetAir) && (!e.isGrounded() || targetGround), b -> targetBuildings, unitSort);
             }
 
             if(
                 target != null && (!Angles.within(angleTo(target), rotation, detectionCone / 2)
-                || maxRange < dst(target))
+                || getObstacle(rotation) < dst(target))
             ) target = null;
         }
 
-        public float getObstacle(){
-            Tmp.v2.set(0f, 0f).trnsExact(rotation, range);
+        public float getObstacle(float rot){
+            Tmp.v2.set(0f, 0f).trnsExact(rot, range);
 
             obstacle = null;
 
             boolean found = Vars.world.raycast(tileX(), tileY(), World.toTile(x + Tmp.v2.x), World.toTile(y + Tmp.v2.y),
-                (x, y) -> (obstacle = Vars.world.tile(x, y)) != null && (obstacle.build != null) && obstacle.build != this);
+                (x, y) -> (obstacle = Vars.world.tile(x, y)) != null && (obstacle.build != null) && obstacle.build != this && (obstacle.build.checkSolid() || obstacle.block().solid));
 
             return found && obstacle != null ? Mathf.dst(x, y, obstacle.worldx(), obstacle.worldy()) : range;
         }
