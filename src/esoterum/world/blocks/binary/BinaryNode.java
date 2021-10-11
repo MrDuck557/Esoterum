@@ -21,7 +21,6 @@ public class BinaryNode extends BinaryBlock{
         super(name);
         rotate = false;
         emits = true;
-        transmits = true;
         range = linkRange;
         configurable = true;
 
@@ -67,9 +66,10 @@ public class BinaryNode extends BinaryBlock{
         public int link = -1;
 
         @Override
-        public void updateSignal(int depth){
+        public void updateTile(){
+            super.updateTile();
             BinaryNodeBuild c = linkedNode();
-            signal(c != null && c.signal());
+            lastSignal = c != null && c.signal();
             if(c != null && c.link != pos()){
                 configure(null);
             }
@@ -118,7 +118,7 @@ public class BinaryNode extends BinaryBlock{
 
         @Override
         public void drawConfigure(){
-            Tmp.c1.set(Color.white).lerp(Pal.accent, signal() ? 1f : 0f);
+            Tmp.c1.set(Color.white).lerp(Pal.accent, lastSignal ? 1f : 0f);
 
             Drawf.circles(x, y, size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f), Tmp.c1);
             Drawf.circles(x, y, range * tilesize, Tmp.c1);
@@ -165,6 +165,28 @@ public class BinaryNode extends BinaryBlock{
 
         public BinaryNodeBuild linkedNode(){
             return getLink(link);
+        }
+
+        // yes, there is no other way to do this
+        // absolutely no way.
+        @Override
+        public boolean signalFront(){
+            return lastSignal;
+        }
+
+        @Override
+        public boolean signalLeft(){
+            return lastSignal;
+        }
+
+        @Override
+        public boolean signalBack(){
+            return lastSignal;
+        }
+
+        @Override
+        public boolean signalRight(){
+            return lastSignal;
         }
 
         @Override

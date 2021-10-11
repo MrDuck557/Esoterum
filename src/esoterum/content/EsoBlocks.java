@@ -5,6 +5,7 @@ import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.environment.*;
 import mindustry.ctype.*;
 import mindustry.entities.bullet.*;
+import mindustry.gen.Sounds;
 import mindustry.world.*;
 import mindustry.world.blocks.environment.*;
 import mindustry.world.meta.BuildVisibility;
