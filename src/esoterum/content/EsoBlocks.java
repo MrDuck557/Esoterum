@@ -98,6 +98,9 @@ public class EsoBlocks implements ContentList{
             buildVisibility = BuildVisibility.shown;
             powerUse = 2f;
             shootCone = 45f;
+            detectionCone = 20f;
+            swayMag = 90f / 2;
+            swayScl = 30f;
 
             shootType = new BasicBulletType(16f, 20){{
                 width = 2f;

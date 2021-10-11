@@ -6,14 +6,21 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.math.Angles;
+import arc.math.Mathf;
+import arc.util.Time;
 import esoterum.graphics.EsoDrawf;
+import mindustry.Vars;
 import mindustry.entities.Units;
 import mindustry.game.Team;
+import mindustry.gen.Sounds;
+import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 
 public class SentryTurret extends PowerTurret {
     public float detectionCone = 45f;
+    public float swayScl = 15f;
+    public float swayMag = 0f;
     public SentryTurret(String name){
         super(name);
         consumesPower = true;
@@ -28,31 +35,34 @@ public class SentryTurret extends PowerTurret {
 
     public class SentryBuild extends PowerTurretBuild {
         public float startAngle = 0f;
+        public boolean wasLocked = false;
 
         @Override
-        public void draw() {
+        public void draw(){
             super.draw();
+            Draw.z(Layer.turret - 1);
+
             Draw.blend(Blending.additive);
-            EsoDrawf.spotlight(x, y, range, rotation + detectionCone / 2, detectionCone, Pal.accent, (int) range / 8);
-            Draw.blend();
-            Draw.color(Color.white);
-            if(target != null){
-                Lines.stroke(2);
-                Lines.circle(target.x(), target.y(), 5);
-                Lines.lineAngle(x, y, angleTo(target), range);
-                Lines.lineAngle(x, y, 0, range);
-                Draw.color(Color.red);
-                Lines.lineAngle(x, y, Angles.angleDist(angleTo(target), 0), range);
+            Draw.color(Color.red);
+            Lines.stroke(1);
+            if(target == null){
+                Lines.lineAngle(x, y, size * 4,rotation, range);
             }
+            Draw.blend();
         }
 
         @Override
-        public void updateTile() {
+        public void updateTile(){
             super.updateTile();
-
+            if((target != null) && !wasLocked) onDetect();
+            wasLocked = (target != null);
             if(target == null){
-                turnToTarget(startAngle);
+                turnToTarget(startAngle + Mathf.sin(swayScl, swayMag));
             }
+        }
+
+        public void onDetect(){
+
         }
 
         @Override
@@ -73,7 +83,7 @@ public class SentryTurret extends PowerTurret {
                 }
             }
 
-            if(target != null && Angles.angleDist(angleTo(target), startAngle) > detectionCone / 2) target = null;
+            if(target != null && Angles.angleDist(angleTo(target), rotation + startAngle + Mathf.sin(swayScl, swayMag)) > detectionCone / 2) target = null;
         }
     }
 }
