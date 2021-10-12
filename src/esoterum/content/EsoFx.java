@@ -78,5 +78,11 @@ public class EsoFx{
         Tmp.c1.a = e.fout();
         Fill.light(e.x, e.y, 10, 4, Tmp.c1, Color.clear);
         Draw.blend();
+    }),
+
+    notePlay = new Effect(20, e -> {
+        Draw.color(Pal.accent);
+        Lines.stroke(3f * e.fout(Interp.pow5Out));
+        Lines.square(e.x, e.y, 4 * e.fin(Interp.pow5Out), 45f);
     });
 }
