@@ -13,7 +13,7 @@ import mindustry.gen.Tex;
 import mindustry.graphics.*;
 
 // each side's behavior is configurable.
-public class SignalController extends BinaryBlock{
+public class SignalController extends BinaryRouter{
     public String[] states = new String[]{"X", "I", "O"};
 
     public TextureRegion inputRegion, outputRegion;
@@ -24,9 +24,7 @@ public class SignalController extends BinaryBlock{
         allOutputs = true;
         rotate = true;
         rotatedBase = false;
-        emits = true;
-        inputs = new boolean[]{true, true, true, true};
-        outputs = new boolean[]{true, true, true, true};
+
         config(IntSeq.class, (ControllerBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
 
         config(Integer.class, (ControllerBuild b, Integer i) -> {
@@ -45,7 +43,7 @@ public class SignalController extends BinaryBlock{
         outputRegion = Core.atlas.find(name + "-out");
     }
 
-    public class ControllerBuild extends BinaryBuild{
+    public class ControllerBuild extends BinaryRouterBuild{
         public boolean rotInit = false;
         /** IO configuration:
          * 0 = ignore/do nothing |
@@ -54,34 +52,24 @@ public class SignalController extends BinaryBlock{
         public IntSeq configs = IntSeq.with(0, 0, 0, 0);
 
         @Override
-        public void updateSignal(int source){
-            try {
-                super.updateSignal(source);
-                if(!rotInit){
-                    for(int i = 0; i < rotation; i++){
-                        configs = IntSeq.with(
-                            configs.get(3),
-                            configs.get(0),
-                            configs.get(1),
-                            configs.get(2)
-                        );
-                    }
-                    rotInit = true;
-                    rotation(0);
+        public void updateTile(){
+            if(!rotInit){
+                for(int i = 0; i < rotation; i++){
+                    configs = IntSeq.with(
+                        configs.get(3),
+                        configs.get(0),
+                        configs.get(1),
+                        configs.get(2)
+                    );
                 }
-                signal[4] = (getSignal(nb.get(0), this) && configs.get(0) == 1)
-                        ||  (getSignal(nb.get(1), this) && configs.get(1) == 1)
-                        ||  (getSignal(nb.get(2), this) && configs.get(2) == 1)
-                        ||  (getSignal(nb.get(3), this) && configs.get(3) == 1);
-                if(signal() != signal[4]){
-                    signal(false);
-                    signal[0] = signal[4] && configs.get(0) == 2;
-                    signal[1] = signal[4] && configs.get(1) == 2;
-                    signal[2] = signal[4] && configs.get(2) == 2;
-                    signal[3] = signal[4] && configs.get(3) == 2;
-                    propagateSignal(configs.get(0) == 2 && source != 0, configs.get(1) == 2 && source != 1, configs.get(2) == 2 && source != 2, configs.get(3) == 2 && source != 3);
-                }
-            } catch(StackOverflowError e){}
+                rotInit = true;
+                rotation(0);
+            }
+            lastSignal = false;
+            for(int i = 0; i < 4; i++){
+                // check if the current side is configured to accept input
+                lastSignal |= getSignal(nb.get(i), this) && configs.get(i) == 1;
+            }
         }
 
         @Override
@@ -92,8 +80,8 @@ public class SignalController extends BinaryBlock{
                 if(c == 1){
                     Draw.color(Color.white, Pal.accent, getSignal(nb.get(i), this) ? 1f : 0f);
                     Draw.rect(inputRegion, x, y, i * 90f);
-                } else {
-                    Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
+                }else{
+                    Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
                     Draw.rect(outputRegion, x, y, i * 90f);
                 }
             }
@@ -146,6 +134,27 @@ public class SignalController extends BinaryBlock{
             return configs.get(i) == 2;
         }
 
+        // check if the current side is configured to output
+        @Override
+        public boolean signalFront() {
+            return lastSignal && configs.get(0) == 2;
+        }
+
+        @Override
+        public boolean signalBack() {
+            return lastSignal && configs.get(2) == 2;
+        }
+
+        @Override
+        public boolean signalLeft() {
+            return lastSignal && configs.get(1) == 2;
+        }
+
+        @Override
+        public boolean signalRight() {
+            return lastSignal && configs.get(3) == 2;
+        }
+
         @Override
         public byte version() {
             return 1;
@@ -153,9 +162,9 @@ public class SignalController extends BinaryBlock{
 
         @Override
         public void read(Reads read, byte revision) {
-            super.read(read, (byte)(revision + 1));
+            super.read(read, revision);
 
-            if(revision >= 1){
+            if(revision == 1){
                 for(int i = 0; i < 4; i++){
                     configs.set(i, read.i());
                 }

@@ -69,31 +69,10 @@ public class BinaryNode extends BinaryBlock{
         public void updateTile(){
             super.updateTile();
             BinaryNodeBuild c = linkedNode();
+            lastSignal = c != null && c.signal();
             if(c != null && c.link != pos()){
                 configure(null);
             }
-        }
-        @Override
-        public void updateSignal(int source){
-            try {
-                super.updateSignal(source);
-                boolean tmp = signal[4];
-                signal[4] = false;
-                for(BinaryBuild b : nb){
-                    signal[4] |= getSignal(b, this);
-                }
-                BinaryNodeBuild c = linkedNode();
-                if(tmp != signal[4]){
-                    tmp = signal[4];
-                    try {if(c != null && source != 4) c.updateSignal(4);} catch(StackOverflowError e){}
-                }
-                signal[4] = c != null && c.signal();
-                if(signal[0] != signal[4]){
-                    signal(signal[4]);
-                    propagateSignal(source != 0, source != 1, source != 2, source != 3);
-                }
-                signal[4] = tmp;
-            } catch(StackOverflowError e){}
         }
 
         @Override
@@ -109,15 +88,7 @@ public class BinaryNode extends BinaryBlock{
 
         @Override
         public void draw(){
-            if(!rotate || !rotatedBase){
-                Draw.rect(region, x, y);
-            } else {
-                Draw.rect(baseRegions[rotation], x, y);
-            }
-
-            drawConnections();
-            Draw.color(Color.white, Pal.accent, signal[0] ? 1f : 0f);
-            Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
+            super.draw();
 
             BinaryNodeBuild c = linkedNode();
             if(c != null){
@@ -139,12 +110,15 @@ public class BinaryNode extends BinaryBlock{
 
         @Override
         public boolean signal(){
-            return signal[4];
+            for(BinaryBuild b : nb){
+                if(getSignal(b, this)) return true;
+            }
+            return false;
         }
 
         @Override
         public void drawConfigure(){
-            Tmp.c1.set(Color.white).lerp(Pal.accent, signal() ? 1f : 0f);
+            Tmp.c1.set(Color.white).lerp(Pal.accent, lastSignal ? 1f : 0f);
 
             Drawf.circles(x, y, size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f), Tmp.c1);
             Drawf.circles(x, y, range * tilesize, Tmp.c1);
@@ -161,7 +135,7 @@ public class BinaryNode extends BinaryBlock{
                 disconnect();
                 if(other.pos() == link){
                     configure(null);
-                } else if(other != self()){
+                }else if(other != self()){
                     ((BinaryNodeBuild)other).disconnect();
                     getLink(other.pos()).configure(pos());
                     configure(other.pos());
@@ -193,6 +167,28 @@ public class BinaryNode extends BinaryBlock{
             return getLink(link);
         }
 
+        // yes, there is no other way to do this
+        // absolutely no way.
+        @Override
+        public boolean signalFront(){
+            return lastSignal;
+        }
+
+        @Override
+        public boolean signalLeft(){
+            return lastSignal;
+        }
+
+        @Override
+        public boolean signalBack(){
+            return lastSignal;
+        }
+
+        @Override
+        public boolean signalRight(){
+            return lastSignal;
+        }
+
         @Override
         public void write(Writes write){
             super.write(write);
@@ -202,7 +198,7 @@ public class BinaryNode extends BinaryBlock{
 
         @Override
         public void read(Reads read, byte revision){
-            super.read(read, (byte)(revision + 1));
+            super.read(read, revision);
 
             link = read.i();
         }
