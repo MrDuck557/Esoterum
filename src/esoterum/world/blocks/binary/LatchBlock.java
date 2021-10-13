@@ -18,11 +18,10 @@ public class LatchBlock extends BinaryBlock{
         rotate = true;
         rotatedBase = true;
         drawArrow = true;
-
         baseType = 1;
         
         config(Boolean.class, (LatchBuild l, Boolean b) -> {
-            l.store = b;
+            l.signal[0] = b;
         });
     }
 
@@ -42,40 +41,42 @@ public class LatchBlock extends BinaryBlock{
     }
 
     public class LatchBuild extends BinaryBuild {
-        public boolean store;
         @Override
-        public void updateTile() {
-            super.updateTile();
-            lastSignal = signal();
-            if(getSignal(nb.get(2), this)){
-                configure(getSignal(nb.get(1), this) | getSignal(nb.get(3), this));
-            }
-        }
-
-        @Override
-        public boolean signal() {
-            return getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
+        public void updateSignal(int source) {
+            try {
+                super.updateSignal(source);
+                if(getSignal(nb.get(2), this)){
+                    signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
+                }
+                if(signal[0] != signal[4]){
+                    configure(signal[4]);
+                    propagateSignal(true, false, false, false);
+                }
+            } catch(StackOverflowError e){}
         }
 
         @Override
         public void draw() {
-            super.draw();
+            if(!rotate || !rotatedBase){
+                Draw.rect(region, x, y);
+            } else {
+                Draw.rect(baseRegions[rotation], x, y);
+            }
 
-            Draw.color(store ? Pal.accent : Color.white);
+            drawConnections();
+            Draw.color(Color.white, Pal.accent, getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this) ? 1f : 0f);
+            Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
+
+            Draw.color(signal[0] ? Pal.accent : Color.white);
             Draw.rect(latchRegion, x, y);
         }
 
         @Override
-        public boolean signalFront() {
-            return store;
-        }
-
-        @Override
         public void read(Reads read, byte revision) {
-            super.read(read, revision);
+            super.read(read, (byte)(revision + 1));
 
             if(revision >= 2){
-                store = read.bool();
+                signal[0] = read.bool();
             }
         }
 
@@ -83,7 +84,7 @@ public class LatchBlock extends BinaryBlock{
         public void write(Writes write) {
             super.write(write);
 
-            write.bool(store);
+            write.bool(signal[0]);
         }
 
         @Override

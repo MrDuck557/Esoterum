@@ -6,10 +6,10 @@ import esoterum.world.blocks.environment.*;
 import mindustry.content.Fx;
 import mindustry.ctype.*;
 import mindustry.entities.bullet.*;
-import mindustry.gen.Sounds;
+import mindustry.gen.*;
 import mindustry.world.*;
 import mindustry.world.blocks.environment.*;
-import mindustry.world.meta.BuildVisibility;
+import mindustry.world.meta.*;
 
 public class EsoBlocks implements ContentList{
     public static Block
