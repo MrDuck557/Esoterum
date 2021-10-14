@@ -103,7 +103,7 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         @Override
-        public void displayBars(Table table) {
+        public void displayBars(Table table){
             super.displayBars(table);
             table.row();
             table.table(e -> {
@@ -155,12 +155,12 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         @Override
-        public Object config() {
+        public Object config(){
             return configs;
         }
 
         @Override
-        public void write(Writes write) {
+        public void write(Writes write){
             super.write(write);
 
             write.f(delayTimer);
@@ -171,7 +171,7 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         @Override
-        public void read(Reads read, byte revision) {
+        public void read(Reads read, byte revision){
             super.read(read, (byte)(revision + 1));
 
             if(revision >= 1){
