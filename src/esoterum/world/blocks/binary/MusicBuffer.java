@@ -1,15 +1,19 @@
 package esoterum.world.blocks.binary;
 
 import arc.*;
+import arc.graphics.*;
+import arc.graphics.g2d.*;
 import arc.scene.style.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
+import esoterum.graphics.*;
 import esoterum.ui.*;
 import esoterum.util.*;
 import mindustry.gen.*;
+import mindustry.graphics.*;
 import mindustry.ui.*;
 
 public class MusicBuffer extends BinaryBlock{
@@ -79,6 +83,28 @@ public class MusicBuffer extends BinaryBlock{
             float BPM = configs.get(1);
             float quarterNote = 3600 / BPM;
             return quarterNote * restMul[configs.get(2)];
+        }
+
+        @Override
+        public void draw(){
+            drawBase();
+            Draw.color(signal() ? Pal.accent : Color.white);
+            Draw.rect(connectionRegion, x, y, rotdeg());
+            drawConnections();
+            drawBuffer();
+        }
+
+        public void drawBuffer(){
+            Draw.color(Color.white);
+            Lines.stroke(0.5f);
+            Lines.circle(x, y, 1.5f);
+            Draw.color(Pal.accent);
+            EsoDrawf.arc(x, y, 1.85f, rotdeg() - 180, 360 * (delayTimer / trueDelay()));
+        }
+
+        public void drawConnections(){
+            Draw.color(signal() ? Pal.accent : Color.white);
+            Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
         }
 
         @Override
