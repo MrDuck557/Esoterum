@@ -5,6 +5,7 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
+import arc.util.Log;
 import arc.util.io.*;
 import esoterum.util.*;
 import mindustry.gen.*;
@@ -26,6 +27,7 @@ public class BinaryBlock extends Block {
     public boolean drawRot = true;
     public int baseType = -1;
     public boolean rotatedBase = false;
+    public int depthLimit = 100000;
 
     public BinaryBlock(String name) {
         super(name);
@@ -34,7 +36,6 @@ public class BinaryBlock extends Block {
         solid = true;
         destructible = true;
         buildVisibility = BuildVisibility.shown;
-
         category = Category.logic;
     }
 
@@ -70,44 +71,85 @@ public class BinaryBlock extends Block {
         public Seq<BinaryBuild> nb = new Seq<>(4);
         public boolean[] connections = new boolean[]{false, false, false, false};
 
-        public boolean nextSignal;
-        public boolean lastSignal;
+        public boolean[] signal = new boolean[]{false, false, false, false, false};
+        public int visited = 0;
+
+        //front, left, back, right, node, none
+        public void updateSignal(int source) throws Exception {
+            if(visited > 2)
+                throw new Exception();
+            else visited += 1;
+        }
+
+        @Override
+        public void placed(){
+            super.placed();
+            try {updateSignal(5);} catch (Exception e) {}
+        }
+
+        @Override
+        public void onRemoved(){
+            super.onRemoved();
+            signal(false);
+            propagateSignal(outputs(0), outputs(1), outputs(2), outputs(3));
+        }
+
+        public void bypassSignal(boolean front, boolean left, boolean back, boolean right){
+            Thread t = new Thread(null, null, "Bypass"){
+                @Override
+                public void run(){
+                    try {
+                        try {
+                            if(front && nb.get(0) != null && connectionCheck(BinaryBuild.this, nb.get(0)))
+                                nb.get(0).updateSignal(EsoUtil.relativeDirection(nb.get(0), BinaryBuild.this));
+                            if(left && nb.get(1) != null && connectionCheck(BinaryBuild.this, nb.get(1)))
+                                nb.get(1).updateSignal(EsoUtil.relativeDirection(nb.get(1), BinaryBuild.this));
+                            if(back && nb.get(2) != null && connectionCheck(BinaryBuild.this, nb.get(2)))
+                                nb.get(2).updateSignal(EsoUtil.relativeDirection(nb.get(2), BinaryBuild.this));
+                            if(right && nb.get(3) != null && connectionCheck(BinaryBuild.this, nb.get(3)))
+                                nb.get(3).updateSignal(EsoUtil.relativeDirection(nb.get(3), BinaryBuild.this));
+                        } catch (Exception e){}
+                    } catch(StackOverflowError e){}
+                }
+            };
+            t.start();
+            try {t.join();} catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        public void propagateSignal(boolean front, boolean left, boolean back, boolean right){
+            try {
+                try {
+                    if(front && nb.get(0) != null && connectionCheck(this, nb.get(0)))
+                        nb.get(0).updateSignal(EsoUtil.relativeDirection(nb.get(0), this));
+                    if(left && nb.get(1) != null && connectionCheck(this, nb.get(1)))
+                        nb.get(1).updateSignal(EsoUtil.relativeDirection(nb.get(1), this));
+                    if(back && nb.get(2) != null && connectionCheck(this, nb.get(2)))
+                        nb.get(2).updateSignal(EsoUtil.relativeDirection(nb.get(2), this));
+                    if(right && nb.get(3) != null && connectionCheck(this, nb.get(3)))
+                        nb.get(3).updateSignal(EsoUtil.relativeDirection(nb.get(3), this));
+                } catch(Exception e){}
+            } catch(StackOverflowError e){
+                bypassSignal(front, left, back, right);
+            }
+        }
+
+        @Override
+        public void updateTile(){
+            super.updateTile();
+            visited = 0;
+        }
 
         public boolean signal(){
-            return false;
+            return signal[0] || signal[1] || signal[2] || signal[3];
         }
 
-        public boolean signalFront(){
-            return false;
-        }
-
-        public boolean signalLeft(){
-            return false;
-        }
-
-        public boolean signalBack(){
-            return false;
-        }
-
-        public boolean signalRight(){
-            return false;
-        }
-    
-        // get relative direction of "To" from "From"'s perspective then get the associated signal output.
-        public boolean getSignalRelativeTo(BinaryBlock.BinaryBuild from, BinaryBlock.BinaryBuild to){
-            if(!from.emits()) return false;
-            
-            return switch(EsoUtil.relativeDirection(from, to)) {
-                case 0 -> from.signalFront(); //front
-                case 1 -> from.signalLeft(); //left
-                case 2 -> from.signalBack(); //back
-                case 3 -> from.signalRight(); //right
-                default -> false;
-            };
+        public void signal(boolean s){
+            signal[0] = signal[1] = signal[2] = signal[3] = s;
         }
     
         public boolean connectionCheck(Building from, BinaryBlock.BinaryBuild to){
-            
             if(from instanceof BinaryBlock.BinaryBuild b){
                 int t = EsoUtil.relativeDirection(b, to);
                 int f = EsoUtil.relativeDirection(to, b);
@@ -118,7 +160,10 @@ public class BinaryBlock extends Block {
         }
     
         public boolean getSignal(Building from, BinaryBlock.BinaryBuild to){
-            if(from instanceof BinaryBlock.BinaryBuild b) return getSignalRelativeTo(b, to);
+            if(from instanceof BinaryBlock.BinaryBuild b){
+                if(!b.emits()) return false;
+                return b.signal[EsoUtil.relativeDirection(b, to)];
+            }
             return false;
         }
     
@@ -131,18 +176,19 @@ public class BinaryBlock extends Block {
         public void draw(){
             if(!rotate || !rotatedBase){
                 Draw.rect(region, x, y);
-            }else{
+            } else {
                 Draw.rect(baseRegions[rotation], x, y);
             }
 
             drawConnections();
-            Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
+            Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
         }
 
         public void drawConnections(){
-            Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
             for(int i = 0; i < 4; i++){
+                if(inputs(i)) Draw.color(Color.white, Pal.accent, getSignal(nb.get(i), this) ? 1f : 0f);
+                if(outputs(i)) Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
                 if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
         }
@@ -166,7 +212,7 @@ public class BinaryBlock extends Block {
                 if(outputs(i) && connections[i]){
                     b = nb.get(i);
                     Draw.z(Layer.overlayUI + 1);
-                    Drawf.arrow(x, y, b.x, b.y, 2f, 2f, lastSignal ? Pal.accent : Color.white);
+                    Drawf.arrow(x, y, b.x, b.y, 2f, 2f, signal() ? Pal.accent : Color.white);
                 }
             }
 
@@ -175,7 +221,7 @@ public class BinaryBlock extends Block {
                     b = nb.get(i);
                     Draw.z(Layer.overlayUI + 3);
                     Lines.stroke(1f);
-                    Draw.color((outputs(i) ? lastSignal : getSignal(b, this)) ? Pal.accent : Color.white);
+                    Draw.color((outputs(i) ? signal() : getSignal(b, this)) ? Pal.accent : Color.white);
                     Lines.line(x, y, b.x, b.y);
 
                     Draw.reset();
@@ -223,7 +269,7 @@ public class BinaryBlock extends Block {
                     e.clearChildren();
                     e.row();
                     e.left();
-                    e.label(() -> "State: " + (lastSignal ? "1" : "0")).color(Color.lightGray);
+                    e.label(() -> "State: " + (signal() ? "1" : "0")).color(Color.lightGray);
                 };
 
                 e.update(rebuild);
@@ -249,8 +295,13 @@ public class BinaryBlock extends Block {
         public void read(Reads read, byte revision) {
             super.read(read, revision);
 
-            if(revision >= 1){
-                nextSignal = lastSignal = read.bool();
+            if(revision >= 2){
+                signal[0] = read.bool();
+                signal[1] = read.bool();
+                signal[2] = read.bool();
+                signal[3] = read.bool();
+            } else if(revision >= 1){
+                signal[0] = signal[1] = signal[2] = signal[3] = read.bool();
             }
         }
 
@@ -258,17 +309,20 @@ public class BinaryBlock extends Block {
         public void write(Writes write) {
             super.write(write);
 
-            write.bool(lastSignal);
+            write.bool(signal[0]);
+            write.bool(signal[1]);
+            write.bool(signal[2]);
+            write.bool(signal[3]);
         }
 
         @Override
         public byte version() {
-            return 1;
+            return 2;
         }
 
         @Override
         public double sense(LAccess sensor){
-            if(sensor == LAccess.enabled) return lastSignal ? 1 : 0;
+            if(sensor == LAccess.enabled) return signal() ? 1 : 0;
             return super.sense(sensor);
         }
     }

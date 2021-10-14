@@ -62,7 +62,6 @@ public class NoteBlock extends BinaryBlock{
         baseType = 0;
         drawRot = false;
         group = BlockGroup.logic;
-
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
 
@@ -92,14 +91,20 @@ public class NoteBlock extends BinaryBlock{
         public IntSeq configs = IntSeq.with(2, 0, 3, 100, 0);
 
         @Override
-        public void updateTile(){
-            lastSignal = nextSignal;
-            nextSignal = signal();
-            if(nextSignal && !lastSignal) playSound();
+        public void updateSignal(int source){
+            try{
+                super.updateSignal(source);
+                signal[4] = getSignal(nb.get(configs.first()), this);
+                if(signal[0] != signal[4]){
+                    if(!signal[0] && signal[4]) playSound();
+                    signal[0] = signal[4];
+                    propagateSignal(true, false, false, false);
+                }
+            } catch(Exception e){}
         }
 
         public void drawConnections(){
-            Draw.color(lastSignal ? Pal.accent : Color.white);
+            Draw.color(signal() ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
         }
 
@@ -107,16 +112,6 @@ public class NoteBlock extends BinaryBlock{
             if(Vars.headless) return;
             samples[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 100f, EsoUtil.notePitch(configs.get(1)), 0);
             EsoFx.notePlay.at(x, y);
-        }
-
-        @Override
-        public boolean signal(){
-            return getSignal(nb.get(configs.first()), this);
-        }
-
-        @Override
-        public boolean signalFront(){
-            return configs.first() == 2 ? signal() : lastSignal;
         }
 
         @Override
@@ -289,7 +284,7 @@ public class NoteBlock extends BinaryBlock{
 
         @Override
         public void read(Reads read, byte revision){
-            super.read(read, revision);
+            super.read(read, (byte)(revision + 1));
 
             configs = IntSeq.with(read.i(), read.i(), read.i(), read.i(), read.i());
             if(revision < 2) configs.incr(2, 1);

@@ -23,7 +23,6 @@ public class LogicGate extends BinaryBlock{
         rotatedBase = true;
         drawArrow = true;
         configurable = saveConfig = true;
-
         baseType = 0;
 
         operation = e -> false;
@@ -53,10 +52,18 @@ public class LogicGate extends BinaryBlock{
         public int nextConfig = 1;
 
         @Override
-        public void updateTile(){
-            super.updateTile();
-            lastSignal = nextSignal;
-            nextSignal = signal();
+        public void updateSignal(int source){
+            try{
+                super.updateSignal(source);
+                signal[4] = operation.get(new boolean[]{
+                    getSignal(nb.get(configs.first()), this),
+                    getSignal(nb.get(configs.get(single ? 0 : 1)), this),
+                });
+                if(signal[0] != signal[4]){
+                    signal[0] = signal[4];
+                    propagateSignal(true, false, false, false);
+                }
+            } catch(Exception e){}
         }
 
         @Override
@@ -70,26 +77,13 @@ public class LogicGate extends BinaryBlock{
         }
 
         @Override
-        public boolean signal(){ //Assumes logic gates only have 2 inputs.
-            return operation.get(new boolean[]{
-                getSignal(nb.get(configs.first()), this),
-                getSignal(nb.get(configs.get(single ? 0 : 1)), this),
-            });
-        }
-
-        @Override
-        public boolean signalFront() {
-            return configs.first() == 2 ? signal() : lastSignal;
-        }
-
-        @Override
         public void drawConnections(){
             for(int i = 1; i < 4; i++){
                 if(!configs.contains(i)) continue;
                 Draw.color(Color.white, Pal.accent, getSignal(nb.get(i), this) ? 1f : 0f);
                 Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
-            Draw.color(Color.white, Pal.accent, lastSignal ? 1f : 0f);
+            Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
             Draw.rect(connectionRegion, x, y, rotdeg());
         }
 
@@ -104,7 +98,7 @@ public class LogicGate extends BinaryBlock{
 
         @Override
         public void read(Reads read, byte revision){
-            super.read(read, revision);
+            super.read(read, (byte)(revision + 1));
 
             if(revision >= 1){
                 nextConfig = read.i();

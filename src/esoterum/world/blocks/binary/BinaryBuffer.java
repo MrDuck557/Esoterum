@@ -34,15 +34,16 @@ public class BinaryBuffer extends BinaryBlock{
 
         public float delay = 5f;
         public float ticks = 1f;
-
+        public boolean bufferedSignal = false;
         /** Direction, Multiplier, Multiplier (but smol), Persistent */
         public IntSeq configs = IntSeq.with(2, 1, 0, 1);
 
         @Override
-        public void updateTile() {
-            if(signal()){
+        public void updateTile(){
+            super.updateTile();
+            if(bufferedSignal){
                 delayTimer += Time.delta;
-            }else{
+            } else {
                 if(configs.get(3) == 0){
                     delayTimer = 0;
                 }
@@ -51,13 +52,23 @@ public class BinaryBuffer extends BinaryBlock{
 
             // this looks terrible
             if(delayTimer > trueDelay()){
-                lastSignal  = true;
+                signal[0]  = true;
                 delayTimer = trueDelay();
+                propagateSignal(true, false, false, false);
             }
             if(delayTimer < 0f){
-                lastSignal = false;
+                signal[0] = false;
                 delayTimer = 0f;
+                propagateSignal(true, false, false, false);
             }
+        }
+
+        @Override
+        public void updateSignal(int source) {
+            try {
+                super.updateSignal(source);
+                bufferedSignal = getSignal(nb.get(configs.first()), this);
+            } catch(Exception e){}
         }
 
         public float trueDelay(){
@@ -69,7 +80,7 @@ public class BinaryBuffer extends BinaryBlock{
         public void draw(){
             Draw.rect(region, x, y);
 
-            Draw.color(lastSignal ? Pal.accent : Color.white);
+            Draw.color(signal() ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg());
             drawConnections();
             drawBuffer();
@@ -90,16 +101,6 @@ public class BinaryBuffer extends BinaryBlock{
         public void drawConnections(){
             Draw.color(signal() ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
-        }
-
-        @Override
-        public boolean signal() {
-            return getSignal(nb.get(configs.first()), this);
-        }
-
-        @Override
-        public boolean signalFront() {
-            return lastSignal;
         }
 
         @Override
@@ -172,7 +173,7 @@ public class BinaryBuffer extends BinaryBlock{
 
         @Override
         public void read(Reads read, byte revision) {
-            super.read(read, revision);
+            super.read(read, (byte)(revision + 1));
 
             if(revision >= 1){
                 delayTimer = read.f();
