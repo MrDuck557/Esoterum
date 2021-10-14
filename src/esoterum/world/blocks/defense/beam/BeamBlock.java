@@ -39,6 +39,7 @@ public class BeamBlock extends BinaryBlock {
         configurable = true;
         rotatedBase = false;
         clipSize = beamLength;
+        drawArrow = true;
 
         config(Float.class, (BeamBuild b, Float f) -> {
             b.beamRotation = f;
@@ -66,7 +67,7 @@ public class BeamBlock extends BinaryBlock {
         public float beamRotation = 0f;
         public float beamDrawLength = 0f;
 
-        public boolean drawBeam = false;
+        public boolean active = false;
 
         public Vec2 tr = new Vec2();
         Tile hit;
@@ -75,15 +76,15 @@ public class BeamBlock extends BinaryBlock {
         public void draw() {
             Draw.rect(region, x, y);
             Draw.z(Layer.turret);
-            Draw.rect(topRegion, x, y, beamRotation);
+            Draw.rect(topRegion, x, y, beamRotation + rotdeg());
 
             if(!drawLight) return;
-            Draw.color(drawBeam ? Pal.lancerLaser : Color.white);
-            Draw.rect(lightRegion, x, y, beamRotation);
+            Draw.color(active ? Pal.lancerLaser : Color.white);
+            Draw.rect(lightRegion, x, y, beamRotation + rotdeg());
 
-            if(!drawBeam) return;
+            if(!active) return;
             Draw.blend(Blending.additive);
-            Draw.rect(glowRegion, x, y, beamRotation);
+            Draw.rect(glowRegion, x, y, beamRotation + rotdeg());
             Draw.blend();
         }
 
@@ -91,7 +92,7 @@ public class BeamBlock extends BinaryBlock {
         public void drawSelect() {
             super.drawSelect();
             Drawf.dashCircle(x, y, beamLength, Pal.lancerLaser);
-            Tmp.v2.setZero().trns(beamRotation, beamLength / 2);
+            Tmp.v2.setZero().trns(beamRotation + rotdeg(), beamLength / 2);
             Drawf.dashLine(Pal.lancerLaser, x, y, x + Tmp.v2.x, y + Tmp.v2.y);
         }
 
@@ -114,20 +115,13 @@ public class BeamBlock extends BinaryBlock {
         public void drawConfigure() {
             super.drawConfigure();
             Drawf.dashCircle(x, y, beamLength, Pal.lancerLaser);
-            Tmp.v2.setZero().trns(beamRotation, beamLength / 2);
+            Tmp.v2.setZero().trns(beamRotation + rotdeg(), beamLength / 2);
             Drawf.dashLine(Pal.lancerLaser, x, y, x + Tmp.v2.x, y + Tmp.v2.y);
         }
 
         @Override
         public Object config() {
             return beamRotation;
-        }
-
-        @Override
-        public void created() {
-            super.created();
-            beamRotation += 90 * rotation;
-            rotation(0);
         }
 
         // beam stuff
@@ -156,8 +150,8 @@ public class BeamBlock extends BinaryBlock {
         }
 
         public void updateBeam(){
-            beamDrawLength = beam(beamRotation, true);
-            drawBeam = true;
+            beamDrawLength = beam(beamRotation + rotdeg(), true);
+            active = true;
         }
 
         public void drawBeam(float rot, float length){

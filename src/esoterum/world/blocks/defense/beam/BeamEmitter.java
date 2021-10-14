@@ -29,7 +29,7 @@ public class BeamEmitter extends BeamBlock{
         @Override
         public void draw() {
             super.draw();
-            if(signal()) drawBeam(beamRotation, beamDrawLength);
+            if(signal()) drawBeam(beamRotation + rotdeg(), beamDrawLength);
         }
 
         @Override
