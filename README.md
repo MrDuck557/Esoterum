@@ -1,5 +1,6 @@
 ![](https://github.com/Goobrr/Esoterum/blob/master/assets/banner.png)
 
+[![Discord](https://img.shields.io/discord/898088435145928744?color=7289da&label=ESOTERUM&logo=discord&logoColor=7289da&style=for-the-badge)](https://discord.gg/GpvckUY9V2)
 [![Discord](https://img.shields.io/discord/782583108473978880?color=7289da&label=AVANT%20TEAM&logo=discord&logoColor=7289da&style=for-the-badge)](https://discord.gg/V6ygvgGVqE)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Goobrr/Esoterum/Java%20CI?style=for-the-badge)](https://github.com/Goobrr/Esoterum/actions/workflows/gradle.yml)
 
