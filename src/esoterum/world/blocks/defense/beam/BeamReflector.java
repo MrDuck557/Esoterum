@@ -12,7 +12,7 @@ public class BeamReflector extends BeamBlock{
         @Override
         public void updateTile() {
             super.updateTile();
-            drawBeam = false;
+            active = false;
             if(signal()){
                 updateBeam();
                 signal(false);
@@ -21,7 +21,7 @@ public class BeamReflector extends BeamBlock{
 
         public void draw() {
             super.draw();
-            if(drawBeam) drawBeam(beamRotation, beamDrawLength);
+            if(active) drawBeam(beamRotation + rotdeg(), beamDrawLength);
         }
     }
 }
