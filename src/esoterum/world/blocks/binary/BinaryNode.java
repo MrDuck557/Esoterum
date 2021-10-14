@@ -109,12 +109,7 @@ public class BinaryNode extends BinaryBlock{
 
         @Override
         public void draw(){
-            if(!rotate || !rotatedBase){
-                Draw.rect(region, x, y);
-            } else {
-                Draw.rect(baseRegions[rotation], x, y);
-            }
-
+            drawBase();
             drawConnections();
             Draw.color(Color.white, Pal.accent, signal[0] ? 1f : 0f);
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);

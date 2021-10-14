@@ -46,8 +46,7 @@ public class BinaryClock extends BinaryBlock{
 
         @Override
         public void draw(){
-            Draw.rect(region, x, y);
-
+            drawBase();
             drawConnections();
             Lines.stroke(0.5f);
             Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
