@@ -78,8 +78,7 @@ public class BinaryBuffer extends BinaryBlock{
 
         @Override
         public void draw(){
-            Draw.rect(region, x, y);
-
+            drawBase();
             Draw.color(signal() ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg());
             drawConnections();
