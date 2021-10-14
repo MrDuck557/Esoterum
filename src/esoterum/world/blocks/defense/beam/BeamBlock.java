@@ -38,6 +38,7 @@ public class BeamBlock extends BinaryBlock {
         super(name);
         configurable = true;
         rotatedBase = false;
+        clipSize = beamLength;
 
         config(Float.class, (BeamBuild b, Float f) -> {
             b.beamRotation = f;
