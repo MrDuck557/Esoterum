@@ -1,6 +1,8 @@
 package esoterum.world.blocks.defense.beam;
 
 import arc.Core;
+import arc.graphics.Blending;
+import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
@@ -24,6 +26,11 @@ public class BeamBlock extends BinaryBlock {
     public float beamLength = 40f;
     public float beamDamage = 15f;
     public boolean acceptsBeam = false;
+
+    public TextureRegion lightRegion;
+    public TextureRegion glowRegion;
+    public boolean drawLight = false;
+
     public BeamBlock(String name){
         super(name);
         configurable = true;
@@ -37,6 +44,9 @@ public class BeamBlock extends BinaryBlock {
     public void load() {
         super.load();
         region = Core.atlas.find(size == 1 ? "esoterum-node-base" : "esoterum-base-" + size);
+        topRegion = Core.atlas.find(name);
+        lightRegion = Core.atlas.find(name + "-light");
+        glowRegion = Core.atlas.find(name + "-glow");
     }
 
     public void unitHit(Unit u){
@@ -55,6 +65,17 @@ public class BeamBlock extends BinaryBlock {
         @Override
         public void draw() {
             Draw.rect(region, x, y);
+            Draw.z(Layer.turret);
+            Draw.rect(topRegion, x, y, beamRotation - 90f);
+
+            if(!drawLight) return;
+            Draw.color(drawBeam ? Pal.lancerLaser : Color.white);
+            Draw.rect(lightRegion, x, y, beamRotation - 90f);
+
+            if(!drawBeam) return;
+            Draw.blend(Blending.additive);
+            Draw.rect(glowRegion, x, y, beamRotation - 90f);
+            Draw.blend();
         }
 
         @Override
@@ -122,15 +143,16 @@ public class BeamBlock extends BinaryBlock {
         }
 
         public void drawBeam(float rot, float length){
+            Draw.z(Layer.turret - 1);
+            Draw.blend(Blending.additive);
+
             Lines.stroke(1.5f);
             Draw.color(Pal.lancerLaser);
-            Draw.z(Layer.effect);
-
-
             Lines.lineAngle(x, y, rot, length);
-
             Tmp.v2.trns(rot, length);
             Fill.circle(x + Tmp.v2.x, y + Tmp.v2.y, 2);
+
+            Draw.blend();
         }
 
         public boolean acceptsBeam(){

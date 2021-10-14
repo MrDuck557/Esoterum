@@ -124,6 +124,7 @@ public class EsoBlocks implements ContentList{
 
         beamReflector = new BeamReflector("beam-reflector"){{
             beamLength = 80f;
+            drawLight = true;
         }};
         // endregion defense
 
