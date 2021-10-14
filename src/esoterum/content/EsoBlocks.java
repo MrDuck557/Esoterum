@@ -1,5 +1,6 @@
 package esoterum.content;
 
+import arc.audio.*;
 import esoterum.world.blocks.binary.*;
 import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.defense.beam.*;
@@ -18,7 +19,7 @@ public class EsoBlocks implements ContentList{
         esoPanel, esoPanel1, esoPanel2, esoPanel3, esoPanelFlat, esoSolidPanel,
         esoPanelOpen, esoPanelE, esoPanelS, esoPanelO,
         // Signal distribution
-        esoWire, esoJunction, esoRouter, esoNode, esoLatch, esoController, esoBuffer,
+        esoWire, esoJunction, esoRouter, esoNode, esoLatch, esoController, esoBuffer, musicBuffer,
         // Signal sources
         esoSwitch, esoButton, esoClock,
         // Logic gates
@@ -89,6 +90,8 @@ public class EsoBlocks implements ContentList{
         // endregion logic gates
 
         // region logic outputs
+        musicBuffer = new MusicBuffer("rest-block");
+
         noteBlock = new NoteBlock("note-block");
 
         togglerBlock = new Toggler("toggler");

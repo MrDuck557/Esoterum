@@ -43,7 +43,7 @@ public class BinaryBuffer extends BinaryBlock{
             super.updateTile();
             if(bufferedSignal){
                 delayTimer += Time.delta;
-            } else {
+            }else{
                 if(configs.get(3) == 0){
                     delayTimer = 0;
                 }
@@ -64,11 +64,11 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         @Override
-        public void updateSignal(int source) {
-            try {
+        public void updateSignal(int source){
+            try{
                 super.updateSignal(source);
                 bufferedSignal = getSignal(nb.get(configs.first()), this);
-            } catch(Exception e){}
+            }catch(Exception ignored){}
         }
 
         public float trueDelay(){
