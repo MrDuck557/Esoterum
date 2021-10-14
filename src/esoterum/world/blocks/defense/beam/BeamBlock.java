@@ -34,6 +34,7 @@ public class BeamBlock extends BinaryBlock {
     public BeamBlock(String name){
         super(name);
         configurable = true;
+        rotatedBase = false;
 
         config(Float.class, (BeamBuild b, Float f) -> {
             b.beamRotation = f;
@@ -66,15 +67,15 @@ public class BeamBlock extends BinaryBlock {
         public void draw() {
             Draw.rect(region, x, y);
             Draw.z(Layer.turret);
-            Draw.rect(topRegion, x, y, beamRotation - 90f);
+            Draw.rect(topRegion, x, y, beamRotation);
 
             if(!drawLight) return;
             Draw.color(drawBeam ? Pal.lancerLaser : Color.white);
-            Draw.rect(lightRegion, x, y, beamRotation - 90f);
+            Draw.rect(lightRegion, x, y, beamRotation);
 
             if(!drawBeam) return;
             Draw.blend(Blending.additive);
-            Draw.rect(glowRegion, x, y, beamRotation - 90f);
+            Draw.rect(glowRegion, x, y, beamRotation);
             Draw.blend();
         }
 
@@ -112,6 +113,13 @@ public class BeamBlock extends BinaryBlock {
         @Override
         public Object config() {
             return beamRotation;
+        }
+
+        @Override
+        public void created() {
+            super.created();
+            beamRotation += 90 * rotation;
+            rotation(0);
         }
 
         // beam stuff
