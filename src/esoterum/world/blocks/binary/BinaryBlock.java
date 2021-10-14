@@ -72,13 +72,15 @@ public class BinaryBlock extends Block {
         public boolean[] connections = new boolean[]{false, false, false, false};
 
         public boolean[] signal = new boolean[]{false, false, false, false, false};
-        public int visited = 0;
+        public int[] visited = {0, 0, 0, 0};
 
         //front, left, back, right, node, none
         public void updateSignal(int source) throws Exception {
-            if(visited > 2)
-                throw new Exception();
-            else visited += 1;
+            if(source < 4){
+                if(visited[source] > 2)
+                    throw new Exception();
+                else visited[source] += 1;
+            } else return;
         }
 
         @Override
@@ -138,7 +140,10 @@ public class BinaryBlock extends Block {
         @Override
         public void updateTile(){
             super.updateTile();
-            visited = 0;
+            visited[0] = 0;
+            visited[1] = 0;
+            visited[2] = 0;
+            visited[3] = 0;
         }
 
         public boolean signal(){
