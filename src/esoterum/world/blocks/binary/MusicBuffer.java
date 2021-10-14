@@ -6,6 +6,7 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
+import arc.util.io.*;
 import esoterum.ui.*;
 import esoterum.util.*;
 import mindustry.gen.*;
@@ -115,6 +116,31 @@ public class MusicBuffer extends BinaryBlock{
                     }
                 }).height(164).fillX();
             });
+        }
+
+        @Override
+        public Object config(){
+            return configs;
+        }
+
+        @Override
+        public void write(Writes write){
+            super.write(write);
+
+            write.f(delayTimer);
+            write.i(configs.get(0));
+            write.i(configs.get(1));
+            write.i(configs.get(2));
+        }
+
+        @Override
+        public void read(Reads read, byte revision){
+            super.read(read, revision);
+
+            delayTimer = read.f();
+            configs.set(0, read.i());
+            configs.set(1, read.i());
+            configs.set(2, read.i());
         }
     }
 }
