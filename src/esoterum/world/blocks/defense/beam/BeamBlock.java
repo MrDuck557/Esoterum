@@ -162,6 +162,7 @@ public class BeamBlock extends BinaryBlock {
             Draw.color(Pal.lancerLaser);
             Lines.lineAngle(x, y, rot, length);
             Tmp.v2.trns(rot, length);
+            Lines.lineAngle(x + Tmp.v2.x, y + Tmp.v2.y, (rot + 180) % 360, length);
             Fill.circle(x + Tmp.v2.x, y + Tmp.v2.y, 2);
 
             Draw.blend();
