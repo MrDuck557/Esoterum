@@ -18,6 +18,7 @@ import mindustry.ui.*;
 
 public class MusicBuffer extends BinaryBlock{
     protected float[] restMul = {0.25f, 0.5f, 1, 2, 4};
+    protected String[] restNames = {"16th", "8th", "Quarter", "Half", "Whole"};
     public TextureRegionDrawable score;
 
     public MusicBuffer(String name){
@@ -139,7 +140,7 @@ public class MusicBuffer extends BinaryBlock{
                         TextButton ib = rt.button("", EsoStyle.rests[i], () -> {
                             configs.set(2, ii);
                             configure(configs);
-                        }).center().align(Align.center).size(50, 164).scaling(Scaling.none).get();
+                        }).center().align(Align.center).size(50, 164).tooltip(restNames[i] + " Rest").scaling(Scaling.none).get();
                         ib.update(() -> ib.setChecked(configs.get(2) == ii));
                     }
                 }).height(164).fillX();
