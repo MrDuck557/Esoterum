@@ -92,14 +92,16 @@ public class MusicBuffer extends BinaryBlock{
             Draw.rect(connectionRegion, x, y, rotdeg());
             drawConnections();
             drawBuffer();
+            Draw.color(Color.white);
+            Draw.rect(topRegion, x, y);
         }
 
         public void drawBuffer(){
-            Draw.color(Color.white);
-            Lines.stroke(0.5f);
-            Lines.circle(x, y, 1.5f);
-            Draw.color(Pal.accent);
-            EsoDrawf.arc(x, y, 1.85f, rotdeg() - 180, 360 * (delayTimer / trueDelay()));
+            float progress = delayTimer / trueDelay();
+            if(progress > 0.01f){
+                Draw.color(Pal.accent);
+                EsoDrawf.arc(x, y, 1.85f, rotdeg() - 180, 360 * progress);
+            }
         }
 
         public void drawConnections(){

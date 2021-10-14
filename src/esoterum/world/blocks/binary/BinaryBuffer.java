@@ -89,8 +89,11 @@ public class BinaryBuffer extends BinaryBlock{
             Draw.color(Color.white);
             Lines.stroke(0.5f);
             Lines.circle(x, y, 1.5f);
-            Draw.color(Pal.accent);
-            EsoDrawf.arc(x, y, 1.85f, rotdeg() - 180, 360 * (delayTimer / trueDelay()));
+            float progress = delayTimer / trueDelay();
+            if(progress > 0.01f){
+                Draw.color(Pal.accent);
+                EsoDrawf.arc(x, y, 1.85f, rotdeg() - 180, 360 * progress);
+            }
             if(configs.get(3) != 1){
                 Draw.color(EsoPal.esoDark);
                 Fill.circle(x, y, 0.8f);

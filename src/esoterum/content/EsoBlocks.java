@@ -90,7 +90,7 @@ public class EsoBlocks implements ContentList{
         // endregion logic gates
 
         // region logic outputs
-        musicBuffer = new MusicBuffer("rest-block");
+        musicBuffer = new MusicBuffer("rest-buffer");
 
         noteBlock = new NoteBlock("note-block");
 
