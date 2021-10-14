@@ -80,6 +80,15 @@ public class EsoFx{
         Draw.blend();
     }),
 
+    beamHit = new Effect(15, e -> {
+        Draw.color(Pal.lancerLaser);
+        Angles.randLenVectors(e.id, 5, 7f * e.fin(Interp.pow5Out), (x, y) -> {
+            float ang = Mathf.angle(x, y);
+            Lines.stroke(2f * e.fout(Interp.pow3Out));
+            Lines.lineAngle(e.x + x, e.y + y, ang, 7f * e.fout(Interp.pow3In));
+        });
+    }),
+
     notePlay = new Effect(20, e -> {
         Draw.color(Pal.accent);
         Lines.stroke(3f * e.fout(Interp.pow5Out));

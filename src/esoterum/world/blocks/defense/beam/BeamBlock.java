@@ -11,11 +11,14 @@ import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import esoterum.content.EsoFx;
 import esoterum.util.EsoUtil;
 import esoterum.world.blocks.binary.BinaryBlock;
 import mindustry.Vars;
+import mindustry.content.Fx;
 import mindustry.core.World;
 import mindustry.gen.Icon;
+import mindustry.gen.Sounds;
 import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -50,8 +53,12 @@ public class BeamBlock extends BinaryBlock {
         glowRegion = Core.atlas.find(name + "-glow");
     }
 
-    public void unitHit(Unit u){
+    public void unitHit(Unit u, BeamBuild b){
         u.damage(beamDamage * Time.delta);
+        if(Mathf.chanceDelta(0.5)){
+            EsoFx.beamHit.at(u.x, u.y);
+            Sounds.spark.at(b.x, b.y);
+        }
     }
 
     public class BeamBuild extends BinaryBuild {
@@ -139,7 +146,9 @@ public class BeamBlock extends BinaryBlock {
             }
 
             if(damage){
-                EsoUtil.linecastUnits(x, y, rot, length, BeamBlock.this::unitHit);
+                EsoUtil.linecastUnits(x, y, rot, length, u -> {
+                    unitHit(u, this);
+                });
             }
 
             return length;
