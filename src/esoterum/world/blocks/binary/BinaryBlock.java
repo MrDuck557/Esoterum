@@ -26,6 +26,7 @@ public class BinaryBlock extends Block {
     public boolean drawConnectionArrows;
     public boolean drawRot = true;
     public int baseType = 0;
+    public boolean hideDetails = false;
     public boolean rotatedBase = false;
     public int visitLimit = 2;
 
