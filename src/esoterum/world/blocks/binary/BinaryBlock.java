@@ -100,8 +100,8 @@ public class BinaryBlock extends Block {
             Thread t = new Thread(null, null, "Bypass"){
                 @Override
                 public void run(){
-                    try {
-                        try {
+                    try{
+                        try{
                             if(front && nb.get(0) != null && connectionCheck(BinaryBuild.this, nb.get(0)))
                                 nb.get(0).updateSignal(EsoUtil.relativeDirection(nb.get(0), BinaryBuild.this));
                             if(left && nb.get(1) != null && connectionCheck(BinaryBuild.this, nb.get(1)))
@@ -110,8 +110,8 @@ public class BinaryBlock extends Block {
                                 nb.get(2).updateSignal(EsoUtil.relativeDirection(nb.get(2), BinaryBuild.this));
                             if(right && nb.get(3) != null && connectionCheck(BinaryBuild.this, nb.get(3)))
                                 nb.get(3).updateSignal(EsoUtil.relativeDirection(nb.get(3), BinaryBuild.this));
-                        } catch (Exception e){}
-                    } catch(StackOverflowError e){}
+                        }catch(Exception ignored){}
+                    }catch(StackOverflowError ignored){}
                 }
             };
             t.start();
@@ -121,8 +121,8 @@ public class BinaryBlock extends Block {
         }
 
         public void propagateSignal(boolean front, boolean left, boolean back, boolean right){
-            try {
-                try {
+            try{
+                try{
                     if(front && nb.get(0) != null && connectionCheck(this, nb.get(0)))
                         nb.get(0).updateSignal(EsoUtil.relativeDirection(nb.get(0), this));
                     if(left && nb.get(1) != null && connectionCheck(this, nb.get(1)))
@@ -131,8 +131,8 @@ public class BinaryBlock extends Block {
                         nb.get(2).updateSignal(EsoUtil.relativeDirection(nb.get(2), this));
                     if(right && nb.get(3) != null && connectionCheck(this, nb.get(3)))
                         nb.get(3).updateSignal(EsoUtil.relativeDirection(nb.get(3), this));
-                } catch(Exception e){}
-            } catch(StackOverflowError e){
+                }catch(Exception ignored){}
+            }catch(StackOverflowError e){
                 bypassSignal(front, left, back, right);
             }
         }
@@ -188,7 +188,7 @@ public class BinaryBlock extends Block {
         public void drawBase(){
             if(!rotate || !rotatedBase){
                 Draw.rect(region, x, y);
-            } else {
+            }else{
                 Draw.rect(baseRegions[rotation], x, y);
             }
         }
