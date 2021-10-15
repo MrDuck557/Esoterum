@@ -112,8 +112,7 @@ public class MusicBuffer extends BinaryBlock{
 
         @Override
         public void buildConfiguration(Table table){
-            table.table(t -> {
-                t.background(Styles.black5);
+            table.table(Styles.black5, t -> {
                 t.table(bt -> {
                     bt.button(Icon.rotate, () -> {
                         configs.incr(0, -1);
@@ -133,8 +132,7 @@ public class MusicBuffer extends BinaryBlock{
                     bt.add("BPM").left();
                 }).fillX();
                 t.row();
-                t.table(rt -> {
-                    rt.background(score);
+                t.table(score, rt -> {
                     for(int i = 0; i < 5; i++){
                         int ii = i;
                         TextButton ib = rt.button("", EsoStyle.rests[i], () -> {

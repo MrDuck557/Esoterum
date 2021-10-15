@@ -124,36 +124,37 @@ public class BinaryBuffer extends BinaryBlock{
 
         @Override
         public void buildConfiguration(Table table){
-            table.setBackground(Styles.black5);
-            table.table(t -> {
-                t.button(Icon.rotate, () -> {
-                    configs.incr(0, -1);
-                    if(configs.first() < 1){
-                        configs.set(0, 3);
-                    }
-                    configure(configs);
-                }).size(40f).tooltip("Rotate Input");
-                t.button(Icon.settings, () -> {
-                    configs.set(3, 1 - configs.get(3));
-                    configure(configs);
-                }).size(40f).tooltip("Signal persistence");
-                t.table(Tex.button, label -> {
-                    label.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
-                        .growX()
-                        .left();
-                }).growX().left();
-            }).height(40f).growX();
-            table.row();
-            table.table(Tex.button, t -> {
-                t.slider(0, 12, 1, configs.get(1),i -> {
-                    configs.set(1, (int) i);
-                    configure(configs);
-                }).height(40f).growX().left();
+            table.table(Styles.black5, t -> {
+                t.table(dt -> {
+                    dt.button(Icon.rotate, () -> {
+                        configs.incr(0, -1);
+                        if(configs.first() < 1){
+                            configs.set(0, 3);
+                        }
+                        configure(configs);
+                    }).size(40f).tooltip("Rotate Input");
+                    dt.button(Icon.settings, () -> {
+                        configs.set(3, 1 - configs.get(3));
+                        configure(configs);
+                    }).size(40f).tooltip("Signal persistence");
+                    dt.table(Tex.button, label -> {
+                        label.labelWrap(() -> Mathf.floor(trueDelay()) + "t")
+                            .growX()
+                            .left();
+                    }).growX().left();
+                }).height(40f).growX();
                 t.row();
-                t.slider(0, 5, 1, configs.get(2),i -> {
-                    configs.set(2, (int) i);
-                    configure(configs);
-                }).height(40f).growX().left();
+                t.table(Tex.button, dt -> {
+                    dt.slider(0, 12, 1, configs.get(1), i -> {
+                        configs.set(1, (int)i);
+                        configure(configs);
+                    }).height(40f).growX().left();
+                    dt.row();
+                    dt.slider(0, 5, 1, configs.get(2), i -> {
+                        configs.set(2, (int)i);
+                        configure(configs);
+                    }).height(40f).growX().left();
+                });
             });
         }
 

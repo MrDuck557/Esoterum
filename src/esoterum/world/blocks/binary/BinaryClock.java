@@ -60,83 +60,84 @@ public class BinaryClock extends BinaryBlock{
 
         @Override
         public void buildConfiguration(Table table){
-            table.setBackground(Styles.black5);
-            table.table(t -> {
-                t.add("Interval:");
-                t.row();
-                t.table(s -> {
-                    TextField iField = s.field(configs.first() + "t", i -> {
-                        i = EsoUtil.extractNumber(i);
-                        if(!i.isEmpty() && Float.parseFloat(i) > 1){
-                            configs.set(0, (int)(Float.parseFloat(i)));
+            table.table(Styles.black5, t -> {
+                t.table(Tex.underline, it -> {
+                    it.add("Interval:");
+                    it.row();
+                    it.table(s -> {
+                        TextField iField = s.field(configs.first() + "t", i -> {
+                            i = EsoUtil.extractNumber(i);
+                            if(!i.isEmpty() && Float.parseFloat(i) > 1){
+                                configs.set(0, (int)(Float.parseFloat(i)));
+                                configure(configs);
+                            }
+                        }).labelAlign(Align.right).padRight(8).size(100, 40).get();
+                        iField.update(() -> {
+                            Scene stage = iField.getScene();
+                            if(!(stage != null && stage.getKeyboardFocus() == iField))
+                                iField.setText(configs.first() + "t");
+                        });
+                        s.slider(2, maxInterval, 1, configs.first(), i -> {
+                            configs.set(0, (int)i);
                             configure(configs);
-                        }
-                    }).labelAlign(Align.right).padRight(8).size(100, 40).get();
-                    iField.update(() -> {
-                        Scene stage = iField.getScene();
-                        if(!(stage != null && stage.getKeyboardFocus() == iField))
-                            iField.setText(configs.first() + "t");
-                    });
-                    s.slider(2, maxInterval, 1, configs.first(), i -> {
-                        configs.set(0, (int)i);
-                        configure(configs);
-                    }).height(40f).growX().left().get();
-                }).padTop(8);
-            }).growX().get().background(Tex.underline);
-            table.row();
-            table.table(t -> {
-                t.add("Active Time:");
+                        }).height(40f).growX().left().get();
+                    }).padTop(8);
+                }).growX().get();
                 t.row();
-                t.table(s -> {
-                    TextField aField = s.field(configs.get(1) + "t", i -> {
-                        i = EsoUtil.extractNumber(i);
-                        if(!i.isEmpty()){
-                            configs.set(1, (int)(Float.parseFloat(i)));
+                t.table(Tex.underline, at -> {
+                    at.add("Active Time:");
+                    at.row();
+                    at.table(s -> {
+                        TextField aField = s.field(configs.get(1) + "t", i -> {
+                            i = EsoUtil.extractNumber(i);
+                            if(!i.isEmpty()){
+                                configs.set(1, (int)(Float.parseFloat(i)));
+                                configure(configs);
+                            }
+                        }).labelAlign(Align.right).padRight(8).size(100, 40).get();
+                        aField.update(() -> {
+                            Scene stage = aField.getScene();
+                            if(!(stage != null && stage.getKeyboardFocus() == aField))
+                                aField.setText(configs.get(1) + "t");
+                        });
+                        Slider aSlider = s.slider(0, configs.first(), 1, configs.get(1), i -> {
+                            configs.set(1, (int)i);
                             configure(configs);
-                        }
-                    }).labelAlign(Align.right).padRight(8).size(100, 40).get();
-                    aField.update(() -> {
-                        Scene stage = aField.getScene();
-                        if(!(stage != null && stage.getKeyboardFocus() == aField))
-                            aField.setText(configs.get(1) + "t");
-                    });
-                    Slider aSlider = s.slider(0, configs.first(), 1, configs.get(1), i -> {
-                        configs.set(1, (int)i);
-                        configure(configs);
-                    }).height(40f).growX().left().get();
-                    aSlider.update(() -> {
-                        aSlider.setRange(0, configs.first());
-                        aSlider.setValue(configs.get(1));
-                    });
-                }).padTop(8);
-            }).growX().get().background(Tex.underline);
-            table.row();
-            table.table(t -> {
-                t.add("Offset:");
+                        }).height(40f).growX().left().get();
+                        aSlider.update(() -> {
+                            aSlider.setRange(0, configs.first());
+                            aSlider.setValue(configs.get(1));
+                        });
+                    }).padTop(8);
+                }).growX().get();
                 t.row();
-                t.table(s -> {
-                    TextField oField = s.field(configs.get(2) + "t", i -> {
-                        i = EsoUtil.extractNumber(i);
-                        if(!i.isEmpty()){
-                            configs.set(2, (int)(Float.parseFloat(i)));
+                t.table(Tex.underline, ot -> {
+                    ot.add("Offset:");
+                    ot.row();
+                    ot.table(s -> {
+                        TextField oField = s.field(configs.get(2) + "t", i -> {
+                            i = EsoUtil.extractNumber(i);
+                            if(!i.isEmpty()){
+                                configs.set(2, (int)(Float.parseFloat(i)));
+                                configure(configs);
+                            }
+                        }).labelAlign(Align.right).padRight(8).size(100, 40).get();
+                        oField.update(() -> {
+                            Scene stage = oField.getScene();
+                            if(!(stage != null && stage.getKeyboardFocus() == oField))
+                                oField.setText(configs.get(2) + "t");
+                        });
+                        Slider oSlider = s.slider(0, configs.first(), 1, configs.get(2), i -> {
+                            configs.set(2, (int)i);
                             configure(configs);
-                        }
-                    }).labelAlign(Align.right).padRight(8).size(100, 40).get();
-                    oField.update(() -> {
-                        Scene stage = oField.getScene();
-                        if(!(stage != null && stage.getKeyboardFocus() == oField))
-                            oField.setText(configs.get(2) + "t");
-                    });
-                    Slider oSlider = s.slider(0, configs.first(), 1, configs.get(2), i -> {
-                        configs.set(2, (int)i);
-                        configure(configs);
-                    }).height(40f).growX().left().get();
-                    oSlider.update(() -> {
-                        oSlider.setRange(0, configs.first());
-                        oSlider.setValue(configs.get(2));
-                    });
-                }).padTop(8);
-            }).growX().get().background(Tex.underline);
+                        }).height(40f).growX().left().get();
+                        oSlider.update(() -> {
+                            oSlider.setRange(0, configs.first());
+                            oSlider.setValue(configs.get(2));
+                        });
+                    }).padTop(8);
+                }).growX().get();
+            });
         }
 
         @Override

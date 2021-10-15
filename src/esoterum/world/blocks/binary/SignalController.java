@@ -102,16 +102,17 @@ public class SignalController extends BinaryBlock{
         // i don't know how to arrange the buttons, so i just did this
         @Override
         public void buildConfiguration(Table table){
-            table.setBackground(Tex.clear);
-            table.table().size(40);
-            addConfigButton(table, 1).align(Align.center);
-            table.row();
-            addConfigButton(table, 2);
-            table.table().size(40);
-            addConfigButton(table, 0);
-            table.row();
-            table.table().size(40);
-            addConfigButton(table, 3).align(Align.center);
+            table.table(Tex.clear, t -> {
+                t.table().size(40);
+                addConfigButton(t, 1).align(Align.center);
+                t.row();
+                addConfigButton(t, 2);
+                t.table().size(40);
+                addConfigButton(t, 0);
+                t.row();
+                t.table().size(40);
+                addConfigButton(t, 3).align(Align.center);
+            });
         }
 
         public Cell<Table> addConfigButton(Table table, int index){
