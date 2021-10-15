@@ -19,7 +19,7 @@ public class BinaryRouter extends BinaryBlock{
                 };
                 if(signal() != signal[4]){
                     signal(signal[4]);
-                    propagateSignal(source != 0, source != 1, source != 2, source != 3);
+                    propagateSignal(true, true, true, true);
                 }
             } catch(Exception e){}
         }
