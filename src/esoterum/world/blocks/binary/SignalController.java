@@ -11,7 +11,6 @@ import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
 import mindustry.gen.Tex;
-import mindustry.graphics.*;
 
 // each side's behavior is configurable.
 public class SignalController extends BinaryBlock{

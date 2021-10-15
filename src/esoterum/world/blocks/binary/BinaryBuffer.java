@@ -9,7 +9,6 @@ import arc.util.*;
 import arc.util.io.*;
 import esoterum.graphics.*;
 import mindustry.gen.*;
-import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.logic.*;
 

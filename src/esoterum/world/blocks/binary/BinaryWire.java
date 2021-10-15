@@ -9,7 +9,6 @@ import arc.math.geom.*;
 import arc.struct.*;
 import esoterum.content.*;
 import mindustry.entities.units.*;
-import mindustry.graphics.*;
 import mindustry.world.*;
 
 public class BinaryWire extends BinaryBlock{
@@ -60,11 +59,14 @@ public class BinaryWire extends BinaryBlock{
     public class BinaryWireBuild extends BinaryBuild{
         @Override
         public void updateSignal(int source){
-            try{
+            try {
                 super.updateSignal(source);
-                signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
-                propagateSignal(true, false, false, false);
-            }catch(Exception ignored){}
+                signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
+                if(signal[0] != signal[4]){
+                    signal[0] = signal[4];
+                    propagateSignal(true, false, false, false);
+                }
+            } catch(Exception ignored){}
         }
 
         @Override

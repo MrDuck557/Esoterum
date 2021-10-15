@@ -4,7 +4,7 @@ import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import mindustry.graphics.*;
+import esoterum.util.EsoUtil;
 import mindustry.logic.LAccess;
 
 public class Toggler extends BinaryBlock{
@@ -32,7 +32,7 @@ public class Toggler extends BinaryBlock{
     public class TogglerBuild extends BinaryBuild{
         @Override
         public void updateSignal(int source){
-            try{
+            try {
                 super.updateSignal(source);
                 signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
                 if(signal[0] != signal[4]){
@@ -42,7 +42,7 @@ public class Toggler extends BinaryBlock{
                 if(front() != null){
                     front().control(LAccess.enabled, Mathf.num(signal()), 0d, 0d, 0d);
                 }
-            }catch(Exception ignored){}
+            } catch(Exception ignored){}
         }
 
         @Override

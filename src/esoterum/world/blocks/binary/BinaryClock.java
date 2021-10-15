@@ -12,7 +12,6 @@ import arc.util.io.*;
 import esoterum.graphics.*;
 import esoterum.util.*;
 import mindustry.gen.*;
-import mindustry.graphics.*;
 import mindustry.ui.*;
 
 public class BinaryClock extends BinaryBlock{

@@ -6,7 +6,6 @@ import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
-import arc.util.Log;
 import arc.util.io.*;
 import esoterum.util.*;
 import mindustry.gen.*;
@@ -28,7 +27,7 @@ public class BinaryBlock extends Block {
     public boolean drawRot = true;
     public int baseType = 0;
     public boolean rotatedBase = false;
-    public int depthLimit = 100000;
+    public int visitLimit = 2;
 
     public BinaryBlock(String name) {
         super(name);
@@ -78,7 +77,7 @@ public class BinaryBlock extends Block {
         //front, left, back, right, node, none
         public void updateSignal(int source) throws Exception {
             if(source < 4){
-                if(visited[source] > 2)
+                if(visited[source] > visitLimit)
                     throw new Exception();
                 else visited[source] += 1;
             } else return;
@@ -101,18 +100,7 @@ public class BinaryBlock extends Block {
             Thread t = new Thread(null, null, "Bypass"){
                 @Override
                 public void run(){
-                    try{
-                        try{
-                            if(front && nb.get(0) != null && connectionCheck(BinaryBuild.this, nb.get(0)))
-                                nb.get(0).updateSignal(EsoUtil.relativeDirection(nb.get(0), BinaryBuild.this));
-                            if(left && nb.get(1) != null && connectionCheck(BinaryBuild.this, nb.get(1)))
-                                nb.get(1).updateSignal(EsoUtil.relativeDirection(nb.get(1), BinaryBuild.this));
-                            if(back && nb.get(2) != null && connectionCheck(BinaryBuild.this, nb.get(2)))
-                                nb.get(2).updateSignal(EsoUtil.relativeDirection(nb.get(2), BinaryBuild.this));
-                            if(right && nb.get(3) != null && connectionCheck(BinaryBuild.this, nb.get(3)))
-                                nb.get(3).updateSignal(EsoUtil.relativeDirection(nb.get(3), BinaryBuild.this));
-                        }catch(Exception ignored){}
-                    }catch(StackOverflowError ignored){}
+                    propagateSignal(front, left, back, right);
                 }
             };
             t.start();

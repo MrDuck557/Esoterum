@@ -9,7 +9,6 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.io.*;
 import mindustry.gen.*;
-import mindustry.graphics.*;
 
 public class LogicGate extends BinaryBlock{
     public Boolf<boolean[]> operation;

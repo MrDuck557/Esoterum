@@ -6,7 +6,6 @@ import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
-import mindustry.graphics.*;
 
 public class LatchBlock extends BinaryBlock{
     public TextureRegion latchRegion;

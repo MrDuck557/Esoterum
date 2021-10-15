@@ -5,7 +5,6 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.util.io.*;
 import arc.math.*;
-import mindustry.graphics.*;
 import mindustry.logic.*;
 
 public class BinaryButton extends BinaryBlock{
@@ -52,13 +51,13 @@ public class BinaryButton extends BinaryBlock{
 
         @Override
         public void updateTile(){
+            signal[4] = signal();
             if(!continuous){
                 if((timer -= delta()) <= 0){
                     signal(false);
                 }
             }
-            if(signal[4] != signal())propagateSignal(true, true, true, true);
-            signal[4] = signal();
+            if(signal[4] != signal()) propagateSignal(true, true, true, true);
         }
 
         @Override
@@ -70,8 +69,11 @@ public class BinaryButton extends BinaryBlock{
         public boolean configTapped(){
             if(continuous){
                 configure(!signal());
+                propagateSignal(true, true, true, true);
             } else {
+                signal[4] = signal();
                 configure(true);
+                if(!signal[4]) propagateSignal(true, true, true, true);
             }
             return false;
         }
@@ -110,9 +112,11 @@ public class BinaryButton extends BinaryBlock{
 
         @Override
         public void control(LAccess type, double p1, double p2, double p3, double p4){
+            signal[4] = signal();
             if(type == LAccess.enabled){
                 configure(!Mathf.zero((float)p1));
             }
+            if(signal[4] != signal()) propagateSignal(true, true, true, true);
         }
     }
 }

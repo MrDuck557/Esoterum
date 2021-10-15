@@ -16,7 +16,6 @@ import esoterum.ui.EsoStyle;
 import esoterum.util.*;
 import mindustry.*;
 import mindustry.gen.*;
-import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.logic.*;
 import mindustry.world.*;
