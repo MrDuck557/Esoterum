@@ -19,13 +19,15 @@ public class EsoBlocks implements ContentList{
         esoPanel, esoPanel1, esoPanel2, esoPanel3, esoPanelFlat, esoSolidPanel,
         esoPanelOpen, esoPanelE, esoPanelS, esoPanelO,
         // Signal distribution
-        esoWire, esoJunction, esoRouter, esoNode, esoLatch, esoController, esoBuffer, musicBuffer,
+        esoWire, esoJunction, esoRouter, esoNode, esoLatch, esoController, esoBuffer,
         // Signal sources
         esoSwitch, esoButton, esoClock,
         // Logic gates
         esoAND, esoXOR, esoNOT,
-        // Logic outputs
-        noteBlock, togglerBlock,
+        // Logic music
+        musicBuffer, noteBlock,
+        // Logic interaction
+        togglerBlock,
         // Defense
         smallSentry, beamEmitter, beamReflector,
 
@@ -89,13 +91,15 @@ public class EsoBlocks implements ContentList{
         }};
         // endregion logic gates
 
-        // region logic outputs
+        // region logic music
         musicBuffer = new MusicBuffer("rest-buffer");
 
         noteBlock = new NoteBlock("note-block");
+        // endregion logic music
 
+        // region logic interaction
         togglerBlock = new Toggler("toggler");
-        // endregion logic outputs
+        // endregion logic interaction
 
         // region defense
         smallSentry = new SentryTurret("small-sentry"){{
