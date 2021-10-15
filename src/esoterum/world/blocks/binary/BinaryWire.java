@@ -30,7 +30,6 @@ public class BinaryWire extends BinaryBlock{
     public void load(){
         super.load();
         connectionRegion = Core.atlas.find("esoterum-connection-large");
-        topRegion = Core.atlas.find("esoterum-wire-top");
     }
 
     @Override
