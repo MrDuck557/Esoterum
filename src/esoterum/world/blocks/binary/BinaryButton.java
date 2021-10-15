@@ -49,6 +49,7 @@ public class BinaryButton extends BinaryBlock{
 
     public class BinaryButtonBuild extends BinaryBuild {
         public float timer;
+        public boolean lastSignal;
 
         @Override
         public void updateTile(){
@@ -69,11 +70,11 @@ public class BinaryButton extends BinaryBlock{
         public boolean configTapped(){
             if(continuous){
                 configure(!signal());
-                propagateSignal(true, true, true, true);
             } else {
                 configure(true);
-                propagateSignal(true, true, true, true);
             }
+            propagateSignal(true, true, true, true);
+            signal[4] = signal();
             return false;
         }
 
@@ -112,8 +113,9 @@ public class BinaryButton extends BinaryBlock{
         @Override
         public void control(LAccess type, double p1, double p2, double p3, double p4){
             if(type == LAccess.enabled){
-                //controlling capability
-                signal(!Mathf.zero((float)p1));
+                configure(!Mathf.zero((float)p1));
+                if(signal() != signal[4]) propagateSignal(true, true, true, true);
+                signal[4] = signal();
             }
         }
     }
