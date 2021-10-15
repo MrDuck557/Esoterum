@@ -119,14 +119,9 @@ public class NoteBlock extends BinaryBlock{
             super.displayBars(table);
             table.row();
             table.table(e -> {
-                Runnable rebuild = () -> {
-                    e.clearChildren();
-                    e.row();
-                    e.left();
-                    e.label(() -> "Note: " + noteString() + " (" + samples[configs.get(4)].name + ")").color(Color.lightGray);
-                };
-
-                e.update(rebuild);
+                e.row();
+                e.left();
+                e.label(() -> "Note: " + noteString() + " (" + samples[configs.get(4)].name + ")").color(Color.lightGray);
             }).left();
         }
 

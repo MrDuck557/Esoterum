@@ -110,15 +110,9 @@ public class BinaryBuffer extends BinaryBlock{
             super.displayBars(table);
             table.row();
             table.table(e -> {
-                Runnable rebuild = () -> {
-                    e.clearChildren();
-                    e.row();
-                    e.left();
-                    e.label(() -> "Delay: " + Mathf.floor(trueDelay()) + " ticks" + (configs.get(3) == 1 ? " (Persistent)" : ""))
-                        .color(Color.lightGray);
-                };
-
-                e.update(rebuild);
+                e.row();
+                e.left();
+                e.label(() -> "Delay: " + Mathf.floor(trueDelay()) + " ticks" + (configs.get(3) == 1 ? " (Persistent)" : "")).color(Color.lightGray);
             }).left();
         }
 

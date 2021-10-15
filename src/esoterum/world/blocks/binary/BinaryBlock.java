@@ -273,14 +273,9 @@ public class BinaryBlock extends Block {
         public void displayBars(Table table) {
             super.displayBars(table);
             table.table(e -> {
-                Runnable rebuild = () -> {
-                    e.clearChildren();
-                    e.row();
-                    e.left();
-                    e.label(() -> "State: " + (signal() ? "1" : "0")).color(Color.lightGray);
-                };
-
-                e.update(rebuild);
+                e.row();
+                e.left();
+                e.label(() -> "State: " + (signal() ? "1" : "0")).color(Color.lightGray);
             }).left();
         }
 

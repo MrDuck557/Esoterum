@@ -3,6 +3,7 @@ package esoterum.world.blocks.binary;
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.math.*;
 import arc.scene.style.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
@@ -111,6 +112,17 @@ public class MusicBuffer extends BinaryBlock{
         }
 
         @Override
+        public void displayBars(Table table){
+            super.displayBars(table);
+            table.row();
+            table.table(e -> {
+                e.row();
+                e.left();
+                e.label(() -> "BPM: " + configs.get(1) + " (" + restNames[configs.get(2)] + " Rest)").color(Color.lightGray);
+            }).left();
+        }
+
+        @Override
         public void buildConfiguration(Table table){
             table.table(Styles.black5, t -> {
                 t.table(bt -> {
@@ -124,7 +136,7 @@ public class MusicBuffer extends BinaryBlock{
                     bt.field(String.valueOf(configs.get(1)), d -> {
                         d = EsoUtil.extractNumber(d);
                         if(!d.isEmpty()){
-                            int q = Math.min((int)(Float.parseFloat(d)), 900);
+                            int q = Mathf.round(Math.min((int)(Float.parseFloat(d)), 900), 4);
                             configs.set(1, q);
                             configure(configs);
                         }
