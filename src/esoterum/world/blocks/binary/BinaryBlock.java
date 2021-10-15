@@ -35,6 +35,7 @@ public class BinaryBlock extends Block {
         update = true;
         solid = true;
         destructible = true;
+        hideDetails = false;
         buildVisibility = BuildVisibility.shown;
         category = Category.logic;
     }
