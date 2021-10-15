@@ -321,7 +321,7 @@ public class NoteBlock extends BinaryBlock{
                 }
                 rem += 0.5; //forces typecast to work
                 configs.set(1, (int) rem);
-                configs.set(2, whole + 1);
+                configs.set(2, whole);
                 configure(configs);
             }else if (type == LAccess.color){
                 // r is instrument, b is volume, g does absolutely nothing
