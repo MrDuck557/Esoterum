@@ -49,7 +49,7 @@ public class BinaryClock extends BinaryBlock{
             drawBase();
             drawConnections();
             Lines.stroke(0.5f);
-            Draw.color(Color.white, team.color, signal() ? 1f : 0f);
+            Draw.color(Color.white, team.color, Mathf.num(signal()));
             Lines.circle(x, y, 1.5f);
             Draw.color(team.color);
             EsoDrawf.arc(x, y, 1.85f, -configs.get(2) / (float)configs.first() * 360f + 90f, configs.get(1) / (float)configs.first() * 360f);

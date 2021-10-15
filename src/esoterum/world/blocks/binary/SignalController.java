@@ -3,6 +3,7 @@ package esoterum.world.blocks.binary;
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.math.*;
 import arc.math.geom.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
@@ -90,10 +91,10 @@ public class SignalController extends BinaryBlock{
                 int c = configs.get(i);
                 if(c == 0) continue;
                 if(c == 1){
-                    Draw.color(Color.white, team.color, getSignal(nb.get(i), this) ? 1f : 0f);
+                    Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
                     Draw.rect(inputRegion, x, y, i * 90f);
-                } else {
-                    Draw.color(Color.white, team.color, signal() ? 1f : 0f);
+                }else{
+                    Draw.color(Color.white, team.color, Mathf.num(signal()));
                     Draw.rect(outputRegion, x, y, i * 90f);
                 }
             }

@@ -3,6 +3,7 @@ package esoterum.world.blocks.binary;
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.math.*;
 import mindustry.graphics.*;
 
 // too similar to BinaryRouter?
@@ -50,9 +51,9 @@ public class BinaryJunction extends BinaryBlock{
 
         @Override
         public void drawConnections(){
-            Draw.color(Color.white, team.color, signal[0] || signal[2] ? 1f : 0f);
+            Draw.color(Color.white, team.color, Mathf.num(signal[0] || signal[2]));
             Draw.rect(directionRegions[0], x, y);
-            Draw.color(Color.white, team.color, signal[1] || signal[3] ? 1f : 0f);
+            Draw.color(Color.white, team.color, Mathf.num(signal[1] || signal[3]));
             Draw.rect(directionRegions[1], x, y);
         }
     }

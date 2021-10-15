@@ -3,6 +3,7 @@ package esoterum.world.blocks.binary;
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.math.*;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.graphics.*;
@@ -59,7 +60,7 @@ public class LatchBlock extends BinaryBlock{
         public void draw() {
             drawBase();
             drawConnections();
-            Draw.color(Color.white, team.color, getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this) ? 1f : 0f);
+            Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this)));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
             Draw.color(signal[0] ? team.color : Color.white);

@@ -363,7 +363,7 @@ public class NoteBlock extends BinaryBlock{
             "A%s", "A%s#", "B%s"
         };
         /** Processes octave and pitch to create name */
-        public Notef titleProcessor = (o, p) -> String.valueOf(o + 1 + (p >= 12 ? 1 : 0));
+        public Notef titleProcessor = (o, p) -> String.valueOf(o + 1 + (Mathf.num(p >= 12)));
         /** Icon */
         public TextureRegion icon;
 

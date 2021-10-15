@@ -3,6 +3,7 @@ package esoterum.world.blocks.binary;
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.Log;
@@ -181,7 +182,7 @@ public class BinaryBlock extends Block {
         public void draw(){
             drawBase();
             drawConnections();
-            Draw.color(Color.white, team.color, signal() ? 1f : 0f);
+            Draw.color(Color.white, team.color, Mathf.num(signal()));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
         }
 
@@ -195,8 +196,8 @@ public class BinaryBlock extends Block {
 
         public void drawConnections(){
             for(int i = 0; i < 4; i++){
-                if(inputs(i)) Draw.color(Color.white, team.color, getSignal(nb.get(i), this) ? 1f : 0f);
-                if(outputs(i)) Draw.color(Color.white, team.color, signal() ? 1f : 0f);
+                if(inputs(i)) Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
+                if(outputs(i)) Draw.color(Color.white, team.color, Mathf.num(signal()));
                 if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
         }
@@ -330,7 +331,7 @@ public class BinaryBlock extends Block {
 
         @Override
         public double sense(LAccess sensor){
-            if(sensor == LAccess.enabled) return signal() ? 1 : 0;
+            if(sensor == LAccess.enabled) return Mathf.num(signal());
             return super.sense(sensor);
         }
     }

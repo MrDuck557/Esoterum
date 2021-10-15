@@ -111,14 +111,14 @@ public class BinaryNode extends BinaryBlock{
         public void draw(){
             drawBase();
             drawConnections();
-            Draw.color(Color.white, team.color, signal[0] ? 1f : 0f);
+            Draw.color(Color.white, team.color, Mathf.num(signal[0]));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
             BinaryNodeBuild c = linkedNode();
             if(c != null){
                 Draw.z(Layer.power);
                 Lines.stroke(1f);
-                Draw.color(Color.white, team.color, signal() ? 1f : 0f);
+                Draw.color(Color.white, team.color, Mathf.num(signal()));
                 EsoDrawf.curvedLine(x, y, c.x, c.y, -curveWidth); //Negative so that it goes clockwise if positive
 
                 float time = (Time.time / 60f) % 3f;
@@ -139,7 +139,7 @@ public class BinaryNode extends BinaryBlock{
 
         @Override
         public void drawConfigure(){
-            Tmp.c1.set(Color.white).lerp(team.color, signal() ? 1f : 0f);
+            Tmp.c1.set(Color.white).lerp(team.color, Mathf.num(signal()));
 
             Drawf.circles(x, y, size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f), Tmp.c1);
             Drawf.circles(x, y, range * tilesize, Tmp.c1);

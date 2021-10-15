@@ -4,6 +4,7 @@ import arc.*;
 import arc.func.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.io.*;
@@ -80,10 +81,10 @@ public class LogicGate extends BinaryBlock{
         public void drawConnections(){
             for(int i = 1; i < 4; i++){
                 if(!configs.contains(i)) continue;
-                Draw.color(Color.white, team.color, getSignal(nb.get(i), this) ? 1f : 0f);
+                Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
                 Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
-            Draw.color(Color.white, team.color, signal() ? 1f : 0f);
+            Draw.color(Color.white, team.color, Mathf.num(signal()));
             Draw.rect(connectionRegion, x, y, rotdeg());
         }
 
