@@ -291,10 +291,7 @@ public class NoteBlock extends BinaryBlock{
         public void control(LAccess type, double p1, double p2, double p3, double p4){
             if(type == LAccess.config){
                 //controlling capability
-
-                // currently using -1 as the lowest octave for backwards compatibility
-                // this will be replaced with a 0-indexed system later
-                if(p1 < -1.12 || p1 >= 5.9){ //octave invalid
+                if(p1 < 0 || p1 >= 6.9){ //octave invalid
                     configs.set(1, 0);
                     configs.set(2, 3);
                     configure(configs);
@@ -315,7 +312,7 @@ public class NoteBlock extends BinaryBlock{
                 }
                 rem += 0.5; //forces typecast to work
                 configs.set(1, (int) rem);
-                configs.set(2, whole + 1);
+                configs.set(2, whole);
                 configure(configs);
             }else if (type == LAccess.color){
                 // r is instrument, b is volume, g does absolutely nothing
