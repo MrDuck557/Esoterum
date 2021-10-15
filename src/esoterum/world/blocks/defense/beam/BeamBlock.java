@@ -56,10 +56,12 @@ public class BeamBlock extends BinaryBlock {
     }
 
     public void unitHit(Unit u, BeamBuild b){
-        u.damage(beamDamage * Time.delta);
-        if(Mathf.chanceDelta(0.5)){
-            EsoFx.beamHit.at(u.x, u.y);
-            Sounds.spark.at(b.x, b.y);
+        if(u.team != b.team){
+            u.damage(beamDamage * Time.delta);
+            if(Mathf.chanceDelta(0.5)){
+                EsoFx.beamHit.at(u.x, u.y);
+                Sounds.spark.at(b.x, b.y);
+            }
         }
     }
 
