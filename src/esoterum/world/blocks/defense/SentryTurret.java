@@ -8,8 +8,9 @@ import arc.scene.ui.layout.Table;
 import arc.util.Tmp;
 import arc.util.io.*;
 import mindustry.Vars;
+import mindustry.content.*;
 import mindustry.core.World;
-import mindustry.entities.Units;
+import mindustry.entities.*;
 import mindustry.game.Team;
 import mindustry.gen.Icon;
 import mindustry.graphics.*;
@@ -85,7 +86,7 @@ public class SentryTurret extends PowerTurret {
             Draw.color(Pal.gray);
             Lines.stroke(3f);
             drawDetectionCone();
-            Draw.color(Pal.accent);
+            Draw.color(team.color);
             Lines.stroke(1.2f);
             drawDetectionCone();
         }
@@ -103,7 +104,7 @@ public class SentryTurret extends PowerTurret {
             Draw.z(Layer.turret - 1);
 
             Draw.blend(Blending.additive);
-            Draw.color(obstacle != null ? Color.red : Pal.accent);
+            Draw.color(obstacle != null ? Color.red : team.color);
             Lines.stroke(1);
             if (target == null) {
                 Lines.lineAngle(x, y, size * 4, rotation, maxRange - size * 4);
@@ -158,6 +159,22 @@ public class SentryTurret extends PowerTurret {
             );
 
             return found && obstacle != null ? Mathf.dst(x, y, obstacle.worldx(), obstacle.worldy()) : range;
+        }
+
+        @Override
+        protected void effects(){
+            Effect fshootEffect = shootEffect == Fx.none ? peekAmmo().shootEffect : shootEffect;
+            Effect fsmokeEffect = smokeEffect == Fx.none ? peekAmmo().smokeEffect : smokeEffect;
+
+            fshootEffect.at(x + tr.x, y + tr.y, rotation, team.color);
+            fsmokeEffect.at(x + tr.x, y + tr.y, rotation, team.color);
+            shootSound.at(x + tr.x, y + tr.y, Mathf.random(0.9f, 1.1f));
+
+            if(shootShake > 0){
+                Effect.shake(shootShake, shootShake, this);
+            }
+
+            recoil = recoilAmount;
         }
 
         // saving

@@ -62,10 +62,10 @@ public class EsoFx{
     }),
 
     sentryShoot = new Effect(10, e -> {
-        Tmp.c1.set(Pal.accent);
+        Tmp.c1.set(e.color);
         e.scaled(e.lifetime / 2f, s -> {
             tr.trns(e.rotation, 10f * e.fin());
-            Draw.color(Pal.accent);
+            Draw.color(e.color);
             Drawf.tri(e.x + tr.x, e.y + tr.y, 4f * s.fout(), 10f + 5f * s.fin(), e.rotation);
             Drawf.tri(e.x + tr.x, e.y + tr.y, 4f * s.fout(), 5f * s.fin(), e.rotation + 180f);
 
@@ -90,7 +90,7 @@ public class EsoFx{
     }),
 
     notePlay = new Effect(20, e -> {
-        Draw.color(Pal.accent);
+        Draw.color(e.color);
         Lines.stroke(3f * e.fout(Interp.pow5Out));
         Lines.square(e.x, e.y, 4 * e.fin(Interp.pow5Out), 45f);
     });

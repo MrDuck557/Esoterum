@@ -36,7 +36,7 @@ public class Toggler extends BinaryBlock{
         public void drawSelect() {
             super.drawSelect();
             if(front() != null){
-                Draw.color(signal() ? Pal.accent : Color.white);
+                Draw.color(signal() ? team.color : Color.white);
                 Lines.square(front().x, front().y, 4 * front().block.size);
             }
         }

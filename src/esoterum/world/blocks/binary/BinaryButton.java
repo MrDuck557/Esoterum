@@ -80,7 +80,7 @@ public class BinaryButton extends BinaryBlock{
         @Override
         public void draw() {
             drawBase();
-            Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
+            Draw.color(Color.white, team.color, signal() ? 1f : 0f);
             for(int i = 0; i < 4; i++){
                 if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }

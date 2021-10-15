@@ -79,7 +79,7 @@ public class BinaryBuffer extends BinaryBlock{
         @Override
         public void draw(){
             drawBase();
-            Draw.color(signal() ? Pal.accent : Color.white);
+            Draw.color(signal() ? team.color : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg());
             drawConnections();
             drawBuffer();
@@ -91,7 +91,7 @@ public class BinaryBuffer extends BinaryBlock{
             Lines.circle(x, y, 1.5f);
             float progress = delayTimer / trueDelay();
             if(progress > 0.01f){
-                Draw.color(Pal.accent);
+                Draw.color(team.color);
                 EsoDrawf.arc(x, y, 1.85f, rotdeg() - 180, 360 * progress);
             }
             if(configs.get(3) != 1){
@@ -101,7 +101,7 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         public void drawConnections(){
-            Draw.color(signal() ? Pal.accent : Color.white);
+            Draw.color(signal() ? team.color : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
         }
 

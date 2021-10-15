@@ -90,10 +90,10 @@ public class SignalController extends BinaryBlock{
                 int c = configs.get(i);
                 if(c == 0) continue;
                 if(c == 1){
-                    Draw.color(Color.white, Pal.accent, getSignal(nb.get(i), this) ? 1f : 0f);
+                    Draw.color(Color.white, team.color, getSignal(nb.get(i), this) ? 1f : 0f);
                     Draw.rect(inputRegion, x, y, i * 90f);
                 } else {
-                    Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
+                    Draw.color(Color.white, team.color, signal() ? 1f : 0f);
                     Draw.rect(outputRegion, x, y, i * 90f);
                 }
             }

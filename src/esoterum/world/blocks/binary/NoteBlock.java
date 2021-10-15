@@ -107,7 +107,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public void drawConnections(){
-            Draw.color(signal() ? Pal.accent : Color.white);
+            Draw.color(signal() ? team.color : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
             Draw.rect(connectionRegion, x, y, rotdeg());
         }
@@ -115,7 +115,7 @@ public class NoteBlock extends BinaryBlock{
         public void playSound(){
             if(Vars.headless) return;
             samples[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 100f, EsoUtil.notePitch(configs.get(1)), 0);
-            EsoFx.notePlay.at(x, y);
+            EsoFx.notePlay.at(x, y, team.color);
         }
 
         @Override

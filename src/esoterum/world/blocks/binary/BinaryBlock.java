@@ -181,7 +181,7 @@ public class BinaryBlock extends Block {
         public void draw(){
             drawBase();
             drawConnections();
-            Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
+            Draw.color(Color.white, team.color, signal() ? 1f : 0f);
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
         }
 
@@ -195,10 +195,15 @@ public class BinaryBlock extends Block {
 
         public void drawConnections(){
             for(int i = 0; i < 4; i++){
-                if(inputs(i)) Draw.color(Color.white, Pal.accent, getSignal(nb.get(i), this) ? 1f : 0f);
-                if(outputs(i)) Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
+                if(inputs(i)) Draw.color(Color.white, team.color, getSignal(nb.get(i), this) ? 1f : 0f);
+                if(outputs(i)) Draw.color(Color.white, team.color, signal() ? 1f : 0f);
                 if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
+        }
+
+        @Override
+        public void drawTeam(){
+            //no
         }
 
         @Override
@@ -220,7 +225,7 @@ public class BinaryBlock extends Block {
                 if(outputs(i) && connections[i]){
                     b = nb.get(i);
                     Draw.z(Layer.overlayUI + 1);
-                    Drawf.arrow(x, y, b.x, b.y, 2f, 2f, signal() ? Pal.accent : Color.white);
+                    Drawf.arrow(x, y, b.x, b.y, 2f, 2f, signal() ? team.color : Color.white);
                 }
             }
 
@@ -229,7 +234,7 @@ public class BinaryBlock extends Block {
                     b = nb.get(i);
                     Draw.z(Layer.overlayUI + 3);
                     Lines.stroke(1f);
-                    Draw.color((outputs(i) ? signal() : getSignal(b, this)) ? Pal.accent : Color.white);
+                    Draw.color((outputs(i) ? signal() : getSignal(b, this)) ? team.color : Color.white);
                     Lines.line(x, y, b.x, b.y);
 
                     Draw.reset();

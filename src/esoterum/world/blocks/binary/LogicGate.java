@@ -80,10 +80,10 @@ public class LogicGate extends BinaryBlock{
         public void drawConnections(){
             for(int i = 1; i < 4; i++){
                 if(!configs.contains(i)) continue;
-                Draw.color(Color.white, Pal.accent, getSignal(nb.get(i), this) ? 1f : 0f);
+                Draw.color(Color.white, team.color, getSignal(nb.get(i), this) ? 1f : 0f);
                 Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
-            Draw.color(Color.white, Pal.accent, signal() ? 1f : 0f);
+            Draw.color(Color.white, team.color, signal() ? 1f : 0f);
             Draw.rect(connectionRegion, x, y, rotdeg());
         }
 

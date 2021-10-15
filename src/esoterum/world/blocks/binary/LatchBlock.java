@@ -59,10 +59,10 @@ public class LatchBlock extends BinaryBlock{
         public void draw() {
             drawBase();
             drawConnections();
-            Draw.color(Color.white, Pal.accent, getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this) ? 1f : 0f);
+            Draw.color(Color.white, team.color, getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this) ? 1f : 0f);
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
-            Draw.color(signal[0] ? Pal.accent : Color.white);
+            Draw.color(signal[0] ? team.color : Color.white);
             Draw.rect(latchRegion, x, y);
         }
 
