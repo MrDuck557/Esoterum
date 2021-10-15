@@ -46,6 +46,12 @@ public class BeamBlock extends BinaryBlock {
     }
 
     @Override
+    public void drawPlace(int x, int y, int rotation, boolean valid) {
+        super.drawPlace(x * 8, y * 8, rotation, valid);
+        Drawf.dashCircle(x * 8, y * 8, beamLength, valid ? Color.white : Pal.remove);
+    }
+
+    @Override
     public void load(){
         super.load();
         region = Core.atlas.find(size == 1 ? "esoterum-base-2" : "esoterum-block-" + size, "block-" + size);
@@ -92,9 +98,7 @@ public class BeamBlock extends BinaryBlock {
         @Override
         public void drawSelect() {
             super.drawSelect();
-            Drawf.dashCircle(x, y, beamLength, Pal.lancerLaser);
-            Tmp.v2.setZero().trns(beamRotation + rotdeg(), beamLength / 2);
-            Drawf.dashLine(Pal.lancerLaser, x, y, x + Tmp.v2.x, y + Tmp.v2.y);
+            drawConfigure(); // lmao
         }
 
         // config
