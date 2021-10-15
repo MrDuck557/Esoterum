@@ -25,6 +25,7 @@ public class SignalController extends BinaryBlock{
         allOutputs = true;
         rotate = true;
         rotatedBase = false;
+        baseType = 2;
         emits = true;
         inputs = new boolean[]{true, true, true, true};
         outputs = new boolean[]{true, true, true, true};
@@ -41,7 +42,6 @@ public class SignalController extends BinaryBlock{
         super.load();
         
         // looks better with rounded corners
-        region = Core.atlas.find("esoterum-node-base");
         inputRegion = Core.atlas.find(name + "-in");
         outputRegion = Core.atlas.find(name + "-out");
     }
@@ -56,7 +56,7 @@ public class SignalController extends BinaryBlock{
 
         @Override
         public void updateSignal(int source){
-            try {
+            try{
                 super.updateSignal(source);
                 if(!rotInit){
                     for(int i = 0; i < rotation; i++){
@@ -82,7 +82,7 @@ public class SignalController extends BinaryBlock{
                     signal[3] = signal[4] && configs.get(3) == 2;
                     propagateSignal(configs.get(0) == 2 && source != 0, configs.get(1) == 2 && source != 1, configs.get(2) == 2 && source != 2, configs.get(3) == 2 && source != 3);
                 }
-            } catch(Exception e){}
+            }catch(Exception ignored){}
         }
 
         @Override

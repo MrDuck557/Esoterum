@@ -36,7 +36,7 @@ public class SentryTurret extends PowerTurret {
         config(Float.class, (SentryBuild t, Float f) -> t.startAngle = f);
     }
 
-    public void onDetect() {
+    public void onDetect(){
 
     }
 
@@ -44,7 +44,7 @@ public class SentryTurret extends PowerTurret {
     public void load() {
         super.load();
 
-        baseRegion = Core.atlas.find(size == 1 ? "esoterum-node-base" : "esoterum-base-" + size);
+        baseRegion = Core.atlas.find(size == 1 ? "esoterum-base-2" : "esoterum-block-" + size, "block-" + size);
     }
 
     public class SentryBuild extends PowerTurretBuild {

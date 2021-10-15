@@ -46,9 +46,9 @@ public class BeamBlock extends BinaryBlock {
     }
 
     @Override
-    public void load() {
+    public void load(){
         super.load();
-        region = Core.atlas.find(size == 1 ? "esoterum-node-base" : "esoterum-base-" + size);
+        region = Core.atlas.find(size == 1 ? "esoterum-base-2" : "esoterum-block-" + size, "block-" + size);
         topRegion = Core.atlas.find(name);
         lightRegion = Core.atlas.find(name + "-light");
         glowRegion = Core.atlas.find(name + "-glow");

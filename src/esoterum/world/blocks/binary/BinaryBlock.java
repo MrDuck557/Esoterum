@@ -26,7 +26,7 @@ public class BinaryBlock extends Block {
     public boolean allOutputs;
     public boolean drawConnectionArrows;
     public boolean drawRot = true;
-    public int baseType = -1;
+    public int baseType = 0;
     public boolean rotatedBase = false;
     public int depthLimit = 100000;
 
@@ -42,10 +42,10 @@ public class BinaryBlock extends Block {
 
     public void load() {
         super.load();
-        if(baseType != -1){
-            region = Core.atlas.find("esoterum-base-" + baseType, "esoterum-base");
+        if(rotatedBase){
+            region = Core.atlas.find("esoterum-base-" + baseType, "esoterum-base-" + baseType);
         }else{
-            region = Core.atlas.find(name + "-base", "esoterum-base");
+            region = Core.atlas.find(name + "-base", "esoterum-base-" + baseType);
         }
         for(int i = 0; i < 4; i++){
             baseRegions[i] = Core.atlas.find("esoterum-base-" + baseType + "-" + i, "esoterum-base");
