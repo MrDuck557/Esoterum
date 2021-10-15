@@ -50,7 +50,7 @@ public class BinaryBlock extends Block {
             baseRegions[i] = Core.atlas.find("esoterum-base-" + baseType + "-" + i, "esoterum-base");
         }
         connectionRegion = Core.atlas.find(name + "-connection", "esoterum-connection");
-        topRegion = Core.atlas.find(name + "-top", "esoterum-router-top"); // router supremacy
+        topRegion = Core.atlas.find(name, "esoterum-router"); // router supremacy
     }
 
     @Override
