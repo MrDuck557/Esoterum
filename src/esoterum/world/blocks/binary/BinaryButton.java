@@ -55,9 +55,10 @@ public class BinaryButton extends BinaryBlock{
             if(!continuous){
                 if((timer -= delta()) <= 0){
                     signal(false);
-                    propagateSignal(true, true, true, true);
                 }
             }
+            if(signal[4] != signal())propagateSignal(true, true, true, true);
+            signal[4] = signal();
         }
 
         @Override
@@ -72,8 +73,6 @@ public class BinaryButton extends BinaryBlock{
             } else {
                 configure(true);
             }
-            propagateSignal(true, true, true, true);
-            signal[4] = signal();
             return false;
         }
 
@@ -113,8 +112,6 @@ public class BinaryButton extends BinaryBlock{
         public void control(LAccess type, double p1, double p2, double p3, double p4){
             if(type == LAccess.enabled){
                 configure(!Mathf.zero((float)p1));
-                if(signal() != signal[4]) propagateSignal(true, true, true, true);
-                signal[4] = signal();
             }
         }
     }
