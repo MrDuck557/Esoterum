@@ -39,7 +39,7 @@ public class BeamEmitter extends BeamBlock{
             Draw.blend(Blending.additive);
             float scl = Mathf.sin(8f, 3f);
             Drawf.tri(x + Tmp.v2.x, y + Tmp.v2.y, 4f, Math.min(length / 5f, 8f) + scl, rot);
-            Fill.light(x + Tmp.v2.x, y + Tmp.v2.y, 7, 6f, Pal.lancerLaser, Color.clear);
+            Fill.light(x + Tmp.v2.x, y + Tmp.v2.y, 7, 6f, team.color, Color.clear);
             Draw.blend();
         }
     }

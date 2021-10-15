@@ -15,7 +15,6 @@ import esoterum.content.EsoFx;
 import esoterum.util.EsoUtil;
 import esoterum.world.blocks.binary.BinaryBlock;
 import mindustry.Vars;
-import mindustry.content.Fx;
 import mindustry.core.World;
 import mindustry.gen.Icon;
 import mindustry.gen.Sounds;
@@ -81,7 +80,7 @@ public class BeamBlock extends BinaryBlock {
             Draw.rect(topRegion, x, y, beamRotation + rotdeg());
 
             if(!drawLight) return;
-            Draw.color(active ? Pal.lancerLaser : Color.white);
+            Draw.color(active ? team.color : Color.white);
             Draw.rect(lightRegion, x, y, beamRotation + rotdeg());
 
             if(!active) return;
@@ -116,9 +115,9 @@ public class BeamBlock extends BinaryBlock {
         @Override
         public void drawConfigure() {
             super.drawConfigure();
-            Drawf.dashCircle(x, y, beamLength, Pal.lancerLaser);
+            Drawf.dashCircle(x, y, beamLength, team.color);
             Tmp.v2.setZero().trns(beamRotation + rotdeg(), beamLength / 2);
-            Drawf.dashLine(Pal.lancerLaser, x, y, x + Tmp.v2.x, y + Tmp.v2.y);
+            Drawf.dashLine(team.color, x, y, x + Tmp.v2.x, y + Tmp.v2.y);
         }
 
         @Override
@@ -139,7 +138,7 @@ public class BeamBlock extends BinaryBlock {
             float length = found ? Mathf.dst(x, y, hit.worldx(), hit.worldy()) : beamLength;
 
             if(found && hit.build != null && hit.build instanceof BeamBuild b && b.acceptsBeam()){
-                b.signal(true);
+                if(b.team == team) b.signal(true);
             }
 
             if(damage){
@@ -161,7 +160,7 @@ public class BeamBlock extends BinaryBlock {
             Draw.blend(Blending.additive);
 
             Lines.stroke(1.5f);
-            Draw.color(Pal.lancerLaser);
+            Draw.color(team.color);
             Lines.lineAngle(x, y, rot, length);
             Tmp.v2.trns(rot, length);
             Fill.circle(x + Tmp.v2.x, y + Tmp.v2.y, 2);
