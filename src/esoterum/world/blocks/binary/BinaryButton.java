@@ -49,7 +49,6 @@ public class BinaryButton extends BinaryBlock{
 
     public class BinaryButtonBuild extends BinaryBuild {
         public float timer;
-        public boolean lastSignal;
 
         @Override
         public void updateTile(){
