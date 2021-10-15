@@ -14,6 +14,7 @@ import esoterum.graphics.*;
 import esoterum.ui.*;
 import esoterum.util.*;
 import mindustry.gen.*;
+import mindustry.logic.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
 
@@ -160,6 +161,33 @@ public class MusicBuffer extends BinaryBlock{
         @Override
         public Object config(){
             return configs;
+        }
+
+        @Override
+        public void control(LAccess type, double p1, double p2, double p3, double p4){
+            if (type == LAccess.config){
+                if (p1 < 0.0001){ // input invalid
+                    configs.set(1, 120);
+                    configs.set(2, 2);
+                    configure(configs);
+                    return;
+                }
+                double rem = p1;
+                int whole = (int) (p1 + 0.0001);
+                rem -= whole;
+                rem *= 10;
+                rem += 0.0001;
+                if (rem > 5){ // rest invalid
+                    configs.set(1, 120);
+                    configs.set(2, 2);
+                    configure(configs);
+                    return;
+                }
+                //whole is BPM, rem is Rest
+                configs.set(1, whole);
+                configs.set(2, (int) rem);
+                configure(configs);
+            }
         }
 
         @Override
