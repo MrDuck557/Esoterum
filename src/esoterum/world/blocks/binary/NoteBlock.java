@@ -74,6 +74,9 @@ public class NoteBlock extends BinaryBlock{
         outputRegion = Core.atlas.find("esoterum-connection");
         connectionRegion = Core.atlas.find("esoterum-connection");
         region = Core.atlas.find("esoterum-gate-base");
+        for(NoteSample sample : samples){
+            sample.load();
+        }
     }
     
     public boolean isNoteBlock(Block other){
@@ -100,12 +103,13 @@ public class NoteBlock extends BinaryBlock{
                     signal[0] = signal[4];
                     propagateSignal(true, false, false, false);
                 }
-            } catch(Exception e){}
+            }catch(Exception ignored){}
         }
 
         public void drawConnections(){
             Draw.color(signal() ? Pal.accent : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
+            Draw.rect(connectionRegion, x, y, rotdeg());
         }
 
         public void playSound(){
@@ -180,14 +184,9 @@ public class NoteBlock extends BinaryBlock{
                     // instruments
                     m.table(Tex.button, i -> {
                         // sample icon
-                        Table imgt = i.table().size(80).get();
+                        Table it = i.table().size(80).get();
+                        it.image(() -> samples[configs.get(4)].icon).fill();
                         i.row();
-
-                        Runnable getSampleImage = () -> {
-                            imgt.clearChildren();
-                            String inst = samples[configs.get(4)].name.replaceAll("\\s", "-").toLowerCase();
-                            imgt.image(() -> Core.atlas.find("esoterum-instrument-" + inst, "esoterum-instrument-big-shot")).fill();
-                        };
 
                         // buttons & sample name
                         i.table(b -> {
@@ -196,7 +195,6 @@ public class NoteBlock extends BinaryBlock{
                                 if ((configs.get(4) - 1) < 0) configs.set(4, samples.length);
                                 configs.incr(4, -1);
                                 configure(configs);
-                                getSampleImage.run();
                             }).size(10).bottom().left().growX();
 
                             b.label(() -> samples[configs.get(4)].name)
@@ -207,10 +205,8 @@ public class NoteBlock extends BinaryBlock{
                                 if ((configs.get(4) + 1) >= samples.length) configs.set(4, -1);
                                 configs.incr(4, 1);
                                 configure(configs);
-                                getSampleImage.run();
                             }).size(10).bottom().right().growX();
                         }).bottom().growX();
-                        getSampleImage.run();
                     }).size(120f);
                 });
                 t.row();
@@ -371,10 +367,17 @@ public class NoteBlock extends BinaryBlock{
         };
         /** Processes octave and pitch to create name */
         public Notef titleProcessor = (o, p) -> String.valueOf(o + 1 + (p >= 12 ? 1 : 0));
+        /** Icon */
+        public TextureRegion icon;
 
         public NoteSample(Sound[] octaves, String name){
             this.octaves = octaves;
             this.name = name;
+        }
+
+        public void load(){
+            String inst = name.replaceAll("\\s", "-").toLowerCase();
+            icon = Core.atlas.find("esoterum-instrument-" + inst);
         }
 
         public String noteString(int octave, int pitch){
