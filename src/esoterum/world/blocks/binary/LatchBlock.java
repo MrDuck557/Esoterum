@@ -47,8 +47,10 @@ public class LatchBlock extends BinaryBlock{
         @Override
         public void updateTile() {
             super.updateTile();
-            if(signal[0] != tmp) propagateSignal(true, false, false, false);
-            tmp = signal[0];
+            if(signal[0] != tmp) {
+                propagateSignal(true, false, false, false);
+                tmp = signal[0];
+            }
         }
 
         @Override
@@ -77,6 +79,9 @@ public class LatchBlock extends BinaryBlock{
             if(revision >= 2){
                 signal[0] = read.bool();
             }
+            if(revision >= 3){
+                tmp = read.bool();
+            }
         }
 
         @Override
@@ -84,11 +89,12 @@ public class LatchBlock extends BinaryBlock{
             super.write(write);
 
             write.bool(signal[0]);
+            write.bool(tmp);
         }
 
         @Override
         public byte version() {
-            return 2;
+            return 3;
         }
     }
 }
