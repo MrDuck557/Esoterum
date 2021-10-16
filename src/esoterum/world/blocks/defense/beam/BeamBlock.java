@@ -114,11 +114,15 @@ public class BeamBlock extends BinaryBlock {
         }
 
         public void updateBeam(){
-            beamDrawLength = beam(beamRotation + rotdeg(), true);
+            beamDrawLength = beam(beamRotation + rotdeg(), true, beamStrength);
             active = true;
         }
 
-        public float beam(float rot, boolean damage){
+        public void acceptBeam(int strength){
+            beamStrength += strength;
+        }
+
+        public float beam(float rot, boolean damage, int strength){
             tr.set(0f, 0f).trnsExact(rot, beamLength);
 
             hit = null;
@@ -132,7 +136,7 @@ public class BeamBlock extends BinaryBlock {
             if(found && hit.build != null && hit.build instanceof BeamBuild b && b.acceptsBeam()){
                 if(b.team == team && !sources.contains(b)){
                     b.sources.addAll(sources);
-                    b.beamStrength += beamStrength;
+                    b.acceptBeam(strength);
                 }
             }
 
@@ -195,12 +199,12 @@ public class BeamBlock extends BinaryBlock {
         @Override
         public void buildConfiguration(Table table) {
             table.button(Icon.leftSmall, () -> {
-                beamRotation += 15f;
+                beamRotation += 22.5f;
                 beamRotation = Mathf.mod(beamRotation, 360f);
                 configure(beamRotation);
             });
             table.button(Icon.rightSmall, () -> {
-                beamRotation -= 15f;
+                beamRotation -= 22.5f;
                 beamRotation = Mathf.mod(beamRotation, 360f);
                 configure(beamRotation);
             });
@@ -224,6 +228,7 @@ public class BeamBlock extends BinaryBlock {
             super.read(read, revision);
 
             if(revision >= 2) beamRotation = read.f();
+            if(revision >= 3) beamStrength = read.i();
         }
 
         @Override
@@ -231,11 +236,12 @@ public class BeamBlock extends BinaryBlock {
             super.write(write);
 
             write.f(beamRotation);
+            write.i(beamStrength);
         }
 
         @Override
         public byte version() {
-            return 2;
+            return 3;
         }
     }
 }
