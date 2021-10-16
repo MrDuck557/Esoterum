@@ -17,24 +17,19 @@ public class BeamEmitter extends BeamBlock{
     public class BeamEmitterBuild extends BeamBuild {
         @Override
         public void updateTile() {
-            super.updateTile();
             signal[4] = false;
             for(BinaryBuild b : nb){
                 signal[4] |= getSignal(b, this);
             }
             signal(signal[4]);
-            if(signal()) updateBeam();
-        }
-
-        @Override
-        public void draw() {
-            super.draw();
-            if(signal()) drawBeam(beamRotation + rotdeg(), beamDrawLength);
+            beamStrength = signal() ? 1 : 0;
+            super.updateTile();
         }
 
         @Override
         public void drawBeam(float rot, float length) {
             super.drawBeam(rot, length);
+            if(length <= 0) return;
             Tmp.v2.setZero().trns(rot, (size * 4f) - 1f);
             Draw.blend(Blending.additive);
             float scl = Mathf.sin(8f, 3f);
