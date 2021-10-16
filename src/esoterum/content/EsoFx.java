@@ -89,6 +89,16 @@ public class EsoFx{
         });
     }),
 
+    unitHover = new Effect(15, e -> {
+        if(e.data instanceof Float f) Draw.z(f);
+        Draw.color(Pal.lancerLaser);
+        Draw.alpha(e.fout());
+        Draw.blend(Blending.additive);
+        Lines.stroke(5f * e.fout());
+        Lines.circle(e.x, e.y, 6 * e.fin());
+        Draw.blend();
+    }),
+
     notePlay = new Effect(20, e -> {
         Draw.color(e.color);
         Lines.stroke(3f * e.fout(Interp.pow5Out));

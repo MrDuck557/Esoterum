@@ -55,6 +55,7 @@ public class Esoterum extends Mod{
 
     @Override
     public void loadContent(){
+        new EsoUnits().load();
         new EsoBlocks().load();
         new EsoMusic().load();
     }
