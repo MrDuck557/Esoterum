@@ -27,7 +27,7 @@ public class BinaryBlock extends Block {
     public boolean drawRot = true;
     public int baseType = 0;
     public boolean rotatedBase = false;
-    public int visitLimit = 2;
+    public int visitLimit = 5;
 
     public BinaryBlock(String name) {
         super(name);

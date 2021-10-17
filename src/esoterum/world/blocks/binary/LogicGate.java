@@ -88,6 +88,11 @@ public class LogicGate extends BinaryBlock{
         }
 
         @Override
+        public boolean inputs(int dir){
+            return dir == configs.first() || single ? false : dir == configs.get(1);
+        }
+
+        @Override
         public void write(Writes write){
             super.write(write);
 
