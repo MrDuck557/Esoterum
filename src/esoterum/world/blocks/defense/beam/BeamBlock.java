@@ -7,6 +7,7 @@ import arc.graphics.g2d.*;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.scene.ui.layout.Table;
+import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.io.Reads;
@@ -16,6 +17,7 @@ import esoterum.util.EsoUtil;
 import esoterum.world.blocks.binary.BinaryBlock;
 import mindustry.Vars;
 import mindustry.core.World;
+import mindustry.gen.Building;
 import mindustry.gen.Icon;
 import mindustry.gen.Sounds;
 import mindustry.gen.Unit;
@@ -70,29 +72,121 @@ public class BeamBlock extends BinaryBlock {
         }
     }
 
+    //  feedback prevention works, but might be laggy and/or memory consuming on low-end devices.
+    //  There might be a better way to do this.
     public class BeamBuild extends BinaryBuild {
         public float beamRotation = 0f;
         public float beamDrawLength = 0f;
-
         public boolean active = false;
+        public int beamStrength = 0;
+        public int lastBeamStrength = 0; // for displayBars
+
+        public Seq<Building> sources = new Seq<>();
 
         public Vec2 tr = new Vec2();
         Tile hit;
 
+        @Override
+        public void displayBars(Table table) {
+            super.displayBars(table);
+            table.row();
+            table.table(e -> {
+                e.row();
+                e.left();
+                e.label(() -> "Beam Strength:" + lastBeamStrength).color(Color.lightGray);
+            }).left();
+        }
+
+        // beam stuff
+        @Override
+        public void updateTile() {
+            super.updateTile();
+            sources.add(this);
+            active = false;
+            if(beamStrength > 0){
+                updateBeam();
+            }else{
+                beamDrawLength = 0;
+            }
+            lastBeamStrength = beamStrength;
+            beamStrength = 0;
+            sources.clear();
+        }
+
+        public void updateBeam(){
+            beamDrawLength = beam(beamRotation + rotdeg(), true, beamStrength);
+            active = true;
+        }
+
+        public void acceptBeam(int strength){
+            beamStrength += strength;
+        }
+
+        public float beam(float rot, boolean damage, int strength){
+            tr.set(0f, 0f).trnsExact(rot, beamLength);
+
+            hit = null;
+
+            boolean found = Vars.world.raycast(tileX(), tileY(), World.toTile(x + tr.x), World.toTile(y + tr.y),
+            (x, y) -> (hit = Vars.world.tile(x, y)) != null && hit.build != null && hit.build != this && (hit.build.checkSolid() || hit.block().solid)
+            );
+
+            float length = found ? Mathf.dst(x, y, hit.worldx(), hit.worldy()) : beamLength;
+
+            if(found && hit.build != null && hit.build instanceof BeamBuild b && b.acceptsBeam()){
+                if(b.team == team && !sources.contains(b)){
+                    b.sources.addAll(sources);
+                    b.acceptBeam(strength);
+                }
+            }
+
+            if(damage){
+                EsoUtil.linecastUnits(x, y, rot, length, u -> {
+                    unitHit(u, this);
+                });
+            }
+
+            return length;
+        }
+
+        public void drawBeam(float rot, float length){
+            if(length <= 0) return;
+            Draw.z(Layer.turret - 1);
+            Draw.blend(Blending.additive);
+
+            Lines.stroke(1.5f);
+            Draw.color(team.color);
+            Lines.lineAngle(x, y, rot, length);
+            Tmp.v2.trns(rot, length);
+            Fill.circle(x + Tmp.v2.x, y + Tmp.v2.y, 2);
+
+            Draw.blend();
+        }
+
+        public boolean acceptsBeam(){
+            return acceptsBeam;
+        }
+
+        // drawing
         @Override
         public void draw() {
             Draw.rect(region, x, y);
             Draw.z(Layer.turret);
             Draw.rect(topRegion, x, y, beamRotation + rotdeg());
 
-            if(!drawLight) return;
-            Draw.color(active ? team.color : Color.white);
-            Draw.rect(lightRegion, x, y, beamRotation + rotdeg());
+            drawBeam(beamRotation + rotdeg(), beamDrawLength);
+            Draw.z(Layer.turret);
 
-            if(!active) return;
-            Draw.blend(Blending.additive);
-            Draw.rect(glowRegion, x, y, beamRotation + rotdeg());
-            Draw.blend();
+            if(drawLight) {
+                Draw.color(active ? team.color : Color.white);
+                Draw.rect(lightRegion, x, y, beamRotation + rotdeg());
+            }
+
+            if(active && drawLight) {
+                Draw.blend(Blending.additive);
+                Draw.rect(glowRegion, x, y, beamRotation + rotdeg());
+                Draw.blend();
+            }
         }
 
         @Override
@@ -105,12 +199,12 @@ public class BeamBlock extends BinaryBlock {
         @Override
         public void buildConfiguration(Table table) {
             table.button(Icon.leftSmall, () -> {
-                beamRotation += 15f;
+                beamRotation += 22.5f;
                 beamRotation = Mathf.mod(beamRotation, 360f);
                 configure(beamRotation);
             });
             table.button(Icon.rightSmall, () -> {
-                beamRotation -= 15f;
+                beamRotation -= 22.5f;
                 beamRotation = Mathf.mod(beamRotation, 360f);
                 configure(beamRotation);
             });
@@ -129,58 +223,12 @@ public class BeamBlock extends BinaryBlock {
             return beamRotation;
         }
 
-        // beam stuff
-        public float beam(float rot, boolean damage){
-            tr.set(0f, 0f).trnsExact(rot, beamLength);
-
-            hit = null;
-
-            boolean found = Vars.world.raycast(tileX(), tileY(), World.toTile(x + tr.x), World.toTile(y + tr.y),
-            (x, y) -> (hit = Vars.world.tile(x, y)) != null && hit.build != null && hit.build != this && (hit.build.checkSolid() || hit.block().solid)
-            );
-
-            float length = found ? Mathf.dst(x, y, hit.worldx(), hit.worldy()) : beamLength;
-
-            if(found && hit.build != null && hit.build instanceof BeamBuild b && b.acceptsBeam()){
-                if(b.team == team) b.signal(true);
-            }
-
-            if(damage){
-                EsoUtil.linecastUnits(x, y, rot, length, u -> {
-                    unitHit(u, this);
-                });
-            }
-
-            return length;
-        }
-
-        public void updateBeam(){
-            beamDrawLength = beam(beamRotation + rotdeg(), true);
-            active = true;
-        }
-
-        public void drawBeam(float rot, float length){
-            Draw.z(Layer.turret - 1);
-            Draw.blend(Blending.additive);
-
-            Lines.stroke(1.5f);
-            Draw.color(team.color);
-            Lines.lineAngle(x, y, rot, length);
-            Tmp.v2.trns(rot, length);
-            Fill.circle(x + Tmp.v2.x, y + Tmp.v2.y, 2);
-
-            Draw.blend();
-        }
-
-        public boolean acceptsBeam(){
-            return acceptsBeam;
-        }
-
         @Override
         public void read(Reads read, byte revision) {
             super.read(read, revision);
 
             if(revision >= 2) beamRotation = read.f();
+            if(revision >= 3) beamStrength = read.i();
         }
 
         @Override
@@ -188,11 +236,12 @@ public class BeamBlock extends BinaryBlock {
             super.write(write);
 
             write.f(beamRotation);
+            write.i(beamStrength);
         }
 
         @Override
         public byte version() {
-            return 2;
+            return 3;
         }
     }
 }
