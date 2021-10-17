@@ -1,13 +1,14 @@
 package esoterum.content;
 
+import esoterum.entities.units.HandsUnitEntity;
 import esoterum.type.HandsUnitType;
 import mindustry.ai.types.BuilderAI;
 import mindustry.ctype.ContentList;
-import mindustry.gen.Unit;
-import mindustry.gen.UnitEntity;
+import mindustry.gen.EntityMapping;
 import mindustry.type.UnitType;
 
 public class EsoUnits implements ContentList{
+    public static int handsID;
     public static UnitType
         //crumb,
         nibble;
@@ -16,9 +17,9 @@ public class EsoUnits implements ContentList{
 
     @Override
     public void load() {
+        handsID = EntityMapping.register("nibble", HandsUnitEntity::new);
         nibble = new HandsUnitType("nibble"){{
             defaultController = BuilderAI::new;
-            constructor = UnitEntity::create;
             isCounted = false;
 
             hovering = true;
