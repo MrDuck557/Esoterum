@@ -40,7 +40,7 @@ public class HandsUnitEntity extends UnitEntity{
     }
 
     @Override
-    public int classId(){
-        return EsoUnits.classID(HandsUnitEntity.class);
+    public int classId() {
+        return EsoUnits.handsID;
     }
 }
