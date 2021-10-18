@@ -82,7 +82,7 @@ public class BinaryBlock extends Block {
         }
 
         public void updateTile(){
-            //updateSignal();
+            updateSignal();
         }
 
         public BinaryBuild[] getNeighbours(int dir){
