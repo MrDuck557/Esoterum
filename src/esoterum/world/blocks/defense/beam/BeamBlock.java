@@ -58,8 +58,8 @@ public class BeamBlock extends BinaryBlock {
         super.load();
         region = Core.atlas.find(size == 1 ? "esoterum-base-2" : "esoterum-block-" + size, "block-" + size);
         topRegion = Core.atlas.find(name);
-        lightRegion = Core.atlas.find(name + "-light");
-        glowRegion = Core.atlas.find(name + "-glow");
+        lightRegion = Core.atlas.find(name + "-light", "blank");
+        glowRegion = Core.atlas.find(name + "-glow", "blank");
     }
 
     public void unitHit(Unit u, BeamBuild b){
@@ -70,6 +70,15 @@ public class BeamBlock extends BinaryBlock {
                 Sounds.spark.at(b.x, b.y);
             }
         }
+    }
+
+    @Override
+    protected TextureRegion[] icons() {
+        return new TextureRegion[]{
+            region,
+            topRegion,
+            lightRegion
+        };
     }
 
     //  feedback prevention works, but might be laggy and/or memory consuming on low-end devices.
