@@ -1,6 +1,5 @@
 package esoterum.content;
 
-import arc.audio.*;
 import esoterum.world.blocks.binary.*;
 import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.defense.beam.*;
@@ -28,8 +27,10 @@ public class EsoBlocks implements ContentList{
         musicBuffer, noteBlock,
         // Logic interaction
         togglerBlock,
+        // Beams
+        beamEmitter, beamReflector, beamAcceptor,
         // Defense
-        smallSentry, beamEmitter, beamReflector,
+        smallSentry,
 
         esoManual;
 
@@ -101,6 +102,21 @@ public class EsoBlocks implements ContentList{
         togglerBlock = new Toggler("toggler");
         // endregion logic interaction
 
+        // region beams
+        beamEmitter = new BeamEmitter("beam-emitter"){{
+            beamLength = 80f;
+        }};
+
+        beamReflector = new BeamReflector("beam-reflector"){{
+            beamLength = 80f;
+            drawLight = true;
+        }};
+
+        beamAcceptor = new BeamAcceptor("beam-acceptor"){{
+            drawLight = true;
+        }};
+        // endregion beams
+
         // region defense
         smallSentry = new SentryTurret("small-sentry"){{
             reloadTime = 6f;
@@ -123,15 +139,6 @@ public class EsoBlocks implements ContentList{
                 smokeEffect = Fx.none;
                 shootEffect = Fx.none;
             }};
-        }};
-
-        beamEmitter = new BeamEmitter("beam-emitter"){{
-            beamLength = 80f;
-        }};
-
-        beamReflector = new BeamReflector("beam-reflector"){{
-            beamLength = 80f;
-            drawLight = true;
         }};
         // endregion defense
 

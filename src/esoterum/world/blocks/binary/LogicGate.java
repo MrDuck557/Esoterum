@@ -54,21 +54,28 @@ public class LogicGate extends BinaryBlock{
         @Override
         public void updateSignal(int source){
             try{
-                super.updateSignal(source);
-                signal[4] = operation.get(new boolean[]{
-                    getSignal(nb.get(configs.first()), this),
-                    getSignal(nb.get(configs.get(single ? 0 : 1)), this),
+                super.updateSignal(source, () -> {
+                    signal[4] = operation.get(new boolean[]{
+                        getSignal(nb.get(configs.first()), this),
+                        getSignal(nb.get(configs.get(single ? 0 : 1)), this),
+                    });
+                    if(signal[0] != signal[4]){
+                        signal[0] = signal[4];
+                        return new boolean[] {true, false, false, false};
+                    } else{
+                        return new boolean[4];
+                    }
                 });
-                if(signal[0] != signal[4]){
-                    signal[0] = signal[4];
-                    propagateSignal(true, false, false, false);
-                }
+                
             } catch(Exception e){}
         }
 
         @Override
         public void buildConfiguration(Table table){
-            table.button(Icon.rotate, () -> configure(nextConfig)).size(40f).tooltip("Rotate Input" + (single ? "" : "s"));
+            table.button(Icon.rotate, () -> {
+                configure(nextConfig);
+                updateProximity();
+            }).size(40f).tooltip("Rotate Input" + (single ? "" : "s"));
         }
 
         @Override
@@ -85,6 +92,11 @@ public class LogicGate extends BinaryBlock{
             }
             Draw.color(Color.white, team.color, Mathf.num(signal()));
             Draw.rect(connectionRegion, x, y, rotdeg());
+        }
+
+        @Override
+        public boolean inputs(int dir){
+            return dir == configs.first() || dir == configs.get(single ? 0 : 1);
         }
 
         @Override

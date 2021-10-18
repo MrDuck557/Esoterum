@@ -4,6 +4,7 @@ import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import arc.scene.*;
 import arc.scene.style.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
@@ -133,14 +134,19 @@ public class MusicBuffer extends BinaryBlock{
                         }
                         configure(configs);
                     }).size(40f).tooltip("Rotate Input").left();
-                    bt.field(String.valueOf(configs.get(1)), d -> {
+                    TextField bField = bt.field(String.valueOf(configs.get(1)), d -> {
                         d = EsoUtil.extractNumber(d);
                         if(!d.isEmpty()){
                             int q = Mathf.round(Math.min((int)(Float.parseFloat(d)), 900), 4);
                             configs.set(1, q);
                             configure(configs);
                         }
-                    }).right().width(100);
+                    }).right().width(100).get();
+                    bField.update(() -> {
+                        Scene stage = bField.getScene();
+                        if(!(stage != null && stage.getKeyboardFocus() == bField))
+                            bField.setText(String.valueOf(configs.get(1)));
+                    });
                     bt.add("BPM").left();
                 }).fillX();
                 t.row();
