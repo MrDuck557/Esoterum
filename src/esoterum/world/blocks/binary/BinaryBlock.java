@@ -7,6 +7,7 @@ import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.io.*;
+import esoterum.content.EsoFx;
 import esoterum.util.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
@@ -263,6 +264,11 @@ public class BinaryBlock extends Block {
                 checkType(right())
             );
             updateConnections();
+            for(int i = 0; i < 4; i++){
+                try {
+                    updateSignal(i);
+                } catch (Exception ignored) {}
+            }
         }
 
         public void updateConnections(){

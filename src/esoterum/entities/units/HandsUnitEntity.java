@@ -5,7 +5,6 @@ import arc.math.Mathf;
 import esoterum.content.EsoUnits;
 import esoterum.type.HandsUnitType;
 import mindustry.gen.UnitEntity;
-import mindustry.graphics.Layer;
 
 public class HandsUnitEntity extends UnitEntity {
     public float handsAngle;
