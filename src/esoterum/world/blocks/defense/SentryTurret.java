@@ -1,23 +1,23 @@
 package esoterum.world.blocks.defense;
 
-import arc.Core;
+import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import arc.scene.ui.layout.Table;
-import arc.util.Tmp;
+import arc.scene.ui.layout.*;
+import arc.util.*;
 import arc.util.io.*;
-import mindustry.Vars;
+import mindustry.*;
 import mindustry.content.*;
-import mindustry.core.World;
+import mindustry.core.*;
 import mindustry.entities.*;
-import mindustry.game.Team;
-import mindustry.gen.Icon;
+import mindustry.game.*;
+import mindustry.gen.*;
 import mindustry.graphics.*;
-import mindustry.logic.LAccess;
-import mindustry.type.Category;
-import mindustry.world.Tile;
-import mindustry.world.blocks.defense.turrets.PowerTurret;
+import mindustry.logic.*;
+import mindustry.type.*;
+import mindustry.world.*;
+import mindustry.world.blocks.defense.turrets.*;
 
 public class SentryTurret extends PowerTurret {
     public float detectionCone = 45f;

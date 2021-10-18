@@ -9,8 +9,8 @@ import arc.util.*;
 import arc.util.io.*;
 import esoterum.graphics.*;
 import mindustry.gen.*;
-import mindustry.ui.*;
 import mindustry.logic.*;
+import mindustry.ui.*;
 
 public class BinaryBuffer extends BinaryBlock{
     public BinaryBuffer(String name){

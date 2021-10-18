@@ -4,7 +4,7 @@ import esoterum.world.blocks.binary.*;
 import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.defense.beam.*;
 import esoterum.world.blocks.environment.*;
-import mindustry.content.Fx;
+import mindustry.content.*;
 import mindustry.ctype.*;
 import mindustry.entities.bullet.*;
 import mindustry.gen.*;

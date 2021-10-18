@@ -1,30 +1,22 @@
 package esoterum.world.blocks.defense.beam;
 
-import arc.Core;
-import arc.graphics.Blending;
-import arc.graphics.Color;
+import arc.*;
+import arc.graphics.*;
 import arc.graphics.g2d.*;
-import arc.math.Mathf;
-import arc.math.geom.Vec2;
-import arc.scene.ui.layout.Table;
-import arc.struct.Seq;
-import arc.util.Time;
-import arc.util.Tmp;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
-import esoterum.content.EsoFx;
-import esoterum.util.EsoUtil;
-import esoterum.world.blocks.binary.BinaryBlock;
-import mindustry.Vars;
-import mindustry.core.World;
-import mindustry.gen.Building;
-import mindustry.gen.Icon;
-import mindustry.gen.Sounds;
-import mindustry.gen.Unit;
-import mindustry.graphics.Drawf;
-import mindustry.graphics.Layer;
-import mindustry.graphics.Pal;
-import mindustry.world.Tile;
+import arc.math.*;
+import arc.math.geom.*;
+import arc.scene.ui.layout.*;
+import arc.struct.*;
+import arc.util.*;
+import arc.util.io.*;
+import esoterum.content.*;
+import esoterum.util.*;
+import esoterum.world.blocks.binary.*;
+import mindustry.*;
+import mindustry.core.*;
+import mindustry.gen.*;
+import mindustry.graphics.*;
+import mindustry.world.*;
 
 public class BeamBlock extends BinaryBlock {
     public float beamLength = 40f;

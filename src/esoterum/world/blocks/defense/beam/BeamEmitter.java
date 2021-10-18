@@ -2,8 +2,8 @@ package esoterum.world.blocks.defense.beam;
 
 import arc.graphics.*;
 import arc.graphics.g2d.*;
-import arc.math.Mathf;
-import arc.util.Tmp;
+import arc.math.*;
+import arc.util.*;
 import mindustry.graphics.*;
 
 public class BeamEmitter extends BeamBlock{

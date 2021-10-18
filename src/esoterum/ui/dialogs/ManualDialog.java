@@ -1,7 +1,7 @@
 package esoterum.ui.dialogs;
 
-import arc.Core;
-import arc.util.Align;
+import arc.*;
+import arc.util.*;
 import esoterum.ui.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;

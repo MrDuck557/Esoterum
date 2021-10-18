@@ -4,7 +4,7 @@ import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import mindustry.logic.LAccess;
+import mindustry.logic.*;
 
 public class Toggler extends BinaryBlock{
     public TextureRegion[] states = new TextureRegion[2];

@@ -1,22 +1,21 @@
 package esoterum.world.blocks.binary;
 
-import java.util.*;
-
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
-import arc.util.Log;
 import arc.util.io.*;
 import esoterum.util.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
+import mindustry.logic.*;
 import mindustry.type.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
-import mindustry.logic.*;
+
+import java.util.*;
 
 public class BinaryBlock extends Block {
     public TextureRegion topRegion, connectionRegion;
