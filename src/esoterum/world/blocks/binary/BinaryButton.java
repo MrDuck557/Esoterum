@@ -55,28 +55,22 @@ public class BinaryButton extends BinaryBlock{
             if(!continuous){
                 if((timer -= delta()) <= 0){
                     signal(false);
-                    propagateSignal(true, true, true, true);
+                    propagateSignal();
                 }
             }
-            if(signal[4] != signal()) propagateSignal(true, true, true, true);
-        }
-
-        @Override
-        public void updateSignal(int source) {
-            try{super.updateSignal(source);} catch(Exception e){}
+            if(signal[4] != signal()) propagateSignal();
         }
 
         @Override
         public boolean configTapped(){
             if(continuous){
                 configure(!signal());
-                propagateSignal(true, true, true, true);
+                propagateSignal();
             } else {
                 signal[4] = signal();
                 configure(true);
-                if(!signal[4]) propagateSignal(true, true, true, true);
+                if(!signal[4]) propagateSignal();
             }
-            propagateSignal(true, true, true, true);
             signal[4] = signal();
             return false;
         }
@@ -118,10 +112,10 @@ public class BinaryButton extends BinaryBlock{
             signal[4] = signal();
             if(type == LAccess.enabled){
                 configure(!Mathf.zero((float)p1));
-                if(signal() != signal[4]) propagateSignal(true, true, true, true);
+                if(signal() != signal[4]) propagateSignal();
                 signal[4] = signal();
             }
-            if(signal[4] != signal()) propagateSignal(true, true, true, true);
+            if(signal[4] != signal()) propagateSignal();
         }
     }
 }

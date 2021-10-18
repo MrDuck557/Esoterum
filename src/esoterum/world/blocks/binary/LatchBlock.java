@@ -41,24 +41,11 @@ public class LatchBlock extends BinaryBlock{
     }
 
     public class LatchBuild extends BinaryBuild {
-        public boolean tmp = true;
-
-        // laggy?
-        @Override
-        public void updateTile() {
-            super.updateTile();
-            if(signal[0] != tmp) {
-                propagateSignal(true, false, false, false);
-                tmp = signal[0];
-            }
-        }
 
         @Override
-        public void updateSignal(int source) {
-            try {
-                signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
-                if(getSignal(nb.get(2), this)) configure(signal[4]);
-            } catch(Exception e){}
+        public void updateSignal() {
+            signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
+            if(getSignal(nb.get(2), this)) configure(signal[4]);
         }
 
         @Override
@@ -80,7 +67,7 @@ public class LatchBlock extends BinaryBlock{
                 signal[0] = read.bool();
             }
             if(revision >= 3){
-                tmp = read.bool();
+                signal[0] = read.bool();
             }
         }
 
@@ -89,12 +76,11 @@ public class LatchBlock extends BinaryBlock{
             super.write(write);
 
             write.bool(signal[0]);
-            write.bool(tmp);
         }
 
         @Override
         public byte version() {
-            return 3;
+            return 2;
         }
     }
 }

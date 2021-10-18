@@ -1,11 +1,14 @@
 package esoterum.world.blocks.binary;
 
+import java.util.*;
+
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
+import arc.util.Log;
 import arc.util.io.*;
 import esoterum.util.*;
 import mindustry.gen.*;
@@ -73,74 +76,52 @@ public class BinaryBlock extends Block {
         public boolean[] connections = new boolean[]{false, false, false, false};
 
         public boolean[] signal = new boolean[]{false, false, false, false, false};
-        public boolean[] visited = {false, false, false, false};
 
-        public void updateSignal(int source) throws Exception {
-            updateSignal(source, () -> {return new boolean[4];});
+        public void updateSignal(){
+            return;
         }
 
-        //front, left, back, right, node, none
-        public void updateSignal(int source, Updater updater) throws Exception{
-            if(source < 4){
-                if(visited[source])
-                    throw new Exception();
-                else visited[source] = true;
+        public void updateTile(){
+            //updateSignal();
+        }
+
+        public BinaryBuild[] getNeighbours(int dir){
+            BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null};
+            for(int i=0;i<4;i++){
+                if(i != dir && outputs(i) && nb.get(i) != null && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
             }
-            boolean[] directions = updater.fun();
-            propagateSignal(directions[0], directions[1], directions[2], directions[3]);
-            visited[source] = false;
+            return nbs;
+        }
+
+        public void propagateSignal(){
+            //Log.info("init");
+            Deque<BinaryBuild> s = new ArrayDeque<>();
+            BinaryBuild previous, current = this;
+            HashMap<Integer, Integer> visited = new HashMap<>();
+            s.push(this);
+            while(!s.isEmpty()){
+                //Log.info("mainloop");
+                previous = current;
+                current = s.pop();
+                current.updateSignal();
+                int dir = EsoUtil.relativeDirection(current, previous);
+                if(visited.get(current.pos()) == null || visited.get(current.pos()) != dir){
+                    visited.put(current.pos(), dir);
+                    //Log.info("condition");
+                    for(BinaryBuild b : current.getNeighbours(dir)){
+                        if(b != null) s.push(b);
+                        //Log.info("subloop");
+                    }
+                }
+            }
+            //Log.info("end");
         }
 
         @Override
         public void placed(){
             super.placed();
-            try {updateSignal(5);} catch (Exception e) {}
-        }
-
-        @Override
-        public void onRemoved(){
-            super.onRemoved();
-            signal(false);
-            propagateSignal(outputs(0), outputs(1), outputs(2), outputs(3));
-        }
-
-        public void bypassSignal(boolean front, boolean left, boolean back, boolean right){
-            Thread t = new Thread(null, null, "Bypass"){
-                @Override
-                public void run(){
-                    propagateSignal(front, left, back, right);
-                }
-            };
-            t.start();
-            try {t.join();} catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-        }
-
-        public void propagateSignal(boolean front, boolean left, boolean back, boolean right){
-            try{
-                try{
-                    if(front && nb.get(0) != null && connectionCheck(this, nb.get(0)))
-                        nb.get(0).updateSignal(EsoUtil.relativeDirection(nb.get(0), this));
-                    if(left && nb.get(1) != null && connectionCheck(this, nb.get(1)))
-                        nb.get(1).updateSignal(EsoUtil.relativeDirection(nb.get(1), this));
-                    if(back && nb.get(2) != null && connectionCheck(this, nb.get(2)))
-                        nb.get(2).updateSignal(EsoUtil.relativeDirection(nb.get(2), this));
-                    if(right && nb.get(3) != null && connectionCheck(this, nb.get(3)))
-                        nb.get(3).updateSignal(EsoUtil.relativeDirection(nb.get(3), this));
-                }catch(Exception ignored){}
-            }catch(StackOverflowError e){
-                bypassSignal(front, left, back, right);
-            }
-        }
-
-        @Override
-        public void updateTile(){
-            super.updateTile();
-            visited[0] = false;
-            visited[1] = false;
-            visited[2] = false;
-            visited[3] = false;
+            updateSignal();
+            propagateSignal();
         }
 
         public boolean signal(){
@@ -152,6 +133,7 @@ public class BinaryBlock extends Block {
         }
     
         public boolean connectionCheck(Building from, BinaryBlock.BinaryBuild to){
+            if(from == null || to == null) return false;
             if(from instanceof BinaryBlock.BinaryBuild b){
                 int t = EsoUtil.relativeDirection(b, to);
                 int f = EsoUtil.relativeDirection(to, b);
@@ -263,11 +245,8 @@ public class BinaryBlock extends Block {
                 checkType(right())
             );
             updateConnections();
-            for(int i = 0; i < 4; i++){
-                try {
-                    updateSignal(i);
-                } catch (Exception ignored) {}
-            }
+            updateSignal();
+            propagateSignal();
         }
 
         public void updateConnections(){
@@ -334,10 +313,6 @@ public class BinaryBlock extends Block {
         public double sense(LAccess sensor){
             if(sensor == LAccess.enabled) return Mathf.num(signal());
             return super.sense(sensor);
-        }
-
-        public static interface Updater {
-            public boolean[] fun();
         }
     }
 }

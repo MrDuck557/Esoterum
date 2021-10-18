@@ -54,40 +54,30 @@ public class SignalController extends BinaryBlock{
         public IntSeq configs = IntSeq.with(0, 0, 0, 0);
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source, () -> {
-                    if(!rotInit){
-                        for(int i = 0; i < rotation; i++){
-                            configs = IntSeq.with(
-                                configs.get(3),
-                                configs.get(0),
-                                configs.get(1),
-                                configs.get(2)
-                            );
-                        }
-                        rotInit = true;
-                        rotation(0);
-                    }
-                    signal[4] = (getSignal(nb.get(0), this) && configs.get(0) == 1)
-                        ||  (getSignal(nb.get(1), this) && configs.get(1) == 1)
-                        ||  (getSignal(nb.get(2), this) && configs.get(2) == 1)
-                        ||  (getSignal(nb.get(3), this) && configs.get(3) == 1);
-                    if(signal() != signal[4]){
-                        signal(false);
-                        signal[0] = signal[4] && configs.get(0) == 2;
-                        signal[1] = signal[4] && configs.get(1) == 2;
-                        signal[2] = signal[4] && configs.get(2) == 2;
-                        signal[3] = signal[4] && configs.get(3) == 2;
-                        return new boolean [] {configs.get(0) == 2 && source != 0, 
-                            configs.get(1) == 2 && source != 1, 
-                            configs.get(2) == 2 && source != 2, 
-                            configs.get(3) == 2 && source != 3};
-                    } else {
-                        return new boolean[4];
-                    }
-                });
-            }catch(Exception ignored){}
+        public void updateSignal(){
+            if(!rotInit){
+                for(int i = 0; i < rotation; i++){
+                    configs = IntSeq.with(
+                        configs.get(3),
+                        configs.get(0),
+                        configs.get(1),
+                        configs.get(2)
+                    );
+                }
+                rotInit = true;
+                rotation(0);
+            }
+            signal[4] = (getSignal(nb.get(0), this) && configs.get(0) == 1)
+                ||  (getSignal(nb.get(1), this) && configs.get(1) == 1)
+                ||  (getSignal(nb.get(2), this) && configs.get(2) == 1)
+                ||  (getSignal(nb.get(3), this) && configs.get(3) == 1);
+            if(signal() != signal[4]){
+                signal(false);
+                signal[0] = signal[4] && configs.get(0) == 2;
+                signal[1] = signal[4] && configs.get(1) == 2;
+                signal[2] = signal[4] && configs.get(2) == 2;
+                signal[3] = signal[4] && configs.get(3) == 2;
+            }
         }
 
         @Override
@@ -126,6 +116,8 @@ public class SignalController extends BinaryBlock{
                 TextButton b = t.button(states[configs.get(index)], () -> {
                     configure(index);
                     updateProximity();
+                    updateSignal();
+                    propagateSignal();
                 }).size(40f).get();
 
                 b.update(() -> b.setText(states[configs.get(index)]));

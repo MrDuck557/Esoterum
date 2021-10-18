@@ -52,22 +52,11 @@ public class LogicGate extends BinaryBlock{
         public int nextConfig = 1;
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source, () -> {
-                    signal[4] = operation.get(new boolean[]{
-                        getSignal(nb.get(configs.first()), this),
-                        getSignal(nb.get(configs.get(single ? 0 : 1)), this),
-                    });
-                    if(signal[0] != signal[4]){
-                        signal[0] = signal[4];
-                        return new boolean[] {true, false, false, false};
-                    } else{
-                        return new boolean[4];
-                    }
-                });
-                
-            } catch(Exception e){}
+        public void updateSignal(){
+            signal[0] = operation.get(new boolean[]{
+                getSignal(nb.get(configs.first()), this),
+                getSignal(nb.get(configs.get(single ? 0 : 1)), this),
+            });
         }
 
         @Override
@@ -75,6 +64,8 @@ public class LogicGate extends BinaryBlock{
             table.button(Icon.rotate, () -> {
                 configure(nextConfig);
                 updateProximity();
+                updateSignal();
+                propagateSignal();
             }).size(40f).tooltip("Rotate Input" + (single ? "" : "s"));
         }
 

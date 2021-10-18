@@ -37,16 +37,20 @@ public class BinaryJunction extends BinaryBlock{
 
     public class BinaryJunctionBuild extends BinaryBuild{
         @Override
-        public void updateSignal(int source){
-            try {
-                super.updateSignal(source, () -> {
-                    signal[0] = getSignal(nb.get(2), this);
-                    signal[1] = getSignal(nb.get(3), this);
-                    signal[2] = getSignal(nb.get(0), this);
-                    signal[3] = getSignal(nb.get(1), this);
-                    return new boolean[]{source == 2, source == 3, source == 0, source == 1};
-                });
-            } catch(Exception e){}
+        public BinaryBuild[] getNeighbours(int dir){
+            BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null};
+            for(int i=0;i<4;i++){
+                if((i + 2) % 4 == dir && outputs(i) && nb.get(i) != null && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
+            }
+            return nbs;
+        }
+
+        @Override
+        public void updateSignal(){
+            signal[0] = getSignal(nb.get(2), this);
+            signal[1] = getSignal(nb.get(3), this);
+            signal[2] = getSignal(nb.get(0), this);
+            signal[3] = getSignal(nb.get(1), this);
         }
 
         @Override

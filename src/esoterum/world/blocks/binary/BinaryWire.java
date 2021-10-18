@@ -58,19 +58,8 @@ public class BinaryWire extends BinaryBlock{
 
     public class BinaryWireBuild extends BinaryBuild{
         @Override
-        public void updateSignal(int source){
-            try {
-                super.updateSignal(source, () -> {
-                    signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) 
-                        | getSignal(nb.get(3), this);
-                    if(signal[0] != signal[4]){
-                        signal[0] = signal[4];
-                        return new boolean[]{true, false, false, false};
-                    } else{
-                        return new boolean[]{false, false, false, false};
-                    }
-                });
-            } catch(Exception ignored){}
+        public void updateSignal(){
+            signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
         }
 
         @Override

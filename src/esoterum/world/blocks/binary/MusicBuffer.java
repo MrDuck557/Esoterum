@@ -65,21 +65,18 @@ public class MusicBuffer extends BinaryBlock{
             if(delayTimer > trueDelay()){
                 signal[0]  = true;
                 delayTimer = trueDelay();
-                propagateSignal(true, false, false, false);
+                propagateSignal();
             }
             if(delayTimer < 0f){
                 signal[0] = false;
                 delayTimer = 0f;
-                propagateSignal(true, false, false, false);
+                propagateSignal();
             }
         }
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source);
-                bufferedSignal = getSignal(nb.get(configs.first()), this);
-            }catch(Exception ignored){}
+        public void updateSignal(){
+            bufferedSignal = getSignal(nb.get(configs.first()), this);
         }
 
         public float trueDelay(){
