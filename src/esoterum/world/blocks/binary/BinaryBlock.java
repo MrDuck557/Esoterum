@@ -7,7 +7,6 @@ import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.io.*;
-import esoterum.content.EsoFx;
 import esoterum.util.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;

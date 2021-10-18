@@ -1,6 +1,5 @@
 package esoterum.content;
 
-import arc.audio.*;
 import esoterum.world.blocks.binary.*;
 import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.defense.beam.*;
