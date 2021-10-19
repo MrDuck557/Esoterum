@@ -43,6 +43,7 @@ public class LatchBlock extends BinaryBlock{
 
         @Override
         public void updateSignal() {
+            if(nb.isEmpty()) return;
             signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
             if(getSignal(nb.get(2), this)) configure(signal[4]);
         }
@@ -51,6 +52,7 @@ public class LatchBlock extends BinaryBlock{
         public void draw() {
             drawBase();
             drawConnections();
+            if(nb.isEmpty()) return;
             Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this)));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 

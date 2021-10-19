@@ -59,11 +59,13 @@ public class BinaryWire extends BinaryBlock{
     public class BinaryWireBuild extends BinaryBuild{
         @Override
         public void updateSignal(){
+            if(nb.isEmpty()) return;
             signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
         }
 
         @Override
         public void drawConnections(){
+            if(nb.isEmpty()) return;
             for(int i = 1; i < 4; i++){
                 if(connections[i]){
                     Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));

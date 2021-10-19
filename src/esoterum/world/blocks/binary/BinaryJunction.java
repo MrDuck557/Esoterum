@@ -39,6 +39,7 @@ public class BinaryJunction extends BinaryBlock{
         @Override
         public BinaryBuild[] getNeighbours(int dir){
             BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null};
+            if(nb.isEmpty()) return nbs;
             for(int i=0;i<4;i++){
                 if((i + 2) % 4 == dir && outputs(i) && nb.get(i) != null && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
             }
@@ -47,6 +48,7 @@ public class BinaryJunction extends BinaryBlock{
 
         @Override
         public void updateSignal(){
+            if(nb.isEmpty()) return;
             signal[0] = getSignal(nb.get(2), this);
             signal[1] = getSignal(nb.get(3), this);
             signal[2] = getSignal(nb.get(0), this);

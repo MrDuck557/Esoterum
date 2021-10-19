@@ -86,6 +86,7 @@ public class BinaryBlock extends Block {
 
         public BinaryBuild[] getNeighbours(int dir){
             BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null};
+            if(nb.isEmpty()) return nbs;
             for(int i=0;i<4;i++){
                 if(i != dir && outputs(i) && nb.get(i) != null && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
             }
@@ -172,6 +173,7 @@ public class BinaryBlock extends Block {
         }
 
         public void drawConnections(){
+            if(nb.isEmpty()) return;
             for(int i = 0; i < 4; i++){
                 if(inputs(i)) Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
                 if(outputs(i)) Draw.color(Color.white, team.color, Mathf.num(signal()));
@@ -186,6 +188,7 @@ public class BinaryBlock extends Block {
 
         @Override
         public void drawSelect(){
+            if(nb.isEmpty()) return;
             if(!drawConnectionArrows) return;
             BinaryBuild b;
             for(int i = 0; i < 4; i++){
@@ -249,6 +252,7 @@ public class BinaryBlock extends Block {
         }
 
         public void updateConnections(){
+            if(nb.isEmpty()) return;
             for(int i = 0; i < 4; i++){
                 connections[i] = connectionCheck(nb.get(i), this);
             }

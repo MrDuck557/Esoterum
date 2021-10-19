@@ -85,6 +85,7 @@ public class BinaryNode extends BinaryBlock{
         @Override
         public BinaryBuild[] getNeighbours(int dir){
             BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null, null};
+            if(nb.isEmpty()) return nbs;
             for(int i=0;i<4;i++){
                 if(i != dir && outputs(i) && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
             }

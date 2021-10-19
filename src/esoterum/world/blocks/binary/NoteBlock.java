@@ -94,6 +94,7 @@ public class NoteBlock extends BinaryBlock{
 
         @Override
         public void updateSignal(){
+            if(nb.isEmpty()) return;
             signal[4] = getSignal(nb.get(configs.first()), this);
             if(signal[0] != signal[4]){
                 if(!signal[0] && signal[4]) playSound();

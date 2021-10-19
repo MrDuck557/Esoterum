@@ -31,6 +31,7 @@ public class Toggler extends BinaryBlock{
     public class TogglerBuild extends BinaryBuild{
         @Override
         public void updateSignal(){
+            if(nb.isEmpty()) return;
             signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
             if(front() != null) front().control(LAccess.enabled, Mathf.num(signal()), 0d, 0d, 0d);
         }

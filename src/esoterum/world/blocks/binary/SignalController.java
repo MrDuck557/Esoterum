@@ -67,6 +67,7 @@ public class SignalController extends BinaryBlock{
                 rotInit = true;
                 rotation(0);
             }
+            if(nb.isEmpty()) return;
             signal[4] = (getSignal(nb.get(0), this) && configs.get(0) == 1)
                 ||  (getSignal(nb.get(1), this) && configs.get(1) == 1)
                 ||  (getSignal(nb.get(2), this) && configs.get(2) == 1)
@@ -82,6 +83,7 @@ public class SignalController extends BinaryBlock{
 
         @Override
         public void drawConnections(){
+            if(nb.isEmpty()) return;
             for(int i = 0; i < 4; i++){
                 int c = configs.get(i);
                 if(c == 0) continue;

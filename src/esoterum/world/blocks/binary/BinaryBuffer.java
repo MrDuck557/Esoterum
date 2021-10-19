@@ -64,6 +64,7 @@ public class BinaryBuffer extends BinaryBlock{
 
         @Override
         public void updateSignal(){
+            if(nb.isEmpty()) return;
             bufferedSignal = getSignal(nb.get(configs.first()), this);
         }
 
