@@ -3,6 +3,7 @@ package esoterum.ui.dialogs;
 import arc.*;
 import arc.util.*;
 import esoterum.ui.*;
+import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
@@ -17,6 +18,10 @@ public class ManualDialog extends BaseDialog{
 
         build();
         build(); //Run build twice to deal with strange issues that happen the first build.
+
+        Events.on(ResizeEvent.class, e -> {
+            build();
+        });
     }
 
     public void build(){
