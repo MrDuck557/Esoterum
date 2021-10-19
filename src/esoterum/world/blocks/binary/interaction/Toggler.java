@@ -1,9 +1,10 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.interaction;
 
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.logic.*;
 
 public class Toggler extends BinaryBlock{

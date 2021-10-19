@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.source;
 
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -11,6 +11,7 @@ import arc.util.*;
 import arc.util.io.*;
 import esoterum.graphics.*;
 import esoterum.util.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
 import mindustry.ui.*;
 

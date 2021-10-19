@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.music;
 
 import arc.*;
 import arc.audio.*;
@@ -14,6 +14,7 @@ import arc.util.io.*;
 import esoterum.content.*;
 import esoterum.ui.*;
 import esoterum.util.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.*;
 import mindustry.gen.*;
 import mindustry.logic.*;

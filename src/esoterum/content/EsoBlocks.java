@@ -1,6 +1,10 @@
 package esoterum.content;
 
 import esoterum.world.blocks.binary.*;
+import esoterum.world.blocks.binary.interaction.*;
+import esoterum.world.blocks.binary.music.*;
+import esoterum.world.blocks.binary.source.*;
+import esoterum.world.blocks.binary.transmission.*;
 import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.defense.beam.*;
 import esoterum.world.blocks.environment.*;

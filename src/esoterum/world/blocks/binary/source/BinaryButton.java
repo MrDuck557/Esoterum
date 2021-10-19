@@ -1,10 +1,11 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.source;
 
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.util.io.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.logic.*;
 
 public class BinaryButton extends BinaryBlock{

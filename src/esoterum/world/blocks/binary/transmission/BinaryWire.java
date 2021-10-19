@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.*;
 import arc.func.*;
@@ -8,6 +8,7 @@ import arc.math.*;
 import arc.math.geom.*;
 import arc.struct.*;
 import esoterum.content.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.entities.units.*;
 import mindustry.world.*;
 
