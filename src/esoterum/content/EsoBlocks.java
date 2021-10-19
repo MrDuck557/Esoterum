@@ -21,7 +21,7 @@ public class EsoBlocks implements ContentList{
         // Environment
         esoPanel, esoPanel1, esoPanel2, esoPanel3, esoPanelFlat, esoSolidPanel,
         esoPanelOpen, esoPanelE, esoPanelS, esoPanelO,
-        // Signal distribution
+        // Signal transmission
         esoWire, esoJunction, esoRouter, esoNode, esoLatch, esoController, esoBuffer,
         // Signal sources
         esoSwitch, esoButton, esoClock,
@@ -57,7 +57,7 @@ public class EsoBlocks implements ContentList{
         esoPanelO = new NonblendFloor("panel-o", 0);
         // endregion environment
 
-        // region distribution
+        // region transmission
         esoWire = new BinaryWire("wire");
 
         esoJunction = new BinaryJunction("junction");
@@ -71,7 +71,7 @@ public class EsoBlocks implements ContentList{
         esoController = new SignalController("controller");
 
         esoBuffer = new BinaryBuffer("buffer");
-        // endregion distribution
+        // endregion transmission
 
         // region sources
         esoSwitch = new BinaryButton("switch", true);

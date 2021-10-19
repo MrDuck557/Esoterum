@@ -9,13 +9,13 @@ import mindustry.*;
  */
 public class ManualPages {
     public static ManualPage[][] topics = new ManualPage[][]{
-        // signal distribution
+        // signal transmission
         new ManualPage[]{
-            makePage("distribution/Wire"),
-            makePage("distribution/Router"),
-            makePage("distribution/Controller"),
-            makePage("distribution/Junction"),
-            makePage("distribution/Node")
+            makePage("transmission/Wire"),
+            makePage("transmission/Router"),
+            makePage("transmission/Controller"),
+            makePage("transmission/Junction"),
+            makePage("transmission/Node")
         },
         // signal sources
         new ManualPage[]{

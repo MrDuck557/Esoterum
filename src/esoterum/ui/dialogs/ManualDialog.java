@@ -51,12 +51,12 @@ public class ManualDialog extends BaseDialog{
         // navigation buttons
         // topic buttons
         cont.table(topics -> {
-            // distribution
+            // transmission
             topics.button(Icon.distribution, () -> {
                 currentPage = 0;
                 currentTopic = 0;
                 build();
-            }).tooltip("Signal Distribution")
+            }).tooltip("Signal Transmission")
                 .visible(ManualPages.topics[0].length != 0);
 
             topics.row();
