@@ -3,7 +3,7 @@ package esoterum.world.blocks.defense.beam;
 public class BeamAcceptor extends BeamBlock{
     public BeamAcceptor(String name){
         super(name);
-        rotate = false;
+        rotate = true;
         acceptsBeam = true;
         outputs = new boolean[]{true, true, true, true};
         emits = true;
