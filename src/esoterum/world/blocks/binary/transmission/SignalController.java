@@ -118,7 +118,7 @@ public class SignalController extends BinaryBlock{
             return table.table(t -> {
                 TextButton b = t.button(states[configs.get(index)], () -> {
                     configure(index);
-                    if(configs.get(index) == 0){
+                    if(configs.get(index) == 0 && !nb.isEmpty() && nb.get(index) != null){
                         nb.get(index).updateSignal();
                         nb.get(index).propagateSignal();
                     } else if(configs.get(index) == 1){
