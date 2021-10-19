@@ -1,9 +1,10 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import esoterum.world.blocks.binary.*;
 
 // too similar to BinaryRouter?
 public class BinaryJunction extends BinaryBlock{

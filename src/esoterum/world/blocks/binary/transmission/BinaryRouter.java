@@ -1,4 +1,6 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
+
+import esoterum.world.blocks.binary.*;
 
 public class BinaryRouter extends BinaryBlock{
     public BinaryRouter(String name){

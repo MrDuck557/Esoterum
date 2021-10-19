@@ -1,10 +1,11 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.util.io.*;
+import esoterum.world.blocks.binary.*;
 
 public class LatchBlock extends BinaryBlock{
     public TextureRegion latchRegion;
