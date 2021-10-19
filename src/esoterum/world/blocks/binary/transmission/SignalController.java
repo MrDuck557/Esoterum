@@ -117,10 +117,15 @@ public class SignalController extends BinaryBlock{
         public Cell<Table> addConfigButton(Table table, int index){
             return table.table(t -> {
                 TextButton b = t.button(states[configs.get(index)], () -> {
-                    configure(index);
-                    updateProximity();
-                    updateSignal();
-                    propagateSignal();
+                    if(configs.get(index) < 2){
+                        configure(index);
+                        updateSignal();
+                        propagateSignal();
+                    } else if(configs.get(index) == 2 && !nb.isEmpty() && nb.get(index) != null){
+                        configure(index);
+                        nb.get(index).updateSignal();
+                        nb.get(index).propagateSignal();
+                    }
                 }).size(40f).get();
 
                 b.update(() -> b.setText(states[configs.get(index)]));
