@@ -15,6 +15,7 @@ public class BinaryJunction extends BinaryBlock{
         emits = true;
         inputs = new boolean[]{true, true, true, true};
         outputs = new boolean[]{true, true, true, true};
+        propagates = false;
     }
 
     @Override

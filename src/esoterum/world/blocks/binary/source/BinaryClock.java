@@ -34,9 +34,8 @@ public class BinaryClock extends BinaryBlock{
 
         @Override
         public void updateTile(){
-            signal[4] = signal();
             signal(Mathf.mod(Time.time - configs.get(2), configs.first()) <= configs.get(1));
-            if(signal[4] != signal()) propagateSignal();
+            propagateSignal();
         }
 
         @Override

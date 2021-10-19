@@ -52,14 +52,8 @@ public class BinaryButton extends BinaryBlock{
 
         @Override
         public void updateTile(){
-            signal[4] = signal();
-            if(!continuous){
-                if((timer -= delta()) <= 0){
-                    signal(false);
-                    propagateSignal();
-                }
-            }
-            if(signal[4] != signal()) propagateSignal();
+            if(!continuous && (timer -= delta()) <= 0) signal(false);
+            propagateSignal();
         }
 
         @Override
@@ -72,7 +66,6 @@ public class BinaryButton extends BinaryBlock{
                 configure(true);
                 if(!signal[4]) propagateSignal();
             }
-            signal[4] = signal();
             return false;
         }
 

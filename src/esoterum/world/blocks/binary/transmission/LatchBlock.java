@@ -41,12 +41,15 @@ public class LatchBlock extends BinaryBlock{
     }
 
     public class LatchBuild extends BinaryBuild {
+        @Override
+        public void updateTile(){
+            propagateSignal();
+        }
 
         @Override
         public void updateSignal() {
             if(nb.isEmpty()) return;
-            signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
-            if(getSignal(nb.get(2), this)) configure(signal[4]);
+            if(getSignal(nb.get(2), this)) signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
         }
 
         @Override

@@ -29,6 +29,7 @@ public class SignalController extends BinaryBlock{
         emits = true;
         inputs = new boolean[]{true, true, true, true};
         outputs = new boolean[]{true, true, true, true};
+        propagates = false;
         config(IntSeq.class, (ControllerBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
 
         config(Integer.class, (ControllerBuild b, Integer i) -> {

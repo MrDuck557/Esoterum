@@ -27,6 +27,7 @@ public class BinaryNode extends BinaryBlock{
 
         outputs = new boolean[]{true, true, true, true};
         inputs = new boolean[]{true, true, true, true};
+        propagates = false;
 
         //point2 config is relative
         config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> {

@@ -66,13 +66,12 @@ public class MusicBuffer extends BinaryBlock{
             if(delayTimer > trueDelay()){
                 signal[0]  = true;
                 delayTimer = trueDelay();
-                propagateSignal();
             }
             if(delayTimer < 0f){
                 signal[0] = false;
                 delayTimer = 0f;
-                propagateSignal();
             }
+            propagateSignal();
         }
 
         @Override

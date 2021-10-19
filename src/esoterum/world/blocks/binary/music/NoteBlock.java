@@ -64,6 +64,7 @@ public class NoteBlock extends BinaryBlock{
         group = BlockGroup.logic;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
+        propagates = false;
 
         config(IntSeq.class, (NoteBlockBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
     }

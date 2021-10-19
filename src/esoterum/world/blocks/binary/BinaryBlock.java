@@ -30,6 +30,7 @@ public class BinaryBlock extends Block {
     public int baseType = 0;
     public boolean rotatedBase = false;
     public int visitLimit = 5;
+    public boolean propagates = true;
 
     public BinaryBlock(String name) {
         super(name);
@@ -81,7 +82,7 @@ public class BinaryBlock extends Block {
         }
 
         public void updateTile(){
-            updateSignal();
+            //updateSignal();
         }
 
         public BinaryBuild[] getNeighbours(int dir){
@@ -109,7 +110,7 @@ public class BinaryBlock extends Block {
                     visited.put(current.pos(), dir);
                     //Log.info("condition");
                     for(BinaryBuild b : current.getNeighbours(dir)){
-                        if(b != null) s.push(b);
+                        if(b != null && !b.propagates()) s.push(b);
                         //Log.info("subloop");
                     }
                 }
@@ -271,6 +272,10 @@ public class BinaryBlock extends Block {
         // emission
         public boolean emits(){
             return emits;
+        }
+
+        public boolean propagates(){
+            return propagates;
         }
 
         public boolean outputs(int i){

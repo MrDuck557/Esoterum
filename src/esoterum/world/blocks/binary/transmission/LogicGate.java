@@ -53,6 +53,11 @@ public class LogicGate extends BinaryBlock{
         public int nextConfig = 1;
 
         @Override
+        public void updateTile(){
+            propagateSignal();
+        }
+
+        @Override
         public void updateSignal(){
             if(nb.isEmpty()) return;
             signal[0] = operation.get(new boolean[]{

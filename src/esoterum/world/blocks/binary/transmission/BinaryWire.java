@@ -22,6 +22,7 @@ public class BinaryWire extends BinaryBlock{
         emits = true;
         rotate = true;
         drawArrow = true;
+        propagates = false;
 
         drawConnectionArrows = true;
     }
