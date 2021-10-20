@@ -77,84 +77,23 @@ public class BinaryBlock extends Block {
 
         public boolean[] signal = new boolean[]{false, false, false, false, false};
 
-        public void updateSignal(){
-            return;
-        }
-
-        public void updateTile(){
-            //updateSignal();
-        }
-
-        public BinaryBuild[] getNeighbours(int dir){
-            BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null};
-            if(nb.isEmpty()) return nbs;
-            for(int i=0;i<4;i++){
-                if(i != dir && outputs(i) && nb.get(i) != null && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
-            }
-            return nbs;
-        }
-
-        public void propagateSignal(){
-            //Log.info("init");
-            Deque<BinaryBuild> s = new ArrayDeque<>();
-            BinaryBuild previous, current = this;
-            HashMap<Integer, Integer> visited = new HashMap<>();
-            s.push(this);
-            while(!s.isEmpty()){
-                //Log.info("mainloop");
-                previous = current;
-                current = s.pop();
-                current.updateSignal();
-                int dir = EsoUtil.relativeDirection(current, previous);
-                if(visited.get(current.pos()) == null || visited.get(current.pos()) != dir){
-                    visited.put(current.pos(), dir);
-                    //Log.info("condition");
-                    for(BinaryBuild b : current.getNeighbours(dir)){
-                        if(b != null && !b.propagates()) s.push(b);
-                        //Log.info("subloop");
-                    }
-                }
-            }
-            //Log.info("end");
+        @Override
+        public void placed(){
+            
         }
 
         @Override
-        public void placed(){
-            super.placed();
-            updateSignal();
-            propagateSignal();
+        public void rotation(int dir){
+            
         }
 
-        public boolean signal(){
-            return signal[0] || signal[1] || signal[2] || signal[3];
+        @Override
+        public void onRemoved(){
+
         }
 
-        public void signal(boolean s){
-            signal[0] = signal[1] = signal[2] = signal[3] = s;
-        }
-    
-        public boolean connectionCheck(Building from, BinaryBlock.BinaryBuild to){
-            if(from == null || to == null) return false;
-            if(from instanceof BinaryBlock.BinaryBuild b){
-                int t = EsoUtil.relativeDirection(b, to);
-                int f = EsoUtil.relativeDirection(to, b);
-                return b.outputs(t) & to.inputs(f)
-                    || to.outputs(f) & b.inputs(t);
-            }
-            return false;
-        }
-    
-        public boolean getSignal(Building from, BinaryBlock.BinaryBuild to){
-            if(from instanceof BinaryBlock.BinaryBuild b){
-                if(!b.emits()) return false;
-                return b.signal[EsoUtil.relativeDirection(b, to)];
-            }
-            return false;
-        }
-    
-        public BinaryBlock.BinaryBuild checkType(Building b){
-            if(b instanceof BinaryBlock.BinaryBuild bb) return bb;
-            return null;
+        public BinaryBuild[] getInputs(){
+
         }
 
         @Override
@@ -224,41 +163,6 @@ public class BinaryBlock extends Block {
             }
         }
 
-        
-        // Mindustry saves block placement rotation even for blocks that don't rotate.
-        // Usually this doesn't cause any problems, but with the current implementation
-        // it is necessary for non-rotatable binary blocks to have a rotation of 0.
-        @Override
-        public void created(){
-            super.created();
-            if(!rotate) rotation(0);
-        }
-
-        // connections
-        @Override
-        public void onProximityUpdate(){
-            super.onProximityUpdate();
-
-            // update connected builds only when necessary
-            nb.clear();
-            nb.add(
-                checkType(front()),
-                checkType(left()),
-                checkType(back()),
-                checkType(right())
-            );
-            updateConnections();
-            updateSignal();
-            propagateSignal();
-        }
-
-        public void updateConnections(){
-            if(nb.isEmpty()) return;
-            for(int i = 0; i < 4; i++){
-                connections[i] = connectionCheck(nb.get(i), this);
-            }
-        }
-
         @Override
         public void displayBars(Table table) {
             super.displayBars(table);
@@ -269,23 +173,16 @@ public class BinaryBlock extends Block {
             }).left();
         }
 
-        // emission
-        public boolean emits(){
-            return emits;
+        public boolean outputs(int i){
+            return outputs[i];
+        }
+
+        public boolean inputs(int i) {
+            return inputs[i];
         }
 
         public boolean propagates(){
             return propagates;
-        }
-
-        public boolean outputs(int i){
-            return outputs[i];
-        }
-        public boolean inputs(int i) {
-            return inputs[i];
-        }
-        public boolean allOutputs(){
-            return allOutputs;
         }
 
         @Override
