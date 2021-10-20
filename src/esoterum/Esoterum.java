@@ -6,8 +6,10 @@ import arc.struct.*;
 import esoterum.content.*;
 import esoterum.ui.*;
 import esoterum.ui.dialogs.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.game.*;
 import mindustry.game.EventType.*;
+import mindustry.io.*;
 import mindustry.mod.*;
 import mindustry.mod.Mods.*;
 
@@ -40,6 +42,11 @@ public class Esoterum extends Mod{
                         swapMusic(control.sound.darkMusic, prevDark, null);
                     }
                 }
+            });
+            Events.on(SaveWriteEvent.class, e -> {
+                StringMap map = new StringMap();
+                SignalGraph.writeGraph(map);
+                state.rules.tags.put("SignalGraph", JsonIO.json.toJson(map, StringMap.class, String.class));
             });
         }
     }

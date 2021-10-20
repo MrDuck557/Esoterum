@@ -45,7 +45,7 @@ public class EsoBlocks implements ContentList{
         esoPanel1 = new NonblendFloor("panel-1", 0);
         esoPanel2 = new NonblendFloor("panel-2", 0);
         esoPanel3 = new NonblendFloor("panel-3", 0);
-
+        
         esoPanelFlat = new NonblendFloor("panel-flat", 0);
         esoSolidPanel = new StaticWall("panel-solid"){{
             variants = 0;
