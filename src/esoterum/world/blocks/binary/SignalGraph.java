@@ -66,7 +66,10 @@ public class SignalGraph {
     }
 
     public static void run(){
-
+        //I will change this later
+        while(true){
+            update();
+        }
     }
 
     public static void readGraph(StringMap map){
