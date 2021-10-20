@@ -5,7 +5,6 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.scene.ui.layout.*;
-import arc.struct.*;
 import arc.util.io.*;
 import esoterum.util.*;
 import mindustry.gen.*;
@@ -14,8 +13,6 @@ import mindustry.logic.*;
 import mindustry.type.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
-
-import java.util.*;
 
 public class BinaryBlock extends Block {
     public TextureRegion topRegion, connectionRegion;
@@ -72,28 +69,73 @@ public class BinaryBlock extends Block {
     }
 
     public class BinaryBuild extends Building {
-        public Seq<BinaryBuild> nb = new Seq<>(4);
+        public BinaryBuild[] nb = new BinaryBuild[]{null, null, null, null};
         public boolean[] connections = new boolean[]{false, false, false, false};
 
         public boolean[] signal = new boolean[]{false, false, false, false, false};
 
         @Override
         public void placed(){
+            super.placed();
             
         }
 
         @Override
         public void rotation(int dir){
-            
+            super.rotation(dir);
         }
 
         @Override
         public void onRemoved(){
-
+            super.onRemoved();
         }
 
-        public BinaryBuild[] getInputs(){
+        @Override
+        public void onProximityUpdate(){
+            super.onProximityUpdate();
+        }
 
+        public void updateSignal(){}
+
+        public BinaryBuild[] getInputs(){
+            BinaryBuild[] i = new BinaryBuild[nb.length];
+            int c = 0;
+            for(BinaryBuild b : nb)
+                if (b != null && inputs(c) && connections[c]) i[c] = b;
+            return i;
+        }
+
+        public BinaryBuild[] getOutputs(){
+            BinaryBuild[] o = new BinaryBuild[nb.length];
+            int c = 0;
+            for(BinaryBuild b : nb)
+                if (b != null && outputs(c) && connections[c]) o[c] = b;
+            return o;
+        }
+
+        public boolean connectionCheck(Building from, BinaryBlock.BinaryBuild to){
+            if(from == null || to == null) return false;
+            if(from instanceof BinaryBlock.BinaryBuild b){
+                int t = EsoUtil.relativeDirection(b, to);
+                int f = EsoUtil.relativeDirection(to, b);
+                return b.outputs(t) & to.inputs(f)
+                    || to.outputs(f) & b.inputs(t);
+            }
+            return false;
+        }
+
+        public boolean getSignal(Building from, BinaryBlock.BinaryBuild to){
+            if(from instanceof BinaryBlock.BinaryBuild b)
+                return b.signal[EsoUtil.relativeDirection(b, to)];
+            return false;
+        }
+
+        public boolean signal(){
+            return signal[0] || signal[1] || signal[2] || signal[3];
+        }
+
+        public void signal(boolean b){
+            signal[0] = signal[1] = signal[2] = signal[3] = b;
         }
 
         @Override
@@ -113,9 +155,8 @@ public class BinaryBlock extends Block {
         }
 
         public void drawConnections(){
-            if(nb.isEmpty()) return;
             for(int i = 0; i < 4; i++){
-                if(inputs(i)) Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
+                if(inputs(i)) Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
                 if(outputs(i)) Draw.color(Color.white, team.color, Mathf.num(signal()));
                 if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
@@ -128,12 +169,11 @@ public class BinaryBlock extends Block {
 
         @Override
         public void drawSelect(){
-            if(nb.isEmpty()) return;
             if(!drawConnectionArrows) return;
             BinaryBuild b;
             for(int i = 0; i < 4; i++){
                 if(connections[i]){
-                    b = nb.get(i);
+                    b = nb[i];
 
                     Draw.z(Layer.overlayUI);
                     Lines.stroke(3f);
@@ -144,7 +184,7 @@ public class BinaryBlock extends Block {
 
             for(int i = 0; i < 4; i++){
                 if(outputs(i) && connections[i]){
-                    b = nb.get(i);
+                    b = nb[i];
                     Draw.z(Layer.overlayUI + 1);
                     Drawf.arrow(x, y, b.x, b.y, 2f, 2f, signal() ? team.color : Color.white);
                 }
@@ -152,7 +192,7 @@ public class BinaryBlock extends Block {
 
             for (int i = 0; i < 4; i++){
                 if(connections[i]) {
-                    b = nb.get(i);
+                    b = nb[i];
                     Draw.z(Layer.overlayUI + 3);
                     Lines.stroke(1f);
                     Draw.color((outputs(i) ? signal() : getSignal(b, this)) ? team.color : Color.white);

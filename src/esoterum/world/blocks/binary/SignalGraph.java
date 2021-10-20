@@ -4,32 +4,32 @@ import java.util.*;
 
 import esoterum.util.EsoUtil;
 
-public class SignalGraphBlock {
-    public HashMap<BinaryBlock.BinaryBuild, HashSet<BinaryBlock.BinaryBuild>> hm = new HashMap<>();
-    public HashSet<BinaryBlock.BinaryBuild> sources = new HashSet<>();
+public class SignalGraph {
+    public static HashMap<BinaryBlock.BinaryBuild, HashSet<BinaryBlock.BinaryBuild>> hm = new HashMap<>();
+    public static HashSet<BinaryBlock.BinaryBuild> sources = new HashSet<>();
 
-    public void addVertex(BinaryBlock.BinaryBuild b){
+    public static void addVertex(BinaryBlock.BinaryBuild b){
         hm.put(b, new HashSet<>());
         if(!b.propagates()) sources.add(b);
     }
 
-    public void addEdge(BinaryBlock.BinaryBuild a, BinaryBlock.BinaryBuild b){
+    public static void addEdge(BinaryBlock.BinaryBuild a, BinaryBlock.BinaryBuild b){
         if(hm.get(a) != null){
             hm.get(a).add(b);
         }
     }
 
-    public void removeVertex(BinaryBlock.BinaryBuild b){
+    public static void removeVertex(BinaryBlock.BinaryBuild b){
         hm.remove(b);
     }
 
-    public void removeEdge(BinaryBlock.BinaryBuild a, BinaryBlock.BinaryBuild b){
+    public static void removeEdge(BinaryBlock.BinaryBuild a, BinaryBlock.BinaryBuild b){
         if(hm.get(a) != null){
             hm.get(a).remove(b);
         }
     }
 
-    public void dfs(BinaryBlock.BinaryBuild b){
+    public static void dfs(BinaryBlock.BinaryBuild b){
         Stack<BinaryBlock.BinaryBuild> s = new Stack<>();
         HashMap<BinaryBlock.BinaryBuild, Integer> h = new HashMap<>();
         s.push(b);
@@ -48,7 +48,7 @@ public class SignalGraphBlock {
         }
     }
 
-    public void update(){
+    public static void update(){
         Thread t = new Thread(){
             @Override
             public void run(){
@@ -61,7 +61,7 @@ public class SignalGraphBlock {
         try {t.join();} catch (InterruptedException e) {e.printStackTrace();}
     }
 
-    public void updateSignal(BinaryBlock.BinaryBuild b){
-
+    public static void updateSignal(BinaryBlock.BinaryBuild b){
+        b.updateSignal();
     }
 }
