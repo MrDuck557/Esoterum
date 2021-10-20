@@ -29,6 +29,14 @@ public class SignalGraph {
         }
     }
 
+    public static void clearEdges(BinaryBlock.BinaryBuild b){
+        hm.get(b).clear();
+    }
+
+    public static void updateSignal(BinaryBlock.BinaryBuild b){
+        b.updateSignal();
+    }
+
     public static void dfs(BinaryBlock.BinaryBuild b){
         Stack<BinaryBlock.BinaryBuild> s = new Stack<>();
         HashMap<BinaryBlock.BinaryBuild, Integer> h = new HashMap<>();
@@ -49,19 +57,8 @@ public class SignalGraph {
     }
 
     public static void update(){
-        Thread t = new Thread(){
-            @Override
-            public void run(){
-                for(BinaryBlock.BinaryBuild b : sources){
-                    dfs(b);
-                }
-            }
-        };
-        t.start();
-        try {t.join();} catch (InterruptedException e) {e.printStackTrace();}
-    }
-
-    public static void updateSignal(BinaryBlock.BinaryBuild b){
-        b.updateSignal();
+        for(BinaryBlock.BinaryBuild b : sources){
+            dfs(b);
+        }
     }
 }

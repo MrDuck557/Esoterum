@@ -10,13 +10,6 @@ public class BeamAcceptor extends BeamBlock{
     }
 
     public class BeamAcceptorBuild extends BeamBuild {
-        @Override
-        public void updateTile() {
-            super.updateTile();
-            signal(active);
-            if(active != signal[4]) propagateSignal();
-            signal[4] = active;
-        }
 
         @Override
         public void updateBeam() {

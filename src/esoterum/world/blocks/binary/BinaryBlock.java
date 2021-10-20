@@ -77,22 +77,48 @@ public class BinaryBlock extends Block {
         @Override
         public void placed(){
             super.placed();
-            
+            SignalGraph.addVertex(this);
+            updateNeighbours();
+            updateConnections();
         }
 
         @Override
         public void rotation(int dir){
             super.rotation(dir);
+            updateNeighbours();
+            updateConnections();
         }
 
         @Override
         public void onRemoved(){
             super.onRemoved();
+            SignalGraph.clearEdges(this);
+            SignalGraph.removeVertex(this);
+        }
+
+        public void updateConnections(){
+            for(int i = 0; i < 4; i++){
+                connections[i] = connectionCheck(nb[i], this);
+            }
+            SignalGraph.clearEdges(this);
+            for(BinaryBuild b : getOutputs()){
+                if(b != null) SignalGraph.addEdge(this, b);
+            }
         }
 
         @Override
         public void onProximityUpdate(){
             super.onProximityUpdate();
+            updateNeighbours();
+            updateConnections();
+        }
+
+        public void updateNeighbours(){
+            //I don't like this
+            nb[0] = checkType(front());
+            nb[1] = checkType(left());
+            nb[2] = checkType(back());
+            nb[3] = checkType(right());
         }
 
         public void updateSignal(){}
@@ -111,6 +137,11 @@ public class BinaryBlock extends Block {
             for(BinaryBuild b : nb)
                 if (b != null && outputs(c) && connections[c]) o[c] = b;
             return o;
+        }
+
+        public BinaryBlock.BinaryBuild checkType(Building b){
+            if(b instanceof BinaryBlock.BinaryBuild bb) return bb;
+            return null;
         }
 
         public boolean connectionCheck(Building from, BinaryBlock.BinaryBuild to){
