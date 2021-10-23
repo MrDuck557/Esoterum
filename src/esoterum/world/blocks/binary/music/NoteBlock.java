@@ -30,14 +30,14 @@ public class NoteBlock extends BinaryBlock{
         "F", "F#", "G", "G#", "A",
         "A#", "B"
     };
-    public NoteSample[] samples = {
-        new NoteSample(EsoSounds.bells, "Bell"),
-        new NoteSample(EsoSounds.bass, "Bass"),
-        new NoteSample(EsoSounds.saw, "Saw"),
-        new NoteSample(EsoSounds.organ, "Organ"),
-        new NoteSample(EsoSounds.BIGSHOT, "BIG SHOT"),
-        new NoteSample(EsoSounds.badtime, "Bad Time"),
-        new NoteSample(EsoSounds.piano, "Piano")/*,
+    public Instrument[] instruments = {
+        new Instrument(EsoSounds.bells, "Bell"),
+        new Instrument(EsoSounds.bass, "Bass"),
+        new Instrument(EsoSounds.saw, "Saw"),
+        new Instrument(EsoSounds.organ, "Organ"),
+        new Instrument(EsoSounds.BIGSHOT, "BIG SHOT"),
+        new Instrument(EsoSounds.badtime, "Bad Time"),
+        new Instrument(EsoSounds.piano, "Piano")/*,
         new NoteSample(EsoSounds.drums, "Drum Kit"){{
             noteNames = new String[]{
                 "%s C", "%s C#", "%s D",
@@ -75,8 +75,8 @@ public class NoteBlock extends BinaryBlock{
         outputRegion = Core.atlas.find("esoterum-connection");
         connectionRegion = Core.atlas.find("esoterum-connection");
         region = Core.atlas.find("esoterum-gate-base");
-        for(NoteSample sample : samples){
-            sample.load();
+        for(Instrument instrument : instruments){
+            instrument.load();
         }
     }
     
@@ -91,7 +91,7 @@ public class NoteBlock extends BinaryBlock{
     }
 
     public class NoteBlockBuild extends BinaryBuild{
-        /** Direction, Pitch, Octave, Volume, Note Sample */
+        /** Direction, Pitch, Octave, Volume, Instrument */
         public IntSeq configs = IntSeq.with(2, 0, 3, 100, 0);
 
         @Override
@@ -104,6 +104,14 @@ public class NoteBlock extends BinaryBlock{
             }
         }
 
+        @Override
+        public void draw(){
+            drawBase();
+            drawConnections();
+            Draw.color(Color.white, team.color, Mathf.num(signal()));
+            Draw.rect(instruments[configs.get(4)].top, x, y, (rotate && drawRot) ? rotdeg() : 0f);
+        }
+
         public void drawConnections(){
             Draw.color(signal() ? team.color : Color.white);
             Draw.rect(connectionRegion, x, y, rotdeg() + 90 * configs.first());
@@ -112,7 +120,7 @@ public class NoteBlock extends BinaryBlock{
 
         public void playSound(){
             if(Vars.headless) return;
-            samples[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 100f, EsoUtil.notePitch(configs.get(1)), 0);
+            instruments[configs.get(4)].octaves[configs.get(2)].play((float)configs.get(3) / 100f, EsoUtil.notePitch(configs.get(1)), 0);
             EsoFx.notePlay.at(x, y, team.color);
         }
 
@@ -123,7 +131,7 @@ public class NoteBlock extends BinaryBlock{
             table.table(e -> {
                 e.row();
                 e.left();
-                e.label(() -> "Note: " + noteString() + " (" + samples[configs.get(4)].name + ")").color(Color.lightGray);
+                e.label(() -> "Note: " + noteString() + " (" + instruments[configs.get(4)].name + ")").color(Color.lightGray);
             }).left();
         }
 
@@ -183,24 +191,24 @@ public class NoteBlock extends BinaryBlock{
                     m.table(Tex.button, i -> {
                         // sample icon
                         Table it = i.table().size(80).get();
-                        it.image(() -> samples[configs.get(4)].icon).fill();
+                        it.image(() -> instruments[configs.get(4)].icon).fill();
                         i.row();
 
                         // buttons & sample name
                         i.table(b -> {
                             b.bottom();
                             b.button(Icon.leftSmall, Styles.emptyi, () -> {
-                                if ((configs.get(4) - 1) < 0) configs.set(4, samples.length);
+                                if ((configs.get(4) - 1) < 0) configs.set(4, instruments.length);
                                 configs.incr(4, -1);
                                 configure(configs);
                             }).size(10).bottom().left().growX();
 
-                            b.label(() -> samples[configs.get(4)].name)
+                            b.label(() -> instruments[configs.get(4)].name)
                                 .bottom().center().growX()
                                 .fontScale(0.8f).get().setAlignment(Align.center);
 
                             b.button(Icon.rightSmall, Styles.emptyi, () -> {
-                                if ((configs.get(4) + 1) >= samples.length) configs.set(4, -1);
+                                if ((configs.get(4) + 1) >= instruments.length) configs.set(4, -1);
                                 configs.incr(4, 1);
                                 configure(configs);
                             }).size(10).bottom().right().growX();
@@ -236,7 +244,7 @@ public class NoteBlock extends BinaryBlock{
 
                     k.stack(whites, blacks);
                     k.row();
-                    k.label(() -> samples[configs.get(4)].noteString(configs.get(2), configs.get(1))).center().growX();
+                    k.label(() -> instruments[configs.get(4)].noteString(configs.get(2), configs.get(1))).center().growX();
                 });
 
                 t.row();
@@ -259,7 +267,7 @@ public class NoteBlock extends BinaryBlock{
         }
 
         public String noteString(){
-            return samples[configs.get(4)].noteString(configs.get(2), configs.get(1));
+            return instruments[configs.get(4)].noteString(configs.get(2), configs.get(1));
         }
 
         @Override
@@ -314,7 +322,7 @@ public class NoteBlock extends BinaryBlock{
                 configure(configs);
             }else if (type == LAccess.color){
                 // r is instrument, b is volume, g does absolutely nothing
-                if(p1 + 0.01 - samples.length >= 0  || 0 - p1 >= 0.0001){ // invalid instrument
+                if(p1 + 0.01 - instruments.length >= 0  || 0 - p1 >= 0.0001){ // invalid instrument
                     configs.set(4,0);
                 }else{
                     configs.set(4, (int) (p1 + 0.01));
@@ -341,17 +349,17 @@ public class NoteBlock extends BinaryBlock{
                         configs.set(1, Mathf.mod(pp[1], 12));
                         configs.set(2, Mathf.clamp(pp[1] / 12, 0, 4));
                         configs.set(3, Mathf.clamp(pp[2], 0, 100));
-                        configs.set(4, Mathf.mod(pp[0], samples.length));
+                        configs.set(4, Mathf.mod(pp[0], instruments.length));
                     }
                 }
             }
         }
     }
 
-    public static class NoteSample{
+    public static class Instrument{
         /** Array of sounds. Should contain C1, C2, C3, C4, C5, C6, and C7 */
         Sound[] octaves;
-        /** Used in config to display the name of the sample */
+        /** Used in config to display the name of the instrument */
         String name;
         /** Used to display the name of notes */
         public String[] noteNames = new String[]{
@@ -362,10 +370,9 @@ public class NoteBlock extends BinaryBlock{
         };
         /** Processes octave and pitch to create name */
         public Notef titleProcessor = (o, p) -> String.valueOf(o + 1 + (Mathf.num(p >= 12)));
-        /** Icon */
-        public TextureRegion icon;
+        public TextureRegion icon, top;
 
-        public NoteSample(Sound[] octaves, String name){
+        public Instrument(Sound[] octaves, String name){
             this.octaves = octaves;
             this.name = name;
         }
@@ -373,6 +380,7 @@ public class NoteBlock extends BinaryBlock{
         public void load(){
             String inst = name.replaceAll("\\s", "-").toLowerCase();
             icon = Core.atlas.find("esoterum-instrument-" + inst);
+            top = Core.atlas.find("esoterum-" + inst + "-top");
         }
 
         public String noteString(int octave, int pitch){
