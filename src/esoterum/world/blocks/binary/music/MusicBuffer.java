@@ -23,6 +23,7 @@ public class MusicBuffer extends BinaryBlock{
     protected float[] restMul = {0.25f, 0.5f, 1, 2, 4};
     protected String[] restNames = {"16th", "8th", "Quarter", "Half", "Whole"};
     public TextureRegionDrawable score;
+    public TextureRegion[] rests = new TextureRegion[5];
 
     public MusicBuffer(String name){
         super(name);
@@ -44,6 +45,10 @@ public class MusicBuffer extends BinaryBlock{
         super.load();
 
         score = new TextureRegionDrawable(Core.atlas.find("esoterum-score"));
+        for(int i = 0; i < 5; i++){
+            rests[i] = Core.atlas.find("esoterum-rest-" + i + "-top");
+        }
+        topRegion = rests[2];
     }
 
     public class MusicBufferBuild extends BinaryBuild{
@@ -94,7 +99,7 @@ public class MusicBuffer extends BinaryBlock{
             drawConnections();
             drawBuffer();
             Draw.color(Color.white);
-            Draw.rect(topRegion, x, y);
+            Draw.rect(rests[configs.get(2)], x, y);
         }
 
         public void drawBuffer(){
