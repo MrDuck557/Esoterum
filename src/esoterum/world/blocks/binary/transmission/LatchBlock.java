@@ -1,11 +1,11 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
+import arc.util.io.*;
+import esoterum.world.blocks.binary.*;
 
 public class LatchBlock extends BinaryBlock{
     public TextureRegion latchRegion;
@@ -41,30 +41,22 @@ public class LatchBlock extends BinaryBlock{
     }
 
     public class LatchBuild extends BinaryBuild {
-        public boolean tmp = true;
-
-        // laggy?
         @Override
-        public void updateTile() {
-            super.updateTile();
-            if(signal[0] != tmp) {
-                propagateSignal(true, false, false, false);
-                tmp = signal[0];
-            }
+        public void updateTile(){
+            propagateSignal();
         }
 
         @Override
-        public void updateSignal(int source) {
-            try {
-                signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
-                if(getSignal(nb.get(2), this)) configure(signal[4]);
-            } catch(Exception e){}
+        public void updateSignal() {
+            if(nb.isEmpty()) return;
+            if(getSignal(nb.get(2), this)) signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
         }
 
         @Override
         public void draw() {
             drawBase();
             drawConnections();
+            if(nb.isEmpty()) return;
             Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this)));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
@@ -80,7 +72,7 @@ public class LatchBlock extends BinaryBlock{
                 signal[0] = read.bool();
             }
             if(revision >= 3){
-                tmp = read.bool();
+                signal[0] = read.bool();
             }
         }
 
@@ -89,12 +81,11 @@ public class LatchBlock extends BinaryBlock{
             super.write(write);
 
             write.bool(signal[0]);
-            write.bool(tmp);
         }
 
         @Override
         public byte version() {
-            return 3;
+            return 2;
         }
     }
 }

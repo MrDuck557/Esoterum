@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -8,9 +8,10 @@ import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
 import esoterum.graphics.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
-import mindustry.ui.*;
 import mindustry.logic.*;
+import mindustry.ui.*;
 
 public class BinaryBuffer extends BinaryBlock{
     public BinaryBuffer(String name){
@@ -53,21 +54,18 @@ public class BinaryBuffer extends BinaryBlock{
             if(delayTimer > trueDelay()){
                 signal[0]  = true;
                 delayTimer = trueDelay();
-                propagateSignal(true, false, false, false);
             }
             if(delayTimer < 0f){
                 signal[0] = false;
                 delayTimer = 0f;
-                propagateSignal(true, false, false, false);
             }
+            propagateSignal();
         }
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source);
-                bufferedSignal = getSignal(nb.get(configs.first()), this);
-            }catch(Exception ignored){}
+        public void updateSignal(){
+            if(nb.isEmpty()) return;
+            bufferedSignal = getSignal(nb.get(configs.first()), this);
         }
 
         public float trueDelay(){

@@ -1,10 +1,8 @@
 package esoterum.util;
 
-import arc.func.Cons;
-import arc.math.geom.Geometry;
-import arc.math.geom.Rect;
-import arc.math.geom.Vec2;
-import mindustry.entities.Units;
+import arc.func.*;
+import arc.math.geom.*;
+import mindustry.entities.*;
 import mindustry.gen.*;
 
 public class EsoUtil{

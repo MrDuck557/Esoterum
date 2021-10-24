@@ -1,12 +1,11 @@
 package esoterum.entities.units;
 
-import arc.math.Angles;
-import arc.math.Mathf;
-import esoterum.content.EsoUnits;
-import esoterum.type.HandsUnitType;
-import mindustry.gen.UnitEntity;
+import arc.math.*;
+import esoterum.content.*;
+import esoterum.type.*;
+import mindustry.gen.*;
 
-public class HandsUnitEntity extends UnitEntity {
+public class HandsUnitEntity extends UnitEntity{
     public float handsAngle;
     public float trailTimer;
     public float engineScl;

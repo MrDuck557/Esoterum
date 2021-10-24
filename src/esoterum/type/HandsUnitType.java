@@ -1,26 +1,26 @@
 package esoterum.type;
 
-import arc.Core;
+import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import arc.util.Time;
-import esoterum.content.EsoFx;
-import esoterum.entities.units.HandsUnitEntity;
-import esoterum.graphics.EsoPal;
-import mindustry.Vars;
-import mindustry.entities.Effect;
-import mindustry.gen.Unit;
-import mindustry.graphics.MultiPacker;
-import mindustry.graphics.Pal;
-import mindustry.type.UnitType;
-import mindustry.world.blocks.environment.Floor;
+import arc.util.*;
+import esoterum.content.*;
+import esoterum.entities.units.*;
+import esoterum.graphics.*;
+import mindustry.*;
+import mindustry.entities.*;
+import mindustry.gen.*;
+import mindustry.graphics.*;
+import mindustry.type.*;
+import mindustry.world.blocks.environment.*;
 
-public class HandsUnitType extends UnitType {
+public class HandsUnitType extends UnitType{
     public TextureRegion handsRegion, handsOutlineRegion;
     public float maxHandAngle = 45f;
     public float trailSpacing = 16f;
     public Effect hoverEffect;
+
     public HandsUnitType(String name){
         super(name);
         outlineColor = EsoPal.esoOutline;
@@ -28,7 +28,7 @@ public class HandsUnitType extends UnitType {
     }
 
     @Override
-    public void load() {
+    public void load(){
         super.load();
         constructor = HandsUnitEntity::new;
 

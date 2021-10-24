@@ -1,10 +1,14 @@
 package esoterum.content;
 
 import esoterum.world.blocks.binary.*;
+import esoterum.world.blocks.binary.interaction.*;
+import esoterum.world.blocks.binary.music.*;
+import esoterum.world.blocks.binary.source.*;
+import esoterum.world.blocks.binary.transmission.*;
 import esoterum.world.blocks.defense.*;
 import esoterum.world.blocks.defense.beam.*;
 import esoterum.world.blocks.environment.*;
-import mindustry.content.Fx;
+import mindustry.content.*;
 import mindustry.ctype.*;
 import mindustry.entities.bullet.*;
 import mindustry.gen.*;
@@ -17,7 +21,7 @@ public class EsoBlocks implements ContentList{
         // Environment
         esoPanel, esoPanel1, esoPanel2, esoPanel3, esoPanelFlat, esoSolidPanel,
         esoPanelOpen, esoPanelE, esoPanelS, esoPanelO,
-        // Signal distribution
+        // Signal transmission
         esoWire, esoJunction, esoRouter, esoNode, esoLatch, esoController, esoBuffer,
         // Signal sources
         esoSwitch, esoButton, esoClock,
@@ -53,7 +57,7 @@ public class EsoBlocks implements ContentList{
         esoPanelO = new NonblendFloor("panel-o", 0);
         // endregion environment
 
-        // region distribution
+        // region transmission
         esoWire = new BinaryWire("wire");
 
         esoJunction = new BinaryJunction("junction");
@@ -67,7 +71,7 @@ public class EsoBlocks implements ContentList{
         esoController = new SignalController("controller");
 
         esoBuffer = new BinaryBuffer("buffer");
-        // endregion distribution
+        // endregion transmission
 
         // region sources
         esoSwitch = new BinaryButton("switch", true);

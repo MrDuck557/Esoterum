@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.*;
 import arc.func.*;
@@ -8,6 +8,7 @@ import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.io.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
 
 public class LogicGate extends BinaryBlock{
@@ -52,22 +53,17 @@ public class LogicGate extends BinaryBlock{
         public int nextConfig = 1;
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source, () -> {
-                    signal[4] = operation.get(new boolean[]{
-                        getSignal(nb.get(configs.first()), this),
-                        getSignal(nb.get(configs.get(single ? 0 : 1)), this),
-                    });
-                    if(signal[0] != signal[4]){
-                        signal[0] = signal[4];
-                        return new boolean[] {true, false, false, false};
-                    } else{
-                        return new boolean[4];
-                    }
-                });
-                
-            } catch(Exception e){}
+        public void updateTile(){
+            propagateSignal();
+        }
+
+        @Override
+        public void updateSignal(){
+            if(nb.isEmpty()) return;
+            signal[0] = operation.get(new boolean[]{
+                getSignal(nb.get(configs.first()), this),
+                getSignal(nb.get(configs.get(single ? 0 : 1)), this),
+            });
         }
 
         @Override
@@ -75,6 +71,8 @@ public class LogicGate extends BinaryBlock{
             table.button(Icon.rotate, () -> {
                 configure(nextConfig);
                 updateProximity();
+                updateSignal();
+                propagateSignal();
             }).size(40f).tooltip("Rotate Input" + (single ? "" : "s"));
         }
 
@@ -85,6 +83,7 @@ public class LogicGate extends BinaryBlock{
 
         @Override
         public void drawConnections(){
+            if(nb.isEmpty()) return;
             for(int i = 1; i < 4; i++){
                 if(!configs.contains(i)) continue;
                 Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));

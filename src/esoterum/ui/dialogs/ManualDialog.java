@@ -1,8 +1,9 @@
 package esoterum.ui.dialogs;
 
-import arc.Core;
-import arc.util.Align;
+import arc.*;
+import arc.util.*;
 import esoterum.ui.*;
+import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
@@ -17,6 +18,10 @@ public class ManualDialog extends BaseDialog{
 
         build();
         build(); //Run build twice to deal with strange issues that happen the first build.
+
+        Events.on(ResizeEvent.class, e -> {
+            build();
+        });
     }
 
     public void build(){
@@ -46,12 +51,12 @@ public class ManualDialog extends BaseDialog{
         // navigation buttons
         // topic buttons
         cont.table(topics -> {
-            // distribution
+            // transmission
             topics.button(Icon.distribution, () -> {
                 currentPage = 0;
                 currentTopic = 0;
                 build();
-            }).tooltip("Signal Distribution")
+            }).tooltip("Signal Transmission")
                 .visible(ManualPages.topics[0].length != 0);
 
             topics.row();

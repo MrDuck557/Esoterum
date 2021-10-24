@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.source;
 
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -11,6 +11,7 @@ import arc.util.*;
 import arc.util.io.*;
 import esoterum.graphics.*;
 import esoterum.util.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
 import mindustry.ui.*;
 
@@ -33,14 +34,8 @@ public class BinaryClock extends BinaryBlock{
 
         @Override
         public void updateTile(){
-            signal[4] = signal();
             signal(Mathf.mod(Time.time - configs.get(2), configs.first()) <= configs.get(1));
-            if(signal[4] != signal()) propagateSignal(true, true, true, true);
-        }
-
-        @Override
-        public void updateSignal(int source){
-            try {super.updateSignal(source);} catch(Exception e){}
+            propagateSignal();
         }
 
         @Override

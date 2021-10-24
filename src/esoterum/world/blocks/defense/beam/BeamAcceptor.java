@@ -3,7 +3,7 @@ package esoterum.world.blocks.defense.beam;
 public class BeamAcceptor extends BeamBlock{
     public BeamAcceptor(String name){
         super(name);
-        rotate = false;
+        rotate = true;
         acceptsBeam = true;
         outputs = new boolean[]{true, true, true, true};
         emits = true;
@@ -13,8 +13,8 @@ public class BeamAcceptor extends BeamBlock{
         @Override
         public void updateTile() {
             super.updateTile();
-            signal[0] = signal[1] = signal[2] = signal[3] = active;
-            if(active != signal[4])propagateSignal(true, true, true, true);
+            signal(active);
+            if(active != signal[4]) propagateSignal();
             signal[4] = active;
         }
 

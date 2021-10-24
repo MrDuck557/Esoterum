@@ -1,23 +1,24 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.music;
 
 import arc.*;
 import arc.audio.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import arc.scene.event.Touchable;
+import arc.scene.event.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
 import esoterum.content.*;
-import esoterum.ui.EsoStyle;
+import esoterum.ui.*;
 import esoterum.util.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.*;
 import mindustry.gen.*;
-import mindustry.ui.*;
 import mindustry.logic.*;
+import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 
@@ -63,6 +64,7 @@ public class NoteBlock extends BinaryBlock{
         group = BlockGroup.logic;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
+        propagates = false;
 
         config(IntSeq.class, (NoteBlockBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
     }
@@ -93,19 +95,13 @@ public class NoteBlock extends BinaryBlock{
         public IntSeq configs = IntSeq.with(2, 0, 3, 100, 0);
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source, () -> {
-                    signal[4] = getSignal(nb.get(configs.first()), this);
-                    if(signal[0] != signal[4]){
-                        if(!signal[0] && signal[4]) playSound();
-                        signal[0] = signal[4];
-                        return new boolean[] {true, false, false, false};
-                    } else{
-                        return new boolean[4];
-                    }
-                });
-            }catch(Exception ignored){}
+        public void updateSignal(){
+            if(nb.isEmpty()) return;
+            signal[4] = getSignal(nb.get(configs.first()), this);
+            if(signal[0] != signal[4]){
+                if(!signal[0] && signal[4]) playSound();
+                signal[0] = signal[4];
+            }
         }
 
         public void drawConnections(){

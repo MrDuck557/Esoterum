@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -7,6 +7,7 @@ import arc.math.geom.*;
 import arc.util.*;
 import arc.util.io.*;
 import esoterum.graphics.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.world.*;
@@ -26,11 +27,20 @@ public class BinaryNode extends BinaryBlock{
 
         outputs = new boolean[]{true, true, true, true};
         inputs = new boolean[]{true, true, true, true};
+        propagates = false;
 
         //point2 config is relative
-        config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> tile.link = Point2.pack(i.x + tile.tileX(), i.y + tile.tileY()));
+        config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> {
+            tile.link = Point2.pack(i.x + tile.tileX(), i.y + tile.tileY());
+            tile.updateSignal();
+            tile.propagateSignal();
+        });
         //integer is not
-        config(Integer.class, (BinaryNodeBuild tile, Integer i) -> tile.link = i);
+        config(Integer.class, (BinaryNodeBuild tile, Integer i) -> {
+            tile.link = i;
+            tile.updateSignal();
+            tile.propagateSignal();
+        });
 
         configClear((BinaryNodeBuild tile) -> tile.link = -1);
     }
@@ -73,27 +83,26 @@ public class BinaryNode extends BinaryBlock{
                 configure(null);
             }
         }
+        
         @Override
-        public void updateSignal(int source){
-            try {
-                super.updateSignal(source);
-                boolean tmp = signal[4];
-                signal[4] = false;
-                for(BinaryBuild b : nb){
-                    signal[4] |= getSignal(b, this);
-                }
-                BinaryNodeBuild c = linkedNode();
-                if(tmp != signal[4]){
-                    tmp = signal[4];
-                    try {if(c != null && source != 4) c.updateSignal(4);} catch(Exception e){}
-                }
-                signal[4] = c != null && c.signal();
-                if(signal[0] != signal[4]){
-                    signal(signal[4]);
-                    propagateSignal(source != 0, source != 1, source != 2, source != 3);
-                }
-                signal[4] = tmp;
-            } catch(Exception e){}
+        public BinaryBuild[] getNeighbours(int dir){
+            BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null, null};
+            if(nb.isEmpty()) return nbs;
+            for(int i=0;i<4;i++){
+                if(i != dir && outputs(i) && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
+            }
+            nbs[4] = linkedNode();
+            return nbs;
+        }
+
+        @Override
+        public void updateSignal(){
+            signal[4] = false;
+            for(BinaryBuild b : nb){
+                signal[4] |= getSignal(b, this);
+            }
+            BinaryNodeBuild c = linkedNode();
+            signal(c != null && c.signal());
         }
 
         @Override

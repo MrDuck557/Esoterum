@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.transmission;
 
 import arc.*;
 import arc.graphics.*;
@@ -10,7 +10,8 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
-import mindustry.gen.Tex;
+import esoterum.world.blocks.binary.*;
+import mindustry.gen.*;
 
 // each side's behavior is configurable.
 public class SignalController extends BinaryBlock{
@@ -28,6 +29,7 @@ public class SignalController extends BinaryBlock{
         emits = true;
         inputs = new boolean[]{true, true, true, true};
         outputs = new boolean[]{true, true, true, true};
+        propagates = false;
         config(IntSeq.class, (ControllerBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
 
         config(Integer.class, (ControllerBuild b, Integer i) -> {
@@ -54,44 +56,36 @@ public class SignalController extends BinaryBlock{
         public IntSeq configs = IntSeq.with(0, 0, 0, 0);
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source, () -> {
-                    if(!rotInit){
-                        for(int i = 0; i < rotation; i++){
-                            configs = IntSeq.with(
-                                configs.get(3),
-                                configs.get(0),
-                                configs.get(1),
-                                configs.get(2)
-                            );
-                        }
-                        rotInit = true;
-                        rotation(0);
-                    }
-                    signal[4] = (getSignal(nb.get(0), this) && configs.get(0) == 1)
-                        ||  (getSignal(nb.get(1), this) && configs.get(1) == 1)
-                        ||  (getSignal(nb.get(2), this) && configs.get(2) == 1)
-                        ||  (getSignal(nb.get(3), this) && configs.get(3) == 1);
-                    if(signal() != signal[4]){
-                        signal(false);
-                        signal[0] = signal[4] && configs.get(0) == 2;
-                        signal[1] = signal[4] && configs.get(1) == 2;
-                        signal[2] = signal[4] && configs.get(2) == 2;
-                        signal[3] = signal[4] && configs.get(3) == 2;
-                        return new boolean [] {configs.get(0) == 2 && source != 0, 
-                            configs.get(1) == 2 && source != 1, 
-                            configs.get(2) == 2 && source != 2, 
-                            configs.get(3) == 2 && source != 3};
-                    } else {
-                        return new boolean[4];
-                    }
-                });
-            }catch(Exception ignored){}
+        public void updateSignal(){
+            if(!rotInit){
+                for(int i = 0; i < rotation; i++){
+                    configs = IntSeq.with(
+                        configs.get(3),
+                        configs.get(0),
+                        configs.get(1),
+                        configs.get(2)
+                    );
+                }
+                rotInit = true;
+                rotation(0);
+            }
+            if(nb.isEmpty()) return;
+            signal[4] = (getSignal(nb.get(0), this) && configs.get(0) == 1)
+                ||  (getSignal(nb.get(1), this) && configs.get(1) == 1)
+                ||  (getSignal(nb.get(2), this) && configs.get(2) == 1)
+                ||  (getSignal(nb.get(3), this) && configs.get(3) == 1);
+            if(signal() != signal[4]){
+                signal(false);
+                signal[0] = signal[4] && configs.get(0) == 2;
+                signal[1] = signal[4] && configs.get(1) == 2;
+                signal[2] = signal[4] && configs.get(2) == 2;
+                signal[3] = signal[4] && configs.get(3) == 2;
+            }
         }
 
         @Override
         public void drawConnections(){
+            if(nb.isEmpty()) return;
             for(int i = 0; i < 4; i++){
                 int c = configs.get(i);
                 if(c == 0) continue;
@@ -125,7 +119,18 @@ public class SignalController extends BinaryBlock{
             return table.table(t -> {
                 TextButton b = t.button(states[configs.get(index)], () -> {
                     configure(index);
-                    updateProximity();
+                    if(configs.get(index) == 0 && !nb.isEmpty() && nb.get(index) != null){
+                        nb.get(index).updateSignal();
+                        nb.get(index).propagateSignal();
+                    } else if(configs.get(index) == 1){
+                        updateSignal();
+                        propagateSignal();
+                    } else if(configs.get(index) == 2 && !nb.isEmpty() && nb.get(index) != null){
+                        updateSignal();
+                        propagateSignal();
+                        nb.get(index).updateSignal();
+                        nb.get(index).propagateSignal();
+                    }
                 }).size(40f).get();
 
                 b.update(() -> b.setText(states[configs.get(index)]));

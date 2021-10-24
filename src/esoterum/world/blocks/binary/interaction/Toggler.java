@@ -1,10 +1,11 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.interaction;
 
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import mindustry.logic.LAccess;
+import esoterum.world.blocks.binary.*;
+import mindustry.logic.*;
 
 public class Toggler extends BinaryBlock{
     public TextureRegion[] states = new TextureRegion[2];
@@ -18,6 +19,7 @@ public class Toggler extends BinaryBlock{
         emits = true;
         outputs = new boolean[]{true, false, false, false};
         inputs = new boolean[]{false, true, true, true};
+        propagates = false;
     }
 
     @Override
@@ -30,22 +32,10 @@ public class Toggler extends BinaryBlock{
 
     public class TogglerBuild extends BinaryBuild{
         @Override
-        public void updateSignal(int source){
-            try {
-                super.updateSignal(source, () -> {
-                    signal[4] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
-                    boolean[] out = new boolean[4];
-                    if(signal[0] != signal[4]){
-                        signal[0] = signal[4];
-                        out  = new boolean[]{true, false, false, false};
-                    }
-                    if(front() != null){
-                        front().control(LAccess.enabled, Mathf.num(signal()), 0d, 0d, 0d);
-                    }
-                    return out;
-                });
-                
-            } catch(Exception ignored){}
+        public void updateSignal(){
+            if(nb.isEmpty()) return;
+            signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
+            if(front() != null) front().control(LAccess.enabled, Mathf.num(signal()), 0d, 0d, 0d);
         }
 
         @Override

@@ -1,4 +1,4 @@
-package esoterum.world.blocks.binary;
+package esoterum.world.blocks.binary.music;
 
 import arc.*;
 import arc.graphics.*;
@@ -14,6 +14,7 @@ import arc.util.io.*;
 import esoterum.graphics.*;
 import esoterum.ui.*;
 import esoterum.util.*;
+import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
 import mindustry.logic.*;
 import mindustry.ui.*;
@@ -65,21 +66,18 @@ public class MusicBuffer extends BinaryBlock{
             if(delayTimer > trueDelay()){
                 signal[0]  = true;
                 delayTimer = trueDelay();
-                propagateSignal(true, false, false, false);
             }
             if(delayTimer < 0f){
                 signal[0] = false;
                 delayTimer = 0f;
-                propagateSignal(true, false, false, false);
             }
+            propagateSignal();
         }
 
         @Override
-        public void updateSignal(int source){
-            try{
-                super.updateSignal(source);
-                bufferedSignal = getSignal(nb.get(configs.first()), this);
-            }catch(Exception ignored){}
+        public void updateSignal(){
+            if(nb.isEmpty()) return;
+            bufferedSignal = getSignal(nb.get(configs.first()), this);
         }
 
         public float trueDelay(){

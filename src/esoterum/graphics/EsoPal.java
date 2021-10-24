@@ -1,6 +1,6 @@
 package esoterum.graphics;
 
-import arc.graphics.Color;
+import arc.graphics.*;
 
 public class EsoPal {
     public static Color
