@@ -27,7 +27,7 @@ public class BinaryNode extends BinaryBlock{
 
         outputs = new boolean[]{true, true, true, true};
         inputs = new boolean[]{true, true, true, true};
-        propagates = false;
+        propagates = true;
 
         //point2 config is relative
         config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> {
@@ -94,8 +94,10 @@ public class BinaryNode extends BinaryBlock{
         public BinaryBuild[] getOutputs(){
             BinaryBuild[] o = new BinaryBuild[nb.length + 1];
             int c = 0;
-            for(BinaryBuild b : nb)
+            for(BinaryBuild b : nb){
                 if (b != null && outputs(c) && connections[c]) o[c] = b;
+                c++;
+            }
             o[nb.length] = linkedNode();
             return o;
         }

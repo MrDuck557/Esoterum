@@ -24,7 +24,7 @@ public class BinaryClock extends BinaryBlock{
         configurable = true;
         emits = true;
         baseType = 1;
-
+        propagates = false;
         config(IntSeq.class, (BinaryClockBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
     }
 
@@ -34,6 +34,7 @@ public class BinaryClock extends BinaryBlock{
 
         @Override
         public void updateTile(){
+            super.updateTile();
             signal(Mathf.mod(Time.time - configs.get(2), configs.first()) <= configs.get(1));
         }
 

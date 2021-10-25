@@ -22,7 +22,7 @@ public class BinaryBuffer extends BinaryBlock{
         drawArrow = true;
         configurable = saveConfig = true;
         baseType = 1;
-
+        propagates = false;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
 

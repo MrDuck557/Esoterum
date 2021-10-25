@@ -23,7 +23,7 @@ public class BinaryButton extends BinaryBlock{
         continuous = cont;
         emits = true;
         baseType = 1;
-
+        propagates = false;
         config(Boolean.class, (BinaryButtonBuild b, Boolean on) -> {
             b.signal(on);
             b.timer = duration;
@@ -52,6 +52,7 @@ public class BinaryButton extends BinaryBlock{
 
         @Override
         public void updateTile(){
+            super.updateTile();
             if(!continuous && (timer -= delta()) <= 0) signal(false);
         }
 

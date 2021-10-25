@@ -146,8 +146,10 @@ public class BinaryBlock extends Block {
         public BinaryBuild[] getOutputs(){
             BinaryBuild[] o = new BinaryBuild[nb.length];
             int c = 0;
-            for(BinaryBuild b : nb)
+            for(BinaryBuild b : nb){
                 if (b != null && outputs(c) && connections[c]) o[c] = b;
+                c++;
+            }
             return o;
         }
 

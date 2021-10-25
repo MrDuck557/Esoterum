@@ -19,7 +19,7 @@ public class LatchBlock extends BinaryBlock{
         rotatedBase = true;
         drawArrow = true;
         baseType = 1;
-        
+        propagates = true;
         config(Boolean.class, (LatchBuild l, Boolean b) -> {
             l.signal[0] = b;
         });

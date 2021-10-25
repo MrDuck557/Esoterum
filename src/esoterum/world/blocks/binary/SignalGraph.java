@@ -3,12 +3,14 @@ package esoterum.world.blocks.binary;
 import java.util.*;
 import java.util.concurrent.*;
 
+import arc.util.Log;
 import esoterum.util.*;
 
 public class SignalGraph {
     public static ConcurrentHashMap<BinaryBlock.BinaryBuild, Set<BinaryBlock.BinaryBuild>> hm = new ConcurrentHashMap<>();
     public static Set<BinaryBlock.BinaryBuild> sources = ConcurrentHashMap.newKeySet();
     public static boolean run = false;
+    public static ForkJoinPool e = ForkJoinPool.commonPool();
 
     public static void addVertex(BinaryBlock.BinaryBuild b){
         hm.put(b, ConcurrentHashMap.newKeySet());
@@ -52,27 +54,32 @@ public class SignalGraph {
     }
 
     public static void dfs(BinaryBlock.BinaryBuild b){
-        Stack<BinaryBlock.BinaryBuild> s = new Stack<>();
-        HashMap<BinaryBlock.BinaryBuild, Integer> h = new HashMap<>();
+        Deque<BinaryBlock.BinaryBuild> s = new ArrayDeque<>();
+        HashMap<Integer, Integer> v = new HashMap<>();
         s.push(b);
         BinaryBlock.BinaryBuild p;
+        //Log.info("start");
         while(!s.isEmpty()){
+            updateSignal(b);
             p = b;
             b = s.pop();
-            updateSignal(b);
-            int dir = EsoUtil.relativeDirection(b, p);
-            if(h.get(b) == null || h.get(b) != dir){
-                h.put(b, dir);
+            //Log.info("mainloop");
+            //Log.info(b.getDisplayName());
+            int dir = EsoUtil.relativeDirection(p, b);
+            if(v.get(b.pos()) == null || v.get(b.pos()) != dir){
+                v.put(b.pos(), dir);
+                //Log.info("condition");
                 if(hm.get(b) != null) 
                     for(BinaryBlock.BinaryBuild bb : hm.get(b)) 
-                        s.push(bb);
+                        s.push(bb);//Log.info("subloop");
             }
         }
+        //Log.info("end");
     }
 
     public static void update(){
         for(BinaryBlock.BinaryBuild b : sources){
-            dfs(b);
+            e.execute(() -> dfs(b));
         }
     }
 
@@ -83,7 +90,6 @@ public class SignalGraph {
     public static void run(){
         //Log.info("run");
         while(true){
-            //Log.info(run);
             try {
                 Thread.sleep(0, 1);
             } catch (InterruptedException e) {
