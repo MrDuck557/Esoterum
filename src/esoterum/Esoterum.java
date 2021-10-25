@@ -7,9 +7,9 @@ import esoterum.content.*;
 import esoterum.ui.*;
 import esoterum.ui.dialogs.*;
 import esoterum.world.blocks.binary.*;
+import mindustry.core.GameState.*;
 import mindustry.game.*;
 import mindustry.game.EventType.*;
-import mindustry.io.*;
 import mindustry.mod.*;
 import mindustry.mod.Mods.*;
 
@@ -44,24 +44,39 @@ public class Esoterum extends Mod{
                     }
                 }
             });
-            Events.on(SaveWriteEvent.class, e -> {
-                t.interrupt();
-                StringMap map = new StringMap();
-                SignalGraph.writeGraph(map);
-                state.rules.tags.put("SignalGraph", JsonIO.json.toJson(map, StringMap.class, String.class));
-            });
-            Events.on(SaveLoadEvent.class, e -> {
-                if(state.rules.tags.get("SignalGraph") != null)
-                    SignalGraph.readGraph(JsonIO.json.fromJson(StringMap.class, String.class, state.rules.tags.get("SignalGraph")));
-                t = new Thread(){
-                    @Override
-                    public void run(){
-                        SignalGraph.run();
-                    }
-                };
-                t.start();
+            Events.on(StateChangeEvent.class, e -> {
+                if(e.to == State.menu){
+                    SignalGraph.run(false);
+                    SignalGraph.clear();
+                    //Log.info("menu");
+                } else if(e.to == State.paused) {
+                    SignalGraph.run(false);
+                    //Log.info("paused");
+                } else if(e.to == State.playing) {
+                    SignalGraph.run(true);
+                    //Log.info("playing");
+                }
             });
         }
+        t = new Thread(){
+            @Override
+            public void run(){
+                SignalGraph.run();
+            }
+        };
+        t.start();
+        /*
+        Events.on(SaveWriteEvent.class, e -> {
+            t.interrupt();
+            //StringMap map = new StringMap();
+            //SignalGraph.writeGraph(map);
+            //state.rules.tags.put("SignalGraph", JsonIO.json.toJson(map, StringMap.class, String.class));
+        });
+        Events.on(SaveLoadEvent.class, e -> {
+            if(state.rules.tags.get("SignalGraph") != null)
+                SignalGraph.readGraph(JsonIO.json.fromJson(StringMap.class, String.class, state.rules.tags.get("SignalGraph")));
+        });
+        */
     }
 
     private void swapMusic(Seq<Music> target, Seq<Music> replacement, Seq<Music> save){

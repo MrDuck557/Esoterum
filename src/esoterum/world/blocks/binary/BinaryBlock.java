@@ -81,14 +81,17 @@ public class BinaryBlock extends Block {
         public void created(){
             super.created();
             if(!rotate) rotation(0);
+            SignalGraph.addVertex(this);
+            updateNeighbours();
+            updateConnections();
         }
 
         @Override
         public void placed(){
             super.placed();
-            SignalGraph.addVertex(this);
-            updateNeighbours();
-            updateConnections();
+            ///SignalGraph.addVertex(this);
+            //updateNeighbours();
+            //updateConnections();
         }
 
         @Override

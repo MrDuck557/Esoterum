@@ -3,18 +3,17 @@ package esoterum.world.blocks.binary;
 import java.util.*;
 import java.util.concurrent.*;
 
-import arc.struct.*;
 import esoterum.util.*;
-import mindustry.Vars;
-import mindustry.io.*;
 
 public class SignalGraph {
     public static ConcurrentHashMap<BinaryBlock.BinaryBuild, Set<BinaryBlock.BinaryBuild>> hm = new ConcurrentHashMap<>();
     public static Set<BinaryBlock.BinaryBuild> sources = ConcurrentHashMap.newKeySet();
+    public static boolean run = false;
 
     public static void addVertex(BinaryBlock.BinaryBuild b){
         hm.put(b, ConcurrentHashMap.newKeySet());
         if(!b.propagates()) sources.add(b);
+        //Log.info("add");
     }
 
     public static void addEdge(BinaryBlock.BinaryBuild a, BinaryBlock.BinaryBuild b){
@@ -25,12 +24,23 @@ public class SignalGraph {
 
     public static void removeVertex(BinaryBlock.BinaryBuild b){
         hm.remove(b);
+        if(!b.propagates()) sources.remove(b);
+        //Log.info("rm");
+    }
+
+    public static void clearVertices(){
+        hm.clear();
     }
 
     public static void removeEdge(BinaryBlock.BinaryBuild a, BinaryBlock.BinaryBuild b){
         if(hm.get(a) != null){
             hm.get(a).remove(b);
         }
+    }
+
+    public static void clear(){
+        hm.clear();
+        sources.clear();
     }
 
     public static void clearEdges(BinaryBlock.BinaryBuild b){
@@ -53,8 +63,9 @@ public class SignalGraph {
             int dir = EsoUtil.relativeDirection(b, p);
             if(h.get(b) == null || h.get(b) != dir){
                 h.put(b, dir);
-                if(hm.get(b) != null)
-                    for(BinaryBlock.BinaryBuild bb : hm.get(b)) s.push(bb);
+                if(hm.get(b) != null) 
+                    for(BinaryBlock.BinaryBuild bb : hm.get(b)) 
+                        s.push(bb);
             }
         }
     }
@@ -65,24 +76,38 @@ public class SignalGraph {
         }
     }
 
-    public static void run(){
-        //I will change this later
-        while(true){
-            update();
-        }
+    public static void run(boolean b){
+        run = b;
     }
 
+    public static void run(){
+        //Log.info("run");
+        while(true){
+            //Log.info(run);
+            try {
+                Thread.sleep(0, 1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(run) update();
+        }
+    }
+    /*
     public static void readGraph(StringMap map){
         hm.clear();
         sources.clear();
-        readMap(JsonIO.json.fromJson(StringMap.class, String.class, map.get("graph")));
-        readSet(JsonIO.json.fromJson(IntIntMap.class, String.class, map.get("source")), sources);
+        if(map.get("graph") != null)
+            readMap(JsonIO.json.fromJson(StringMap.class, String.class, map.get("graph")));
+        if(map.get("source") != null)
+            readSet(JsonIO.json.fromJson(IntIntMap.class, String.class, map.get("source")), sources);
     }
 
     public static void readMap(StringMap map){
         for(StringMap.Entry<String, String> e : map.entries()){
             hm.put((BinaryBlock.BinaryBuild)Vars.world.build(Integer.valueOf(e.key)), new HashSet<>());
-            readSet(JsonIO.json.fromJson(IntIntMap.class, String.class, e.value), hm.get((BinaryBlock.BinaryBuild)Vars.world.build(Integer.valueOf(e.key))));
+            var tmp = hm.get((BinaryBlock.BinaryBuild)Vars.world.build(Integer.valueOf(e.key)));
+            if(tmp != null)
+                readSet(JsonIO.json.fromJson(IntIntMap.class, String.class, e.value), tmp);
         }
     }
 
@@ -114,4 +139,5 @@ public class SignalGraph {
         }
         return map;
     }
+    */
 }
