@@ -74,6 +74,15 @@ public class BinaryBlock extends Block {
 
         public boolean[] signal = new boolean[]{false, false, false, false, false};
 
+        // Mindustry saves block placement rotation even for blocks that don't rotate.
+        // Usually this doesn't cause any problems, but with the current implementation
+        // it is necessary for non-rotatable binary blocks to have a rotation of 0.
+        @Override
+        public void created(){
+            super.created();
+            if(!rotate) rotation(0);
+        }
+
         @Override
         public void placed(){
             super.placed();

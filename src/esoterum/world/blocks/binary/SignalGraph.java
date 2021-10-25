@@ -53,9 +53,8 @@ public class SignalGraph {
             int dir = EsoUtil.relativeDirection(b, p);
             if(h.get(b) == null || h.get(b) != dir){
                 h.put(b, dir);
-                for(BinaryBlock.BinaryBuild bb : hm.get(b)){
-                    s.push(bb);
-                }
+                if(hm.get(b) != null)
+                    for(BinaryBlock.BinaryBuild bb : hm.get(b)) s.push(bb);
             }
         }
     }

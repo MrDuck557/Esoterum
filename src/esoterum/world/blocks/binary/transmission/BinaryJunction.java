@@ -38,7 +38,6 @@ public class BinaryJunction extends BinaryBlock{
     }
 
     public class BinaryJunctionBuild extends BinaryBuild {
-
         @Override
         public void updateSignal(){
             signal[0] = getSignal(nb[2], this);
