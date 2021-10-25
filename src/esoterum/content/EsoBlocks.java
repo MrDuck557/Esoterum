@@ -1,10 +1,8 @@
 package esoterum.content;
 
 import esoterum.world.blocks.binary.*;
-/*
 import esoterum.world.blocks.binary.interaction.*;
 import esoterum.world.blocks.binary.music.*;
-*/
 import esoterum.world.blocks.binary.source.*;
 import esoterum.world.blocks.binary.transmission.*;
 import esoterum.world.blocks.defense.*;
@@ -63,7 +61,7 @@ public class EsoBlocks implements ContentList{
         esoWire = new BinaryWire("wire");
 
         esoJunction = new BinaryJunction("junction");
-        /*
+        
         esoRouter = new BinaryRouter("router");
 
         esoNode = new BinaryNode("node", 6);
@@ -74,12 +72,12 @@ public class EsoBlocks implements ContentList{
 
         esoBuffer = new BinaryBuffer("buffer");
         // endregion transmission
-        */
+        
         // region sources
         esoSwitch = new BinaryButton("switch", true);
 
         esoButton = new BinaryButton("button", false);
-        /*
+        
         esoClock = new BinaryClock("clock");
         // endregion sources
 
@@ -107,7 +105,7 @@ public class EsoBlocks implements ContentList{
         // region logic interaction
         togglerBlock = new Toggler("toggler");
         // endregion logic interaction
-        */
+        
         // region beams
         beamEmitter = new BeamEmitter("beam-emitter"){{
             beamLength = 80f;
