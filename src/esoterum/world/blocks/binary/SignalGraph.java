@@ -1,6 +1,7 @@
 package esoterum.world.blocks.binary;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 import arc.struct.*;
 import esoterum.util.*;
@@ -8,11 +9,11 @@ import mindustry.Vars;
 import mindustry.io.*;
 
 public class SignalGraph {
-    public static HashMap<BinaryBlock.BinaryBuild, HashSet<BinaryBlock.BinaryBuild>> hm = new HashMap<>();
-    public static HashSet<BinaryBlock.BinaryBuild> sources = new HashSet<>();
+    public static ConcurrentHashMap<BinaryBlock.BinaryBuild, Set<BinaryBlock.BinaryBuild>> hm = new ConcurrentHashMap<>();
+    public static Set<BinaryBlock.BinaryBuild> sources = ConcurrentHashMap.newKeySet();
 
     public static void addVertex(BinaryBlock.BinaryBuild b){
-        hm.put(b, new HashSet<>());
+        hm.put(b, ConcurrentHashMap.newKeySet());
         if(!b.propagates()) sources.add(b);
     }
 
@@ -33,7 +34,7 @@ public class SignalGraph {
     }
 
     public static void clearEdges(BinaryBlock.BinaryBuild b){
-        hm.get(b).clear();
+        if(hm.get(b) != null) hm.get(b).clear();
     }
 
     public static void updateSignal(BinaryBlock.BinaryBuild b){
@@ -86,7 +87,7 @@ public class SignalGraph {
         }
     }
 
-    public static void readSet(IntIntMap map, HashSet<BinaryBlock.BinaryBuild> h){
+    public static void readSet(IntIntMap map, Set<BinaryBlock.BinaryBuild> h){
         for(IntIntMap.Entry e : map.entries()){
             h.add((BinaryBlock.BinaryBuild)Vars.world.build(e.value));
         }
@@ -105,7 +106,7 @@ public class SignalGraph {
         return map;
     }
     
-    public static IntIntMap writeSet(HashSet<BinaryBlock.BinaryBuild> h){
+    public static IntIntMap writeSet(Set<BinaryBlock.BinaryBuild> h){
         IntIntMap map = new IntIntMap();
         int i = 0;
         for(BinaryBlock.BinaryBuild b : h){

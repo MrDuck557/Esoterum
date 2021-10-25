@@ -20,6 +20,7 @@ public class Esoterum extends Mod{
 
     private static final Seq<Music> prevAmbient = new Seq<>(), prevDark = new Seq<>();
     private boolean lastMapEso;
+    public Thread t;
 
     public Esoterum(){
         if(!headless){
@@ -42,23 +43,23 @@ public class Esoterum extends Mod{
                         swapMusic(control.sound.darkMusic, prevDark, null);
                     }
                 }
-
-                Thread t = new Thread(){
+            });
+            Events.on(SaveWriteEvent.class, e -> {
+                t.interrupt();
+                StringMap map = new StringMap();
+                SignalGraph.writeGraph(map);
+                state.rules.tags.put("SignalGraph", JsonIO.json.toJson(map, StringMap.class, String.class));
+            });
+            Events.on(SaveLoadEvent.class, e -> {
+                if(state.rules.tags.get("SignalGraph") != null)
+                    SignalGraph.readGraph(JsonIO.json.fromJson(StringMap.class, String.class, state.rules.tags.get("SignalGraph")));
+                t = new Thread(){
                     @Override
                     public void run(){
                         SignalGraph.run();
                     }
                 };
                 t.start();
-                try {t.join();} catch (InterruptedException e1) {e1.printStackTrace();}
-            });
-            Events.on(SaveWriteEvent.class, e -> {
-                StringMap map = new StringMap();
-                SignalGraph.writeGraph(map);
-                state.rules.tags.put("SignalGraph", JsonIO.json.toJson(map, StringMap.class, String.class));
-            });
-            Events.on(SaveLoadEvent.class, e -> {
-                SignalGraph.readGraph(JsonIO.json.fromJson(StringMap.class, String.class, state.rules.tags.get("SignalGraph")));
             });
         }
     }
