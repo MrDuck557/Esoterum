@@ -65,18 +65,6 @@ public class Esoterum extends Mod{
             }
         };
         t.start();
-        /*
-        Events.on(SaveWriteEvent.class, e -> {
-            t.interrupt();
-            //StringMap map = new StringMap();
-            //SignalGraph.writeGraph(map);
-            //state.rules.tags.put("SignalGraph", JsonIO.json.toJson(map, StringMap.class, String.class));
-        });
-        Events.on(SaveLoadEvent.class, e -> {
-            if(state.rules.tags.get("SignalGraph") != null)
-                SignalGraph.readGraph(JsonIO.json.fromJson(StringMap.class, String.class, state.rules.tags.get("SignalGraph")));
-        });
-        */
     }
 
     private void swapMusic(Seq<Music> target, Seq<Music> replacement, Seq<Music> save){

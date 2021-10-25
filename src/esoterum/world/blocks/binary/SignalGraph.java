@@ -3,7 +3,6 @@ package esoterum.world.blocks.binary;
 import java.util.*;
 import java.util.concurrent.*;
 
-import arc.util.Log;
 import esoterum.util.*;
 
 public class SignalGraph {
@@ -98,52 +97,4 @@ public class SignalGraph {
             if(run) update();
         }
     }
-    /*
-    public static void readGraph(StringMap map){
-        hm.clear();
-        sources.clear();
-        if(map.get("graph") != null)
-            readMap(JsonIO.json.fromJson(StringMap.class, String.class, map.get("graph")));
-        if(map.get("source") != null)
-            readSet(JsonIO.json.fromJson(IntIntMap.class, String.class, map.get("source")), sources);
-    }
-
-    public static void readMap(StringMap map){
-        for(StringMap.Entry<String, String> e : map.entries()){
-            hm.put((BinaryBlock.BinaryBuild)Vars.world.build(Integer.valueOf(e.key)), new HashSet<>());
-            var tmp = hm.get((BinaryBlock.BinaryBuild)Vars.world.build(Integer.valueOf(e.key)));
-            if(tmp != null)
-                readSet(JsonIO.json.fromJson(IntIntMap.class, String.class, e.value), tmp);
-        }
-    }
-
-    public static void readSet(IntIntMap map, Set<BinaryBlock.BinaryBuild> h){
-        for(IntIntMap.Entry e : map.entries()){
-            h.add((BinaryBlock.BinaryBuild)Vars.world.build(e.value));
-        }
-    }
-
-    public static void writeGraph(StringMap map){
-        map.put("graph", JsonIO.json.toJson(writeMap(), StringMap.class, String.class));
-        map.put("sources", JsonIO.json.toJson(writeSet(sources), IntIntMap.class, String.class));
-    }
-
-    public static StringMap writeMap(){
-        StringMap map = new StringMap();
-        for(BinaryBlock.BinaryBuild b : hm.keySet()){
-            map.put(Integer.toString(b.pos()), JsonIO.json.toJson(writeSet(hm.get(b)), IntIntMap.class, String.class));
-        }
-        return map;
-    }
-    
-    public static IntIntMap writeSet(Set<BinaryBlock.BinaryBuild> h){
-        IntIntMap map = new IntIntMap();
-        int i = 0;
-        for(BinaryBlock.BinaryBuild b : h){
-            map.put(i, b.pos());
-            i++;
-        }
-        return map;
-    }
-    */
 }
