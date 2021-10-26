@@ -72,7 +72,6 @@ public class SignalController extends BinaryBlock{
             }
             updateNeighbours();
             updateConnections();
-            updateProximity();
             signal[4] = (getSignal(nb[0], this) && configs.get(0) == 1)
                 ||  (getSignal(nb[1], this) && configs.get(1) == 1)
                 ||  (getSignal(nb[2], this) && configs.get(2) == 1)
