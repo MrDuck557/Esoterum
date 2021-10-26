@@ -13,7 +13,11 @@ public class EsoUtil{
     /** relativeTo does not account for building rotation. */
     public static int relativeDirection(Building from, Building to){
         if(from == null || to == null) return -1;
-        return (4 + from.relativeTo(to) - from.rotation) % 4;
+        if(from.x == to.x && from.y > to.y) return (7 - from.rotation) % 4;
+        if(from.x == to.x && from.y < to.y) return (5 - from.rotation) % 4;
+        if(from.x > to.x && from.y == to.y) return (6 - from.rotation) % 4;
+        if(from.x < to.x && from.y == to.y) return (4 - from.rotation) % 4;
+        return -1;
     }
 
     /** @return the multiplier for the pitch of a sound to be an amount of semitones higher */

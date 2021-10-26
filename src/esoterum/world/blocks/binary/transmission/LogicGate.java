@@ -39,6 +39,9 @@ public class LogicGate extends BinaryBlock{
             }
             b.nextConfig--;
             if(b.nextConfig < 1) b.nextConfig = 3;
+            b.updateNeighbours();
+            b.updateConnections();
+            b.updateProximity();
         });
     }
 

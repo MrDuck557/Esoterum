@@ -3,7 +3,8 @@ package esoterum.world.blocks.binary;
 import java.util.*;
 import java.util.concurrent.*;
 
-import esoterum.util.*;
+import arc.math.geom.Point2;
+import esoterum.world.blocks.binary.transmission.BinaryJunction;
 
 public class SignalGraph {
     public static ConcurrentHashMap<BinaryBlock.BinaryBuild, Set<BinaryBlock.BinaryBuild>> hm = new ConcurrentHashMap<>();
@@ -54,24 +55,37 @@ public class SignalGraph {
 
     public static void dfs(BinaryBlock.BinaryBuild b){
         Deque<BinaryBlock.BinaryBuild> s = new ArrayDeque<>();
+        Deque<Integer> d = new ArrayDeque<>();
         HashMap<Integer, Integer> v = new HashMap<>();
         s.push(b);
-        BinaryBlock.BinaryBuild p;
+        d.push(5);
+        int dir;
         //Log.info("start");
         while(!s.isEmpty()){
-            updateSignal(b);
-            p = b;
             b = s.pop();
+            dir = d.pop();
+            updateSignal(b);
             //Log.info("mainloop");
-            //Log.info(b.getDisplayName());
-            int dir = EsoUtil.relativeDirection(p, b);
+            //Log.info("Updated " + b.getDisplayName() + " at " + String.valueOf(b.x / 8) + ", " + String.valueOf(b.y / 8) + " from " + String.valueOf(Point2.unpack(dir).x) + ", " + String.valueOf(Point2.unpack(dir).y));
             if(v.get(b.pos()) == null || v.get(b.pos()) != dir){
+                //Log.info("unvisited");
                 v.put(b.pos(), dir);
                 //Log.info("condition");
                 if(hm.get(b) != null) 
-                    for(BinaryBlock.BinaryBuild bb : hm.get(b)) 
-                        s.push(bb);//Log.info("subloop");
-            }
+                    for(BinaryBlock.BinaryBuild bb : hm.get(b)) {
+                        //Log.info("Candidate " + bb.getDisplayName() + " at " + String.valueOf(bb.x / 8) + ", " + String.valueOf(bb.y / 8) + " in direction " + String.valueOf(EsoUtil.relativeDirection(bb, b)));
+                        if(b instanceof BinaryJunction.BinaryJunctionBuild) {
+                            if(Math.abs(Point2.unpack(dir).x - Point2.unpack(bb.pos()).x) == 2
+                            || Math.abs(Point2.unpack(dir).y - Point2.unpack(bb.pos()).y) == 2) {
+                                s.push(bb);
+                                d.push(b.pos());
+                            }
+                        } else if(bb.pos() != dir) {
+                            s.push(bb);
+                            d.push(b.pos());
+                        }//Log.info("subloop");
+                    }
+            }// else Log.info("visited");
         }
         //Log.info("end");
     }

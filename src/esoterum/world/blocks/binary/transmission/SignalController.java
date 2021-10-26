@@ -35,6 +35,9 @@ public class SignalController extends BinaryBlock{
         config(Integer.class, (ControllerBuild b, Integer i) -> {
             b.configs.incr(i, 1);
             if(b.configs.get(i) > 2) b.configs.set(i, 0);
+            b.updateNeighbours();
+            b.updateConnections();
+            b.updateProximity();
         });
     }
 
@@ -69,6 +72,9 @@ public class SignalController extends BinaryBlock{
                 rotInit = true;
                 rotation(0);
             }
+            updateNeighbours();
+            updateConnections();
+            updateProximity();
             signal[4] = (getSignal(nb[0], this) && configs.get(0) == 1)
                 ||  (getSignal(nb[1], this) && configs.get(1) == 1)
                 ||  (getSignal(nb[2], this) && configs.get(2) == 1)

@@ -66,7 +66,12 @@ public class NoteBlock extends BinaryBlock{
         outputs = new boolean[]{true, false, false, false};
         propagates = true;
 
-        config(IntSeq.class, (NoteBlockBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        config(IntSeq.class, (NoteBlockBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateNeighbours();
+            b.updateConnections();
+            b.updateProximity();
+        });
     }
 
     @Override

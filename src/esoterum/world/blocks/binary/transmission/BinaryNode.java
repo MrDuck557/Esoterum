@@ -32,10 +32,14 @@ public class BinaryNode extends BinaryBlock{
         //point2 config is relative
         config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> {
             tile.link = Point2.pack(i.x + tile.tileX(), i.y + tile.tileY());
+            tile.updateNeighbours();
+            tile.updateConnections();
         });
         //integer is not
         config(Integer.class, (BinaryNodeBuild tile, Integer i) -> {
             tile.link = i;
+            tile.updateNeighbours();
+            tile.updateConnections();
         });
 
         configClear((BinaryNodeBuild tile) -> tile.link = -1);
