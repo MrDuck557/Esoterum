@@ -7,13 +7,14 @@ public class BeamAcceptor extends BeamBlock{
         acceptsBeam = true;
         outputs = new boolean[]{true, true, true, true};
         emits = true;
+        propagates = false;
     }
 
     public class BeamAcceptorBuild extends BeamBuild {
-
         @Override
         public void updateBeam() {
             active = true;
+            signal(active);
             if(beamStrength - 1 <= 0){
                 beamDrawLength = 0;
                 return;
