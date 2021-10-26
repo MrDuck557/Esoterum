@@ -59,28 +59,28 @@ public class SignalGraph {
         HashMap<Integer, Integer> v = new HashMap<>();
         s.push(b);
         d.push(5);
-        int dir;
+        int p;
         //Log.info("start");
         while(!s.isEmpty()){
             b = s.pop();
-            dir = d.pop();
+            p = d.pop();
             updateSignal(b);
             //Log.info("mainloop");
-            //Log.info("Updated " + b.getDisplayName() + " at " + String.valueOf(b.x / 8) + ", " + String.valueOf(b.y / 8) + " from " + String.valueOf(Point2.unpack(dir).x) + ", " + String.valueOf(Point2.unpack(dir).y));
-            if(v.get(b.pos()) == null || v.get(b.pos()) != dir){
+            //Log.info("Updated " + b.getDisplayName() + " at " + String.valueOf(b.x / 8) + ", " + String.valueOf(b.y / 8) + " from " + String.valueOf(Point2.unpack(p).x) + ", " + String.valueOf(Point2.unpack(p).y));
+            if(v.get(b.pos()) == null || v.get(b.pos()) != p){
                 //Log.info("unvisited");
-                v.put(b.pos(), dir);
+                v.put(b.pos(), p);
                 //Log.info("condition");
                 if(hm.get(b) != null) 
                     for(BinaryBlock.BinaryBuild bb : hm.get(b)) {
                         //Log.info("Candidate " + bb.getDisplayName() + " at " + String.valueOf(bb.x / 8) + ", " + String.valueOf(bb.y / 8) + " in direction " + String.valueOf(EsoUtil.relativeDirection(bb, b)));
                         if(b instanceof BinaryJunction.BinaryJunctionBuild) {
-                            if(Math.abs(Point2.unpack(dir).x - Point2.unpack(bb.pos()).x) == 2
-                            || Math.abs(Point2.unpack(dir).y - Point2.unpack(bb.pos()).y) == 2) {
+                            if(Math.abs(Point2.unpack(p).x - Point2.unpack(bb.pos()).x) == 2
+                            || Math.abs(Point2.unpack(p).y - Point2.unpack(bb.pos()).y) == 2) {
                                 s.push(bb);
                                 d.push(b.pos());
                             }
-                        } else if(bb.pos() != dir) {
+                        } else if(bb.pos() != p) {
                             s.push(bb);
                             d.push(b.pos());
                         }//Log.info("subloop");

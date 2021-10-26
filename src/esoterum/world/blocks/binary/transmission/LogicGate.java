@@ -31,16 +31,13 @@ public class LogicGate extends BinaryBlock{
         config(IntSeq.class, (LogicGateBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
 
         config(Integer.class, (LogicGateBuild b, Integer i) -> {
-            if(single){
-                b.configs.set(0, i);
-            }else{
+            if(single) b.configs.set(0, i);
+            else {
                 b.configs.set(0, b.configs.get(1));
                 b.configs.set(1, i);
             }
             b.nextConfig--;
             if(b.nextConfig < 1) b.nextConfig = 3;
-            b.updateNeighbours();
-            b.updateConnections();
             b.updateProximity();
         });
     }

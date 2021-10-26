@@ -20,9 +20,7 @@ public class LatchBlock extends BinaryBlock{
         drawArrow = true;
         baseType = 1;
         propagates = true;
-        config(Boolean.class, (LatchBuild l, Boolean b) -> {
-            l.signal[0] = b;
-        });
+        config(Boolean.class, (LatchBuild l, Boolean b) -> l.signal[0] = b);
     }
 
     @Override

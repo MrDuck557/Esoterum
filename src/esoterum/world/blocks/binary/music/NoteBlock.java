@@ -68,8 +68,6 @@ public class NoteBlock extends BinaryBlock{
 
         config(IntSeq.class, (NoteBlockBuild b, IntSeq i) -> {
             b.configs = IntSeq.with(i.items);
-            b.updateNeighbours();
-            b.updateConnections();
             b.updateProximity();
         });
     }

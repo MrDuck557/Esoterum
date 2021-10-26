@@ -38,8 +38,6 @@ public class MusicBuffer extends BinaryBlock{
 
         config(IntSeq.class, (MusicBufferBuild b, IntSeq i) -> {
             b.configs = IntSeq.with(i.items);
-            b.updateNeighbours();
-            b.updateConnections();
             b.updateProximity();
         });
     }

@@ -35,8 +35,6 @@ public class SignalController extends BinaryBlock{
         config(Integer.class, (ControllerBuild b, Integer i) -> {
             b.configs.incr(i, 1);
             if(b.configs.get(i) > 2) b.configs.set(i, 0);
-            b.updateNeighbours();
-            b.updateConnections();
             b.updateProximity();
         });
     }

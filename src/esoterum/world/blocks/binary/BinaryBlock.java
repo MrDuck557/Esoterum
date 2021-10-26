@@ -84,29 +84,20 @@ public class BinaryBlock extends Block {
             SignalGraph.addVertex(this);
             updateNeighbours();
             updateConnections();
-            updateSignal();
-            SignalGraph.dfs(this);
         }
 
         @Override
-        public void rotation(int dir){
-            BinaryBuild[] bb = getOutputs();
-            super.rotation(dir);
+        public void updateProximity(){
+            super.updateProximity();
             updateNeighbours();
             updateConnections();
             updateSignal();
             SignalGraph.dfs(this);
-            for(BinaryBuild b : bb) if(b != null) SignalGraph.dfs(b);
-        }
-
-        @Override
-        public void onRemoved(){
-            BinaryBuild[] bb = getOutputs();
-            super.onRemoved();
-            SignalGraph.clearEdges(this);
-            SignalGraph.removeVertex(this);
-            signal(false);
-            for(BinaryBuild b : bb) if(b != null) SignalGraph.dfs(b);
+            for(int i=0;i<nb.length;i++) if(nb[i] != null && !outputs(i)){
+                nb[i].updateSignal();
+                int j = i;
+                SignalGraph.e.execute(() -> SignalGraph.dfs(nb[j]));
+            }
         }
 
         public void updateConnections(){

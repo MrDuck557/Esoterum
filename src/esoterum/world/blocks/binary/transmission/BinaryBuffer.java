@@ -28,8 +28,6 @@ public class BinaryBuffer extends BinaryBlock{
 
         config(IntSeq.class, (BinaryBufferBuild b, IntSeq i) -> {
             b.configs = IntSeq.with(i.items);
-            b.updateNeighbours();
-            b.updateConnections();
             b.updateProximity();
         });
     }
