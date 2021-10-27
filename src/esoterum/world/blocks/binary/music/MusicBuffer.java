@@ -33,11 +33,14 @@ public class MusicBuffer extends BinaryBlock{
         drawArrow = true;
         configurable = saveConfig = true;
         baseType = 1;
-
+        propagates = false;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
 
-        config(IntSeq.class, (MusicBufferBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        config(IntSeq.class, (MusicBufferBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateProximity();
+        });
     }
 
     @Override
@@ -54,14 +57,13 @@ public class MusicBuffer extends BinaryBlock{
     public class MusicBufferBuild extends BinaryBuild{
         public float delayTimer = 0f;
 
-        public boolean bufferedSignal;
         /** Direction, BPM, Rest */
         public IntSeq configs = IntSeq.with(2, 120, 2);
 
         @Override
         public void updateTile(){
             super.updateTile();
-            if(bufferedSignal){
+            if(signal[4]){
                 delayTimer += Time.delta;
             }else{
                 delayTimer -= Time.delta;
@@ -76,13 +78,11 @@ public class MusicBuffer extends BinaryBlock{
                 signal[0] = false;
                 delayTimer = 0f;
             }
-            propagateSignal();
         }
 
         @Override
         public void updateSignal(){
-            if(nb.isEmpty()) return;
-            bufferedSignal = getSignal(nb.get(configs.first()), this);
+            signal[4] = getSignal(nb[configs.first()], this);
         }
 
         public float trueDelay(){

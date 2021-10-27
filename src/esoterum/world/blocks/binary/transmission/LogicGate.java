@@ -28,17 +28,20 @@ public class LogicGate extends BinaryBlock{
 
         operation = e -> false;
 
-        config(IntSeq.class, (LogicGateBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        config(IntSeq.class, (LogicGateBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateProximity();
+        });
 
         config(Integer.class, (LogicGateBuild b, Integer i) -> {
-            if(single){
-                b.configs.set(0, i);
-            }else{
+            if(single) b.configs.set(0, i);
+            else {
                 b.configs.set(0, b.configs.get(1));
                 b.configs.set(1, i);
             }
             b.nextConfig--;
             if(b.nextConfig < 1) b.nextConfig = 3;
+            b.updateProximity();
         });
     }
 
@@ -53,16 +56,10 @@ public class LogicGate extends BinaryBlock{
         public int nextConfig = 1;
 
         @Override
-        public void updateTile(){
-            propagateSignal();
-        }
-
-        @Override
         public void updateSignal(){
-            if(nb.isEmpty()) return;
             signal[0] = operation.get(new boolean[]{
-                getSignal(nb.get(configs.first()), this),
-                getSignal(nb.get(configs.get(single ? 0 : 1)), this),
+                getSignal(nb[configs.first()], this),
+                getSignal(nb[configs.get(single ? 0 : 1)], this),
             });
         }
 
@@ -72,7 +69,6 @@ public class LogicGate extends BinaryBlock{
                 configure(nextConfig);
                 updateProximity();
                 updateSignal();
-                propagateSignal();
             }).size(40f).tooltip("Rotate Input" + (single ? "" : "s"));
         }
 
@@ -83,10 +79,9 @@ public class LogicGate extends BinaryBlock{
 
         @Override
         public void drawConnections(){
-            if(nb.isEmpty()) return;
             for(int i = 1; i < 4; i++){
                 if(!configs.contains(i)) continue;
-                Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
+                Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
                 Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
             Draw.color(Color.white, team.color, Mathf.num(signal()));
@@ -96,6 +91,11 @@ public class LogicGate extends BinaryBlock{
         @Override
         public boolean inputs(int dir){
             return dir == configs.first() || dir == configs.get(single ? 0 : 1);
+        }
+
+        @Override
+        public boolean propagates(){
+            return !single;
         }
 
         @Override

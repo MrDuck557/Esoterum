@@ -27,19 +27,21 @@ public class BinaryNode extends BinaryBlock{
 
         outputs = new boolean[]{true, true, true, true};
         inputs = new boolean[]{true, true, true, true};
-        propagates = false;
+        propagates = true;
 
         //point2 config is relative
         config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> {
             tile.link = Point2.pack(i.x + tile.tileX(), i.y + tile.tileY());
-            tile.updateSignal();
-            tile.propagateSignal();
+            tile.updateProximity();
+            tile.linkedNode().updateNeighbours();
+            tile.linkedNode().updateConnections();
         });
         //integer is not
         config(Integer.class, (BinaryNodeBuild tile, Integer i) -> {
             tile.link = i;
-            tile.updateSignal();
-            tile.propagateSignal();
+            tile.updateProximity();
+            tile.linkedNode().updateNeighbours();
+            tile.linkedNode().updateConnections();
         });
 
         configClear((BinaryNodeBuild tile) -> tile.link = -1);
@@ -85,22 +87,31 @@ public class BinaryNode extends BinaryBlock{
         }
         
         @Override
-        public BinaryBuild[] getNeighbours(int dir){
-            BinaryBuild[] nbs = new BinaryBuild[]{null, null, null, null, null};
-            if(nb.isEmpty()) return nbs;
-            for(int i=0;i<4;i++){
-                if(i != dir && outputs(i) && connectionCheck(this, nb.get(i))) nbs[i] = nb.get(i);
+        public BinaryBuild[] getInputs(){
+            BinaryBuild[] i = new BinaryBuild[nb.length + 1];
+            int c = 0;
+            for(BinaryBuild b : nb)
+                if (b != null && inputs(c) && connections[c]) i[c] = b;
+            i[nb.length] = linkedNode();
+            return i;
+        }
+
+        @Override
+        public BinaryBuild[] getOutputs(){
+            BinaryBuild[] o = new BinaryBuild[nb.length + 1];
+            int c = 0;
+            for(BinaryBuild b : nb){
+                if (b != null && outputs(c) && connections[c]) o[c] = b;
+                c++;
             }
-            nbs[4] = linkedNode();
-            return nbs;
+            o[nb.length] = linkedNode();
+            return o;
         }
 
         @Override
         public void updateSignal(){
             signal[4] = false;
-            for(BinaryBuild b : nb){
-                signal[4] |= getSignal(b, this);
-            }
+            for(BinaryBuild b : nb) signal[4] |= getSignal(b, this);
             BinaryNodeBuild c = linkedNode();
             signal(c != null && c.signal());
         }

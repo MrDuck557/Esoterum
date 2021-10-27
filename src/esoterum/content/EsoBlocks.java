@@ -45,7 +45,7 @@ public class EsoBlocks implements ContentList{
         esoPanel1 = new NonblendFloor("panel-1", 0);
         esoPanel2 = new NonblendFloor("panel-2", 0);
         esoPanel3 = new NonblendFloor("panel-3", 0);
-
+        
         esoPanelFlat = new NonblendFloor("panel-flat", 0);
         esoSolidPanel = new StaticWall("panel-solid"){{
             variants = 0;
@@ -56,12 +56,12 @@ public class EsoBlocks implements ContentList{
         esoPanelS = new NonblendFloor("panel-s", 0);
         esoPanelO = new NonblendFloor("panel-o", 0);
         // endregion environment
-
+        
         // region transmission
         esoWire = new BinaryWire("wire");
 
         esoJunction = new BinaryJunction("junction");
-
+        
         esoRouter = new BinaryRouter("router");
 
         esoNode = new BinaryNode("node", 6);
@@ -72,12 +72,12 @@ public class EsoBlocks implements ContentList{
 
         esoBuffer = new BinaryBuffer("buffer");
         // endregion transmission
-
+        
         // region sources
         esoSwitch = new BinaryButton("switch", true);
 
         esoButton = new BinaryButton("button", false);
-
+        
         esoClock = new BinaryClock("clock");
         // endregion sources
 
@@ -105,7 +105,7 @@ public class EsoBlocks implements ContentList{
         // region logic interaction
         togglerBlock = new Toggler("toggler");
         // endregion logic interaction
-
+        
         // region beams
         beamEmitter = new BeamEmitter("beam-emitter"){{
             beamLength = 80f;

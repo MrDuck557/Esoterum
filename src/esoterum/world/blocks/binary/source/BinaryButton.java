@@ -23,7 +23,7 @@ public class BinaryButton extends BinaryBlock{
         continuous = cont;
         emits = true;
         baseType = 1;
-
+        propagates = false;
         config(Boolean.class, (BinaryButtonBuild b, Boolean on) -> {
             b.signal(on);
             b.timer = duration;
@@ -52,19 +52,16 @@ public class BinaryButton extends BinaryBlock{
 
         @Override
         public void updateTile(){
+            super.updateTile();
             if(!continuous && (timer -= delta()) <= 0) signal(false);
-            propagateSignal();
         }
 
         @Override
         public boolean configTapped(){
-            if(continuous){
-                configure(!signal());
-                propagateSignal();
-            } else {
+            if(continuous) configure(!signal());
+            else {
                 signal[4] = signal();
                 configure(true);
-                if(!signal[4]) propagateSignal();
             }
             return false;
         }
@@ -103,13 +100,7 @@ public class BinaryButton extends BinaryBlock{
 
         @Override
         public void control(LAccess type, double p1, double p2, double p3, double p4){
-            signal[4] = signal();
-            if(type == LAccess.enabled){
-                configure(!Mathf.zero((float)p1));
-                if(signal() != signal[4]) propagateSignal();
-                signal[4] = signal();
-            }
-            if(signal[4] != signal()) propagateSignal();
+            if(type == LAccess.enabled) configure(!Mathf.zero((float)p1));
         }
     }
 }

@@ -21,8 +21,7 @@ public class BeamEmitter extends BeamBlock{
             for(BinaryBuild b : nb){
                 signal[4] |= getSignal(b, this);
             }
-            signal(signal[4]);
-            beamStrength = signal() ? 1 : 0;
+            beamStrength = signal[4] ? 1 : 0;
             super.updateTile();
         }
 
