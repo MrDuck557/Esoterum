@@ -30,7 +30,10 @@ public class SignalController extends BinaryBlock{
         inputs = new boolean[]{true, true, true, true};
         outputs = new boolean[]{true, true, true, true};
         propagates = true;
-        config(IntSeq.class, (ControllerBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        config(IntSeq.class, (ControllerBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateProximity();
+        });
 
         config(Integer.class, (ControllerBuild b, Integer i) -> {
             b.configs.incr(i, 1);

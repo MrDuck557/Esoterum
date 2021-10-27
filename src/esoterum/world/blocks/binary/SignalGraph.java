@@ -11,6 +11,7 @@ public class SignalGraph {
     public static Set<BinaryBlock.BinaryBuild> sources = ConcurrentHashMap.newKeySet();
     public static boolean run = false;
     public static ForkJoinPool e = ForkJoinPool.commonPool();
+    public static int millis = 0, nanos = 1;
 
     public static void addVertex(BinaryBlock.BinaryBuild b){
         hm.put(b, ConcurrentHashMap.newKeySet());
@@ -104,7 +105,7 @@ public class SignalGraph {
         //Log.info("run");
         while(true){
             try {
-                Thread.sleep(0, 1);
+                Thread.sleep(millis, nanos);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

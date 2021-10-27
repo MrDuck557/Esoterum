@@ -28,7 +28,10 @@ public class LogicGate extends BinaryBlock{
 
         operation = e -> false;
 
-        config(IntSeq.class, (LogicGateBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        config(IntSeq.class, (LogicGateBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateProximity();
+        });
 
         config(Integer.class, (LogicGateBuild b, Integer i) -> {
             if(single) b.configs.set(0, i);
