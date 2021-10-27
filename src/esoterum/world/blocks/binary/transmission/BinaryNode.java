@@ -33,15 +33,15 @@ public class BinaryNode extends BinaryBlock{
         config(Point2.class, (BinaryNodeBuild tile, Point2 i) -> {
             tile.link = Point2.pack(i.x + tile.tileX(), i.y + tile.tileY());
             tile.updateProximity();
-            tile.linkedNode().updateNeighbours();
-            tile.linkedNode().updateConnections();
+            if(tile.linkedNode() != null) tile.linkedNode().updateNeighbours();
+            if(tile.linkedNode() != null) tile.linkedNode().updateConnections();
         });
         //integer is not
         config(Integer.class, (BinaryNodeBuild tile, Integer i) -> {
             tile.link = i;
             tile.updateProximity();
-            tile.linkedNode().updateNeighbours();
-            tile.linkedNode().updateConnections();
+            if(tile.linkedNode() != null) tile.linkedNode().updateNeighbours();
+            if(tile.linkedNode() != null) tile.linkedNode().updateConnections();
         });
 
         configClear((BinaryNodeBuild tile) -> tile.link = -1);
