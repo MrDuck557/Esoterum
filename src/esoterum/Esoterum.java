@@ -6,6 +6,8 @@ import arc.struct.*;
 import esoterum.content.*;
 import esoterum.ui.*;
 import esoterum.ui.dialogs.*;
+import esoterum.world.blocks.binary.*;
+import mindustry.core.GameState.*;
 import mindustry.game.*;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
@@ -18,6 +20,7 @@ public class Esoterum extends Mod{
 
     private static final Seq<Music> prevAmbient = new Seq<>(), prevDark = new Seq<>();
     private boolean lastMapEso;
+    public Thread t;
 
     public Esoterum(){
         if(!headless){
@@ -41,7 +44,27 @@ public class Esoterum extends Mod{
                     }
                 }
             });
+            Events.on(StateChangeEvent.class, e -> {
+                if(e.to == State.menu){
+                    SignalGraph.run(false);
+                    SignalGraph.clear();
+                    //Log.info("menu");
+                } else if(e.to == State.paused) {
+                    SignalGraph.run(false);
+                    //Log.info("paused");
+                } else if(e.to == State.playing) {
+                    SignalGraph.run(true);
+                    //Log.info("playing");
+                }
+            });
         }
+        t = new Thread(){
+            @Override
+            public void run(){
+                SignalGraph.run();
+            }
+        };
+        t.start();
     }
 
     private void swapMusic(Seq<Music> target, Seq<Music> replacement, Seq<Music> save){

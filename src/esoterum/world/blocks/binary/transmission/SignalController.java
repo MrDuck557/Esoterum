@@ -29,12 +29,16 @@ public class SignalController extends BinaryBlock{
         emits = true;
         inputs = new boolean[]{true, true, true, true};
         outputs = new boolean[]{true, true, true, true};
-        propagates = false;
-        config(IntSeq.class, (ControllerBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        propagates = true;
+        config(IntSeq.class, (ControllerBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateProximity();
+        });
 
         config(Integer.class, (ControllerBuild b, Integer i) -> {
             b.configs.incr(i, 1);
             if(b.configs.get(i) > 2) b.configs.set(i, 0);
+            b.updateProximity();
         });
     }
 
@@ -69,11 +73,12 @@ public class SignalController extends BinaryBlock{
                 rotInit = true;
                 rotation(0);
             }
-            if(nb.isEmpty()) return;
-            signal[4] = (getSignal(nb.get(0), this) && configs.get(0) == 1)
-                ||  (getSignal(nb.get(1), this) && configs.get(1) == 1)
-                ||  (getSignal(nb.get(2), this) && configs.get(2) == 1)
-                ||  (getSignal(nb.get(3), this) && configs.get(3) == 1);
+            updateNeighbours();
+            updateConnections();
+            signal[4] = (getSignal(nb[0], this) && configs.get(0) == 1)
+                ||  (getSignal(nb[1], this) && configs.get(1) == 1)
+                ||  (getSignal(nb[2], this) && configs.get(2) == 1)
+                ||  (getSignal(nb[3], this) && configs.get(3) == 1);
             if(signal() != signal[4]){
                 signal(false);
                 signal[0] = signal[4] && configs.get(0) == 2;
@@ -85,12 +90,11 @@ public class SignalController extends BinaryBlock{
 
         @Override
         public void drawConnections(){
-            if(nb.isEmpty()) return;
             for(int i = 0; i < 4; i++){
                 int c = configs.get(i);
                 if(c == 0) continue;
                 if(c == 1){
-                    Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
+                    Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
                     Draw.rect(inputRegion, x, y, i * 90f);
                 }else{
                     Draw.color(Color.white, team.color, Mathf.num(signal()));
@@ -117,22 +121,7 @@ public class SignalController extends BinaryBlock{
 
         public Cell<Table> addConfigButton(Table table, int index){
             return table.table(t -> {
-                TextButton b = t.button(states[configs.get(index)], () -> {
-                    configure(index);
-                    if(configs.get(index) == 0 && !nb.isEmpty() && nb.get(index) != null){
-                        nb.get(index).updateSignal();
-                        nb.get(index).propagateSignal();
-                    } else if(configs.get(index) == 1){
-                        updateSignal();
-                        propagateSignal();
-                    } else if(configs.get(index) == 2 && !nb.isEmpty() && nb.get(index) != null){
-                        updateSignal();
-                        propagateSignal();
-                        nb.get(index).updateSignal();
-                        nb.get(index).propagateSignal();
-                    }
-                }).size(40f).get();
-
+                TextButton b = t.button(states[configs.get(index)], () -> configure(index)).size(40f).get();
                 b.update(() -> b.setText(states[configs.get(index)]));
             }).size(40f);
         }

@@ -12,7 +12,7 @@ import esoterum.world.blocks.binary.*;
 import mindustry.entities.units.*;
 import mindustry.world.*;
 
-public class BinaryWire extends BinaryBlock{
+public class BinaryWire extends BinaryBlock {
     public Block junctionReplacement;
 
     public BinaryWire(String name){
@@ -22,7 +22,7 @@ public class BinaryWire extends BinaryBlock{
         emits = true;
         rotate = true;
         drawArrow = true;
-        propagates = false;
+        propagates = true;
 
         drawConnectionArrows = true;
     }
@@ -61,16 +61,14 @@ public class BinaryWire extends BinaryBlock{
     public class BinaryWireBuild extends BinaryBuild{
         @Override
         public void updateSignal(){
-            if(nb.isEmpty()) return;
-            signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this);
+            signal[0] = getSignal(nb[1], this) | getSignal(nb[2], this) | getSignal(nb[3], this);
         }
 
         @Override
         public void drawConnections(){
-            if(nb.isEmpty()) return;
             for(int i = 1; i < 4; i++){
                 if(connections[i]){
-                    Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(i), this)));
+                    Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
                     Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
                 }
             }

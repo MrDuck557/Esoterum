@@ -64,9 +64,12 @@ public class NoteBlock extends BinaryBlock{
         group = BlockGroup.logic;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
-        propagates = false;
+        propagates = true;
 
-        config(IntSeq.class, (NoteBlockBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        config(IntSeq.class, (NoteBlockBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateProximity();
+        });
     }
 
     @Override
@@ -96,8 +99,7 @@ public class NoteBlock extends BinaryBlock{
 
         @Override
         public void updateSignal(){
-            if(nb.isEmpty()) return;
-            signal[4] = getSignal(nb.get(configs.first()), this);
+            signal[4] = getSignal(nb[configs.first()], this);
             if(signal[0] != signal[4]){
                 if(!signal[0] && signal[4]) playSound();
                 signal[0] = signal[4];

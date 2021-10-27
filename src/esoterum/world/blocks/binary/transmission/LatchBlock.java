@@ -19,10 +19,8 @@ public class LatchBlock extends BinaryBlock{
         rotatedBase = true;
         drawArrow = true;
         baseType = 1;
-        
-        config(Boolean.class, (LatchBuild l, Boolean b) -> {
-            l.signal[0] = b;
-        });
+        propagates = true;
+        config(Boolean.class, (LatchBuild l, Boolean b) -> l.signal[0] = b);
     }
 
     @Override
@@ -42,22 +40,15 @@ public class LatchBlock extends BinaryBlock{
 
     public class LatchBuild extends BinaryBuild {
         @Override
-        public void updateTile(){
-            propagateSignal();
-        }
-
-        @Override
         public void updateSignal() {
-            if(nb.isEmpty()) return;
-            if(getSignal(nb.get(2), this)) signal[0] = getSignal(nb.get(1), this) | getSignal(nb.get(3), this);
+            if(getSignal(nb[2], this)) signal[0] = getSignal(nb[1], this) | getSignal(nb[3], this);
         }
 
         @Override
         public void draw() {
             drawBase();
             drawConnections();
-            if(nb.isEmpty()) return;
-            Draw.color(Color.white, team.color, Mathf.num(getSignal(nb.get(1), this) | getSignal(nb.get(2), this) | getSignal(nb.get(3), this)));
+            Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[1], this) | getSignal(nb[2], this) | getSignal(nb[3], this)));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
             Draw.color(signal[0] ? team.color : Color.white);

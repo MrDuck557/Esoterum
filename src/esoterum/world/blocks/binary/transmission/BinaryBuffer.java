@@ -22,11 +22,14 @@ public class BinaryBuffer extends BinaryBlock{
         drawArrow = true;
         configurable = saveConfig = true;
         baseType = 1;
-
+        propagates = false;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
 
-        config(IntSeq.class, (BinaryBufferBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
+        config(IntSeq.class, (BinaryBufferBuild b, IntSeq i) -> {
+            b.configs = IntSeq.with(i.items);
+            b.updateProximity();
+        });
     }
 
     public class BinaryBufferBuild extends BinaryBuild{
@@ -34,14 +37,13 @@ public class BinaryBuffer extends BinaryBlock{
 
         public float delay = 5f;
         public float ticks = 1f;
-        public boolean bufferedSignal = false;
         /** Direction, Multiplier, Multiplier (but smol), Persistent */
         public IntSeq configs = IntSeq.with(2, 1, 0, 1);
 
         @Override
         public void updateTile(){
             super.updateTile();
-            if(bufferedSignal){
+            if(signal[4]){
                 delayTimer += Time.delta;
             }else{
                 if(configs.get(3) == 0){
@@ -59,13 +61,11 @@ public class BinaryBuffer extends BinaryBlock{
                 signal[0] = false;
                 delayTimer = 0f;
             }
-            propagateSignal();
         }
 
         @Override
         public void updateSignal(){
-            if(nb.isEmpty()) return;
-            bufferedSignal = getSignal(nb.get(configs.first()), this);
+            signal[4] = getSignal(nb[configs.first()], this);
         }
 
         public float trueDelay(){
