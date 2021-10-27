@@ -3,8 +3,8 @@ package esoterum.world.blocks.binary;
 import java.util.*;
 import java.util.concurrent.*;
 
-import arc.math.geom.Point2;
-import esoterum.world.blocks.binary.transmission.BinaryJunction;
+import arc.math.geom.*;
+import esoterum.world.blocks.binary.transmission.*;
 
 public class SignalGraph {
     public static ConcurrentHashMap<BinaryBlock.BinaryBuild, Set<BinaryBlock.BinaryBuild>> hm = new ConcurrentHashMap<>();
@@ -78,6 +78,12 @@ public class SignalGraph {
                         if(b instanceof BinaryJunction.BinaryJunctionBuild) {
                             if(Math.abs(Point2.unpack(p).x - Point2.unpack(bb.pos()).x) == 2
                             || Math.abs(Point2.unpack(p).y - Point2.unpack(bb.pos()).y) == 2) {
+                                s.push(bb);
+                                d.push(b.pos());
+                            }
+                        } else if(b instanceof BinaryCJunction.BinaryCJunctionBuild) {
+                            if(Math.abs(Point2.unpack(p).x - Point2.unpack(bb.pos()).x) == 1
+                            && Math.abs(Point2.unpack(p).y - Point2.unpack(bb.pos()).y) == 1) {
                                 s.push(bb);
                                 d.push(b.pos());
                             }
