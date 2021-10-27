@@ -11,7 +11,7 @@ public class SignalGraph {
     public static Set<BinaryBlock.BinaryBuild> sources = ConcurrentHashMap.newKeySet();
     public static boolean run = false;
     public static ForkJoinPool e = ForkJoinPool.commonPool();
-    public static int millis = 0, nanos = 1;
+    public static int millis = 16, nanos = 666666;
 
     public static void addVertex(BinaryBlock.BinaryBuild b){
         hm.put(b, ConcurrentHashMap.newKeySet());
