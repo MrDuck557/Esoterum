@@ -1,11 +1,11 @@
 package esoterum.world.blocks.binary;
 
-import java.util.*;
-import java.util.concurrent.*;
-
 import arc.*;
 import arc.math.geom.*;
 import esoterum.world.blocks.binary.transmission.*;
+
+import java.util.*;
+import java.util.concurrent.*;
 
 public class SignalGraph {
     public static ConcurrentHashMap<BinaryBlock.BinaryBuild, Set<BinaryBlock.BinaryBuild>> hm = new ConcurrentHashMap<>();

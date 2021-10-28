@@ -1,7 +1,5 @@
 package esoterum.world.blocks.binary.transmission;
 
-import java.util.*;
-
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
