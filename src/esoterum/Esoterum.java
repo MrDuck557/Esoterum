@@ -25,11 +25,14 @@ public class Esoterum extends Mod{
     public Esoterum(){
         if(!headless){
             Events.on(EventType.FileTreeInitEvent.class, h -> EsoSounds.load());
+
             Events.on(ClientLoadEvent.class, e -> {
                 manual = new ManualDialog();
                 EsoStyle.init();
+                EsoSettings.init();
             });
-            Events.on(WorldLoadEvent.class, e -> {
+
+            Events.on(WorldLoadEvent.class, e -> { //haha yes doing the Braindustry
                 LoadedMod eso = mods.locateMod("esoterum");
                 boolean isEso = state.map.mod != null && state.map.mod == eso;
 
@@ -44,6 +47,7 @@ public class Esoterum extends Mod{
                     }
                 }
             });
+
             Events.on(StateChangeEvent.class, e -> {
                 if(e.to == State.menu){
                     SignalGraph.run(false);
@@ -58,6 +62,7 @@ public class Esoterum extends Mod{
                 }
             });
         }
+
         t = new Thread(){
             @Override
             public void run(){

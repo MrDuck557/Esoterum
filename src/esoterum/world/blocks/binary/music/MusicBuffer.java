@@ -32,7 +32,7 @@ public class MusicBuffer extends BinaryBlock{
         rotatedBase = true;
         drawArrow = true;
         configurable = saveConfig = true;
-        baseType = 1;
+        baseHighlight = "gold";
         propagates = false;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
@@ -100,6 +100,7 @@ public class MusicBuffer extends BinaryBlock{
             drawBuffer();
             Draw.color(Color.white);
             Draw.rect(rests[configs.get(2)], x, y);
+            drawStubs();
         }
 
         public void drawBuffer(){

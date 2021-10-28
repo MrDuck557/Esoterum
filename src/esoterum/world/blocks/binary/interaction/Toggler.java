@@ -15,7 +15,7 @@ public class Toggler extends BinaryBlock{
         rotate = true;
         drawRot = false;
         rotatedBase = true;
-        baseType = 1;
+        baseHighlight = "gold";
         emits = true;
         outputs = new boolean[]{true, false, false, false};
         inputs = new boolean[]{false, true, true, true};

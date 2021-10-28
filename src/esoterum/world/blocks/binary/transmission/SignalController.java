@@ -25,7 +25,6 @@ public class SignalController extends BinaryBlock{
         allOutputs = true;
         rotate = true;
         rotatedBase = false;
-        baseType = 2;
         emits = true;
         inputs = new boolean[]{true, true, true, true};
         outputs = new boolean[]{true, true, true, true};
@@ -47,6 +46,7 @@ public class SignalController extends BinaryBlock{
         super.load();
         
         // looks better with rounded corners
+        // no
         inputRegion = Core.atlas.find(name + "-in");
         outputRegion = Core.atlas.find(name + "-out");
     }

@@ -21,7 +21,7 @@ public class BinaryBuffer extends BinaryBlock{
         rotatedBase = true;
         drawArrow = true;
         configurable = saveConfig = true;
-        baseType = 1;
+        baseHighlight = "gold";
         propagates = false;
         inputs = new boolean[]{false, true, true, true};
         outputs = new boolean[]{true, false, false, false};
@@ -80,6 +80,8 @@ public class BinaryBuffer extends BinaryBlock{
             Draw.rect(connectionRegion, x, y, rotdeg());
             drawConnections();
             drawBuffer();
+            Draw.color();
+            drawStubs();
         }
 
         public void drawBuffer(){

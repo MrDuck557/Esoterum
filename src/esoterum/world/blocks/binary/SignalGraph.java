@@ -1,17 +1,18 @@
 package esoterum.world.blocks.binary;
 
+import arc.*;
+import arc.math.geom.*;
+import esoterum.world.blocks.binary.transmission.*;
+
 import java.util.*;
 import java.util.concurrent.*;
-
-import arc.math.geom.Point2;
-import esoterum.world.blocks.binary.transmission.BinaryJunction;
 
 public class SignalGraph {
     public static ConcurrentHashMap<BinaryBlock.BinaryBuild, Set<BinaryBlock.BinaryBuild>> hm = new ConcurrentHashMap<>();
     public static Set<BinaryBlock.BinaryBuild> sources = ConcurrentHashMap.newKeySet();
     public static boolean run = false;
     public static ForkJoinPool e = ForkJoinPool.commonPool();
-    public static int millis = 0, nanos = 1;
+    public static int millis = 16, nanos = 666666;
 
     public static void addVertex(BinaryBlock.BinaryBuild b){
         hm.put(b, ConcurrentHashMap.newKeySet());
@@ -81,6 +82,12 @@ public class SignalGraph {
                                 s.push(bb);
                                 d.push(b.pos());
                             }
+                        } else if(b instanceof BinaryCJunction.BinaryCJunctionBuild) {
+                            if(Math.abs(Point2.unpack(p).x - Point2.unpack(bb.pos()).x) == 1
+                            && Math.abs(Point2.unpack(p).y - Point2.unpack(bb.pos()).y) == 1) {
+                                s.push(bb);
+                                d.push(b.pos());
+                            }
                         } else if(bb.pos() != p) {
                             s.push(bb);
                             d.push(b.pos());
@@ -105,7 +112,10 @@ public class SignalGraph {
         //Log.info("run");
         while(true){
             try {
-                Thread.sleep(millis, nanos);
+                Thread.sleep(
+                    Core.settings.getInt("eso-signal-millis"),
+                    Core.settings.getInt("eso-signal-nanos")
+                );
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
