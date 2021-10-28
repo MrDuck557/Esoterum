@@ -121,7 +121,7 @@ public class BinaryBlock extends Block {
             updateCorners();
             for (BinaryBuild i : nb){
                 if (i != null){
-                    updateCorners();
+                    i.updateCorners();
                 }
             }
         }
