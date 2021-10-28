@@ -118,6 +118,7 @@ public class BinaryBlock extends Block {
             super.onProximityUpdate();
             updateNeighbours();
             updateConnections();
+            updateCorners();
             for (BinaryBuild i : nb){
                 if (i != null){
                     updateCorners();
@@ -145,18 +146,18 @@ public class BinaryBlock extends Block {
                 result = true;
                 temp = this.nb[(4 - this.rotation + i) % 4];
                 if (temp == null){
-                    break;
+                    continue;
                 }
-                result &= (connectionCheck(this,temp) || connectionCheck(temp,this));
-                temp2 = temp.nb[(4 - temp.rotation + i - 1) % 4];
-                result &= (connectionCheck(temp,temp2) || connectionCheck(temp2, temp));
-                temp = this.nb[(4 - this.rotation + i - 1) % 4];
+                result &= (connectionCheck(this, temp) || connectionCheck(temp, this));
+                temp2 = temp.nb[(4 - temp.rotation + i + 1) % 4];
+                result &= (connectionCheck(temp, temp2) || connectionCheck(temp2, temp));
+                temp = this.nb[(4 - this.rotation + i + 1) % 4];
                 if (temp == null){
-                    break;
+                    continue;
                 }
-                result &= (connectionCheck(this,temp) || connectionCheck(temp,this));
+                result &= (connectionCheck(this, temp) || connectionCheck(temp, this));
                 temp2 = temp.nb[(4 - temp.rotation + i) % 4];
-                result &= (connectionCheck(temp,temp2) || connectionCheck(temp2, temp));
+                result &= (connectionCheck(temp, temp2) || connectionCheck(temp2, temp));
                 if (result){
                     corners+=8;
                 }
@@ -234,7 +235,7 @@ public class BinaryBlock extends Block {
             int temp = corners;
             for (int i = 0; i < 4; i++){
                 if (temp % 2 == 1){
-                    Draw.rect(cornerRegion, x, y, rotdeg() + 90 * i);
+                    Draw.rect(cornerRegion, x, y, 90 * i);
                 }
                 temp >>= 1;
             }
