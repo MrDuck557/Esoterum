@@ -194,9 +194,11 @@ public class BinaryBlock extends Block {
             }else{
                 Draw.rect(highlightRegions[rotation], x, y);
             }
-            // for(int i=0;i<4;i++)
-            //     if(nb[i] != null && nb[i].nb[(i+5-nb[i].rotation)%4] != null)
-            //         if(connections[i] && nb[i].connections[(i+5-nb[i].rotation)%4] && nb[i].nb[(i+5-nb[i].rotation)%4].connections[(i+10-nb[i].rotation-nb[i].nb[(i+5-nb[i].rotation)%4].rotation)%4] && connections[(i+1)%4]) Draw.rect(cornerRegion, x, y, rotdeg() + 90 * i);
+            for(int i=0;i<4;i++)
+                if(nb[i] != null && nb[i].nb[(i+5-nb[i].rotation)%4] != null)
+                    if(connections[i] && nb[i].connections[(i+5-nb[i].rotation)%4] 
+                    && nb[i].nb[(i+5-nb[i].rotation)%4].connections[(i+10-nb[i].rotation-nb[i].nb[(i+5-nb[i].rotation)%4].rotation)%4] 
+                    && connections[(i+1)%4]) Draw.rect(cornerRegion, x, y, rotdeg() + 90 * i);
         }
 
         public void drawConnections(){
