@@ -33,7 +33,7 @@ public class BinaryJunction extends BinaryBlock{
     @Override
     protected TextureRegion[] icons(){
         return new TextureRegion[]{
-            region,
+            baseRegion,
             topRegion,
             directionRegions[0][0],
             directionRegions[1][0]

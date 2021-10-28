@@ -58,7 +58,8 @@ public class BinaryBlock extends Block {
     @Override
     protected TextureRegion[] icons() {
         return new TextureRegion[]{
-            rotate && rotatedBase ? baseRegions[0] : baseRegion,
+            baseRegion,
+            rotate && rotatedBase ? highlightRegions[0] : highlightRegion,
             topRegion
         };
     }

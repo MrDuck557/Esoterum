@@ -32,7 +32,7 @@ public class LatchBlock extends BinaryBlock{
     @Override
     protected TextureRegion[] icons() {
         return new TextureRegion[]{
-            region,
+            baseRegion,
             topRegion,
             latchRegion
         };
