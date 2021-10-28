@@ -20,8 +20,8 @@ public class EsoSettings{
 
         eso = new SettingsTable();
         eso.checkPref("eso-junction-variation", false);
-        eso.sliderPref("eso-signal-millis", 16, 1, 100, s -> s + " " + bundle.get("eso-millis"));
-        eso.sliderPref("eso-signal-nanos", 666666, 1, 1000000, s -> s + " " + bundle.get("eso-nanos"));
+        eso.sliderPref("eso-signal-millis", 16, 1, 1000, s -> s + " " + bundle.get("eso-millis"));
+        eso.sliderPref("eso-signal-nanos", 666666, 1, 999999, s -> s + " " + bundle.get("eso-nanos"));
 
         dialog.cont.center().add(eso);
 
