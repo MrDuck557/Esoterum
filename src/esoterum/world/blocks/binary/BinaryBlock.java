@@ -144,10 +144,16 @@ public class BinaryBlock extends Block {
                 corners >>= 1;
                 result = true;
                 temp = this.nb[(4 - this.rotation + i) % 4];
+                if (temp == null){
+                    break;
+                }
                 result &= (connectionCheck(this,temp) || connectionCheck(temp,this));
                 temp2 = temp.nb[(4 - temp.rotation + i - 1) % 4];
                 result &= (connectionCheck(temp,temp2) || connectionCheck(temp2, temp));
                 temp = this.nb[(4 - this.rotation + i - 1) % 4];
+                if (temp == null){
+                    break;
+                }
                 result &= (connectionCheck(this,temp) || connectionCheck(temp,this));
                 temp2 = temp.nb[(4 - temp.rotation + i) % 4];
                 result &= (connectionCheck(temp,temp2) || connectionCheck(temp2, temp));
