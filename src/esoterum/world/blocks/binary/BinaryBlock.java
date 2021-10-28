@@ -75,6 +75,8 @@ public class BinaryBlock extends Block {
 
         public boolean[] signal = new boolean[]{false, false, false, false, false};
 
+        public int corners = 0; //bitmasked corner draw
+
         // Mindustry saves block placement rotation even for blocks that don't rotate.
         // Usually this doesn't cause any problems, but with the current implementation
         // it is necessary for non-rotatable binary blocks to have a rotation of 0.
@@ -116,6 +118,11 @@ public class BinaryBlock extends Block {
             super.onProximityUpdate();
             updateNeighbours();
             updateConnections();
+            for (BinaryBuild i : nb){
+                if (i != null){
+                    updateCorners();
+                }
+            }
         }
 
         public void updateNeighbours(){
@@ -124,6 +131,30 @@ public class BinaryBlock extends Block {
             nb[1] = checkType(left());
             nb[2] = checkType(back());
             nb[3] = checkType(right());
+        }
+
+        public void updateCorners(){
+            //top right is 0, bottom right is 1, ect
+            //<block>.nb[(4 - <block>.rotation + 0) % 4] gets absolute right of block
+            corners = 0;
+            boolean result;
+            BinaryBuild temp;
+            BinaryBuild temp2;
+            for (int i = 0; i < 4; i++){
+                corners >>= 1;
+                result = true;
+                temp = this.nb[(4 - this.rotation + i) % 4];
+                result &= (connectionCheck(this,temp) || connectionCheck(temp,this));
+                temp2 = temp.nb[(4 - temp.rotation + i - 1) % 4];
+                result &= (connectionCheck(temp,temp2) || connectionCheck(temp2, temp));
+                temp = this.nb[(4 - this.rotation + i - 1) % 4];
+                result &= (connectionCheck(this,temp) || connectionCheck(temp,this));
+                temp2 = temp.nb[(4 - temp.rotation + i) % 4];
+                result &= (connectionCheck(temp,temp2) || connectionCheck(temp2, temp));
+                if (result){
+                    corners+=8;
+                }
+            }
         }
 
         public void updateSignal(){}
@@ -194,11 +225,13 @@ public class BinaryBlock extends Block {
             }else{
                 Draw.rect(highlightRegions[rotation], x, y);
             }
-            for(int i=0;i<4;i++)
-                if(nb[i] != null && nb[i].nb[(i+5-nb[i].rotation)%4] != null)
-                    if(connections[i] && nb[i].connections[(i+5-nb[i].rotation)%4] 
-                    && nb[i].nb[(i+5-nb[i].rotation)%4].connections[(i+10-nb[i].rotation-nb[i].nb[(i+5-nb[i].rotation)%4].rotation)%4] 
-                    && connections[(i+1)%4]) Draw.rect(cornerRegion, x, y, rotdeg() + 90 * i);
+            int temp = corners;
+            for (int i = 0; i < 4; i++){
+                if (temp % 2 == 1){
+                    Draw.rect(cornerRegion, x, y, rotdeg() + 90 * i);
+                }
+                temp >>= 1;
+            }
         }
 
         public void drawConnections(){
