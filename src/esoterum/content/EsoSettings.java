@@ -3,7 +3,10 @@ package esoterum.content;
 import arc.*;
 import arc.scene.*;
 import arc.scene.ui.layout.*;
+import esoterum.world.blocks.binary.transmission.BinaryJunction.*;
+import esoterum.world.blocks.binary.transmission.BinaryCJunction.*;
 import mindustry.game.EventType.*;
+import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
 import mindustry.ui.dialogs.SettingsMenuDialog.*;
@@ -19,7 +22,13 @@ public class EsoSettings{
         dialog.addCloseButton();
 
         eso = new SettingsTable();
-        eso.checkPref("eso-junction-variation", false);
+        eso.checkPref("eso-junction-variation", false, bool -> Groups.build.each(
+            b -> b instanceof BinaryJunctionBuild || b instanceof BinaryCJunctionBuild,
+            b -> {
+                if(b instanceof BinaryJunctionBuild j) j.updateVariants();
+                if(b instanceof BinaryCJunctionBuild j) j.updateVariants();
+            }
+        ));
         eso.sliderPref("eso-signal-millis", 16, 1, 1000, s -> s + " " + bundle.get("eso-millis"));
         eso.sliderPref("eso-signal-nanos", 666666, 1, 999999, s -> s + " " + bundle.get("eso-nanos"));
 

@@ -1,7 +1,5 @@
 package esoterum.world.blocks.binary.transmission;
 
-import java.util.*;
-
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -43,10 +41,11 @@ public class BinaryCJunction extends BinaryBlock{
 
     public class BinaryCJunctionBuild extends BinaryBuild {
         public int variant = 0;
+
         @Override
         public void created(){
             super.created();
-            if(Core.settings.getBool("eso-junction-variation")) variant = new Random((long)(pos()*69/x)+(long)(pos()*69/y)).nextInt(2);
+            updateVariants();
         }
 
         @Override
@@ -63,6 +62,14 @@ public class BinaryCJunction extends BinaryBlock{
             Draw.rect(directionRegions[0][variant], x, y, rotdeg());
             Draw.color(Color.white, team.color, Mathf.num(signal[0] || signal[1]));
             Draw.rect(directionRegions[1][variant], x, y, rotdeg());
+        }
+
+        public void updateVariants(){
+            if(Core.settings.getBool("eso-junction-variation")){
+                variant = Mathf.randomSeed(tile.pos(), 0, directionRegions[0].length - 1);
+            }else{
+                variant = 0;
+            }
         }
     }
 }

@@ -40,12 +40,13 @@ public class BinaryJunction extends BinaryBlock{
         };
     }
 
-    public class BinaryJunctionBuild extends BinaryBuild {
+    public class BinaryJunctionBuild extends BinaryBuild{
         public int variant = 0;
+
         @Override
         public void created(){
             super.created();
-            if(Core.settings.getBool("eso-junction-variation")) variant = new Random((long)(pos()*69/x)+(long)(pos()*69/y)).nextInt(4);
+            updateVariants();
         }
 
         @Override
@@ -62,6 +63,14 @@ public class BinaryJunction extends BinaryBlock{
             Draw.rect(directionRegions[0][variant], x, y);
             Draw.color(Color.white, team.color, Mathf.num(signal[1] || signal[3]));
             Draw.rect(directionRegions[1][variant], x, y);
+        }
+
+        public void updateVariants(){
+            if(Core.settings.getBool("eso-junction-variation")){
+                variant = Mathf.randomSeed(tile.pos(), 0, directionRegions[0].length - 1);
+            }else{
+                variant = 0;
+            }
         }
     }
 }
