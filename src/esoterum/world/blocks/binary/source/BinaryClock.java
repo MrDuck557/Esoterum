@@ -23,7 +23,7 @@ public class BinaryClock extends BinaryBlock{
         outputs = new boolean[]{true, true, true, true};
         configurable = true;
         emits = true;
-        baseType = 1;
+        baseHighlight = "gold";
         propagates = false;
         config(IntSeq.class, (BinaryClockBuild b, IntSeq i) -> b.configs = IntSeq.with(i.items));
     }

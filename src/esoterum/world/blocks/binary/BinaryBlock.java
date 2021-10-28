@@ -15,8 +15,8 @@ import mindustry.world.*;
 import mindustry.world.meta.*;
 
 public class BinaryBlock extends Block {
-    public TextureRegion topRegion, connectionRegion;
-    public TextureRegion[] baseRegions = new TextureRegion[4];
+    public TextureRegion topRegion, connectionRegion, baseRegion, highlightRegion, stubRegion, cornerRegion;
+    public TextureRegion[] baseRegions = new TextureRegion[4], highlightRegions = new TextureRegion[4];
     /** in order {front, left, back, right} */
     public boolean[] outputs = new boolean[]{false, false, false, false};
     public boolean[] inputs = new boolean[]{false, false, false, false};
@@ -24,7 +24,8 @@ public class BinaryBlock extends Block {
     public boolean allOutputs;
     public boolean drawConnectionArrows;
     public boolean drawRot = true;
-    public int baseType = 0;
+    public String baseType = "square";
+    public String baseHighlight = "none";
     public boolean rotatedBase = false;
     public int visitLimit = 5;
     public boolean propagates = true;
@@ -42,22 +43,22 @@ public class BinaryBlock extends Block {
 
     public void load() {
         super.load();
-        if(rotatedBase){
-            region = Core.atlas.find("esoterum-base-" + baseType, "esoterum-base-" + baseType);
-        }else{
-            region = Core.atlas.find(name + "-base", "esoterum-base-" + baseType);
-        }
+        baseRegion = Core.atlas.find("esoterum-base-" + baseType, "esoterum-base-none");
+        highlightRegion = Core.atlas.find("esoterum-base-" + baseHighlight, "esoterum-base-none");
         for(int i = 0; i < 4; i++){
-            baseRegions[i] = Core.atlas.find("esoterum-base-" + baseType + "-" + i, "esoterum-base");
+            baseRegions[i] = Core.atlas.find("esoterum-base-" + baseType + "-" + i, "esoterum-base-none");
+            highlightRegions[i] = Core.atlas.find("esoterum-base-" + baseHighlight + "-" + i, "esoterum-base-none");
         }
         connectionRegion = Core.atlas.find(name + "-connection", "esoterum-connection");
         topRegion = Core.atlas.find(name, "esoterum-router"); // router supremacy
+        stubRegion = Core.atlas.find("esoterum-stub");
+        cornerRegion = Core.atlas.find("esoterum-base-corner");
     }
 
     @Override
     protected TextureRegion[] icons() {
         return new TextureRegion[]{
-            rotate && rotatedBase ? baseRegions[0] : region,
+            rotate && rotatedBase ? baseRegions[0] : baseRegion,
             topRegion
         };
     }
@@ -181,21 +182,37 @@ public class BinaryBlock extends Block {
             drawConnections();
             Draw.color(Color.white, team.color, Mathf.num(signal()));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
+            Draw.color();
+            drawStubs();
         }
 
         public void drawBase(){
+            Draw.rect(baseRegion, x, y);
+            for(int i=0;i<4;i++) if(connections[i]) Draw.rect(baseRegions[(i+rotation)%4], x, y);
             if(!rotate || !rotatedBase){
-                Draw.rect(region, x, y);
+                Draw.rect(highlightRegion, x, y);
             }else{
-                Draw.rect(baseRegions[rotation], x, y);
+                Draw.rect(highlightRegions[rotation], x, y);
             }
+            // for(int i=0;i<4;i++)
+            //     if(nb[i] != null && nb[i].nb[(i+5-nb[i].rotation)%4] != null)
+            //         if(connections[i] && nb[i].connections[(i+5-nb[i].rotation)%4] && nb[i].nb[(i+5-nb[i].rotation)%4].connections[(i+10-nb[i].rotation-nb[i].nb[(i+5-nb[i].rotation)%4].rotation)%4] && connections[(i+1)%4]) Draw.rect(cornerRegion, x, y, rotdeg() + 90 * i);
         }
 
         public void drawConnections(){
             for(int i = 0; i < 4; i++){
-                if(inputs(i)) Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
-                if(outputs(i)) Draw.color(Color.white, team.color, Mathf.num(signal()));
-                if(connections[i]) Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
+                if(connections[i]){
+                    Draw.color(Color.white, team.color, Mathf.num((getSignal(nb[i], this) && nb[i].outputs(EsoUtil.relativeDirection(nb[i], this))) || (signal[i] && nb[i].inputs(EsoUtil.relativeDirection(nb[i], this)))));
+                    Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
+                }
+            }
+        }
+
+        public void drawStubs(){
+            for(int i = 0; i < 4; i++){
+                if(!connections[i]){
+                    Draw.rect(stubRegion, x, y, rotdeg() + 90 * i);
+                }
             }
         }
 

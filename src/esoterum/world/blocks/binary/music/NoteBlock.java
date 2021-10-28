@@ -59,7 +59,7 @@ public class NoteBlock extends BinaryBlock{
         emits = true;
         rotate = true;
         rotatedBase = true;
-        baseType = 0;
+        baseHighlight = "silver";
         drawRot = false;
         group = BlockGroup.logic;
         inputs = new boolean[]{false, true, true, true};
@@ -112,6 +112,8 @@ public class NoteBlock extends BinaryBlock{
             drawConnections();
             Draw.color(Color.white, team.color, Mathf.num(signal()));
             Draw.rect(instruments[configs.get(4)].top, x, y, (rotate && drawRot) ? rotdeg() : 0f);
+            Draw.color();
+            drawStubs();
         }
 
         public void drawConnections(){

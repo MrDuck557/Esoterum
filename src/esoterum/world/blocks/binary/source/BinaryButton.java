@@ -22,7 +22,7 @@ public class BinaryButton extends BinaryBlock{
         configurable = true;
         continuous = cont;
         emits = true;
-        baseType = 1;
+        baseHighlight = "gold";
         propagates = false;
         config(Boolean.class, (BinaryButtonBuild b, Boolean on) -> {
             b.signal(on);

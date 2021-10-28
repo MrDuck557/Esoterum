@@ -24,7 +24,7 @@ public class LogicGate extends BinaryBlock{
         rotatedBase = true;
         drawArrow = true;
         configurable = saveConfig = true;
-        baseType = 0;
+        baseHighlight = "silver";
 
         operation = e -> false;
 

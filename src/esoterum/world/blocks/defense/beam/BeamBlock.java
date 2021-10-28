@@ -33,7 +33,6 @@ public class BeamBlock extends BinaryBlock {
         rotatedBase = false;
         clipSize = beamLength;
         drawArrow = true;
-
         config(Float.class, (BeamBuild b, Float f) -> {
             b.beamRotation = f;
         });
@@ -48,7 +47,7 @@ public class BeamBlock extends BinaryBlock {
     @Override
     public void load(){
         super.load();
-        region = Core.atlas.find(size == 1 ? "esoterum-base-2" : "esoterum-block-" + size, "block-" + size);
+        region = Core.atlas.find(size == 1 ? "esoterum-base-round" : "esoterum-block-" + size, "block-" + size);
         topRegion = Core.atlas.find(name);
         lightRegion = Core.atlas.find(name + "-light", "blank");
         glowRegion = Core.atlas.find(name + "-glow", "blank");

@@ -3,7 +3,6 @@ package esoterum.content;
 import arc.*;
 import arc.scene.*;
 import arc.scene.ui.layout.*;
-import mindustry.*;
 import mindustry.game.EventType.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;

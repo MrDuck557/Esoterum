@@ -1,5 +1,7 @@
 package esoterum.world.blocks.binary.transmission;
 
+import java.util.*;
+
 import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -8,7 +10,7 @@ import esoterum.world.blocks.binary.*;
 
 // too similar to BinaryRouter?
 public class BinaryCJunction extends BinaryBlock{
-    public TextureRegion[] directionRegions = new TextureRegion[2];
+    public TextureRegion[][] directionRegions = new TextureRegion[2][2];
 
     public BinaryCJunction(String name){
         super(name);
@@ -22,9 +24,10 @@ public class BinaryCJunction extends BinaryBlock{
     @Override
     public void load(){
         super.load();
-
+        
         for(int i = 0; i < 2; i++){
-            directionRegions[i] = Core.atlas.find(name + "-direction-" + i);
+            for(int j = 0; j < 2; j++)
+            directionRegions[i][j] = Core.atlas.find(name + "-direction-" + i + "-" + j);
         }
     }
 
@@ -33,12 +36,19 @@ public class BinaryCJunction extends BinaryBlock{
         return new TextureRegion[]{
             region,
             topRegion,
-            directionRegions[0],
-            directionRegions[1]
+            directionRegions[0][0],
+            directionRegions[1][0]
         };
     }
 
     public class BinaryCJunctionBuild extends BinaryBuild {
+        public int variant = 0;
+        @Override
+        public void created(){
+            super.created();
+            if(Core.settings.getBool("eso-junction-variation")) variant = new Random((long)(pos()*69/x)+(long)(pos()*69/y)).nextInt(2);
+        }
+
         @Override
         public void updateSignal(){
             signal[0] = getSignal(nb[1], this);
@@ -50,9 +60,9 @@ public class BinaryCJunction extends BinaryBlock{
         @Override
         public void drawConnections(){
             Draw.color(Color.white, team.color, Mathf.num(signal[2] || signal[3]));
-            Draw.rect(directionRegions[0], x, y, rotdeg());
+            Draw.rect(directionRegions[0][variant], x, y, rotdeg());
             Draw.color(Color.white, team.color, Mathf.num(signal[0] || signal[1]));
-            Draw.rect(directionRegions[1], x, y, rotdeg());
+            Draw.rect(directionRegions[1][variant], x, y, rotdeg());
         }
     }
 }

@@ -18,7 +18,7 @@ public class LatchBlock extends BinaryBlock{
         rotate = true;
         rotatedBase = true;
         drawArrow = true;
-        baseType = 1;
+        baseHighlight = "gold";
         propagates = true;
         config(Boolean.class, (LatchBuild l, Boolean b) -> l.signal[0] = b);
     }
