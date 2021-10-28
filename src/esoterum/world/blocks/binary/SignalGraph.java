@@ -3,6 +3,7 @@ package esoterum.world.blocks.binary;
 import java.util.*;
 import java.util.concurrent.*;
 
+import arc.*;
 import arc.math.geom.*;
 import esoterum.world.blocks.binary.transmission.*;
 
@@ -111,7 +112,10 @@ public class SignalGraph {
         //Log.info("run");
         while(true){
             try {
-                Thread.sleep(millis, nanos);
+                Thread.sleep(
+                    Core.settings.getInt("eso-signal-millis"),
+                    Core.settings.getInt("eso-signal-nanos")
+                );
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
