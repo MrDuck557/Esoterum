@@ -61,14 +61,14 @@ public class BinaryWire extends BinaryBlock {
     public class BinaryWireBuild extends BinaryBuild{
         @Override
         public void updateSignal(){
-            signal[0] = getSignal(nb[1], this) | getSignal(nb[2], this) | getSignal(nb[3], this);
+            signal[0] = getSignal(relnb[1], this) | getSignal(relnb[2], this) | getSignal(relnb[3], this);
         }
 
         @Override
         public void drawConnections(){
             for(int i = 1; i < 4; i++){
                 if(connections[i]){
-                    Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
+                    Draw.color(Color.white, team.color, Mathf.num(getSignal(relnb[i], this)));
                     Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
                 }
             }

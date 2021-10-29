@@ -58,8 +58,8 @@ public class LogicGate extends BinaryBlock{
         @Override
         public void updateSignal(){
             signal[0] = operation.get(new boolean[]{
-                getSignal(nb[configs.first()], this),
-                getSignal(nb[configs.get(single ? 0 : 1)], this),
+                getSignal(relnb[configs.first()], this),
+                getSignal(relnb[configs.get(single ? 0 : 1)], this),
             });
         }
 
@@ -81,7 +81,7 @@ public class LogicGate extends BinaryBlock{
         public void drawConnections(){
             for(int i = 1; i < 4; i++){
                 if(!configs.contains(i)) continue;
-                Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
+                Draw.color(Color.white, team.color, Mathf.num(getSignal(relnb[i], this)));
                 Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
             }
             Draw.color(Color.white, team.color, Mathf.num(signal()));

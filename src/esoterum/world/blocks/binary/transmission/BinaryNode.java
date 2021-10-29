@@ -88,30 +88,30 @@ public class BinaryNode extends BinaryBlock{
         
         @Override
         public BinaryBuild[] getInputs(){
-            BinaryBuild[] i = new BinaryBuild[nb.length + 1];
+            BinaryBuild[] i = new BinaryBuild[relnb.length + 1];
             int c = 0;
-            for(BinaryBuild b : nb)
+            for(BinaryBuild b : relnb)
                 if (b != null && inputs(c) && connections[c]) i[c] = b;
-            i[nb.length] = linkedNode();
+            i[relnb.length] = linkedNode();
             return i;
         }
 
         @Override
         public BinaryBuild[] getOutputs(){
-            BinaryBuild[] o = new BinaryBuild[nb.length + 1];
+            BinaryBuild[] o = new BinaryBuild[relnb.length + 1];
             int c = 0;
-            for(BinaryBuild b : nb){
+            for(BinaryBuild b : relnb){
                 if (b != null && outputs(c) && connections[c]) o[c] = b;
                 c++;
             }
-            o[nb.length] = linkedNode();
+            o[relnb.length] = linkedNode();
             return o;
         }
 
         @Override
         public void updateSignal(){
             signal[4] = false;
-            for(BinaryBuild b : nb) signal[4] |= getSignal(b, this);
+            for(BinaryBuild b : relnb) signal[4] |= getSignal(b, this);
             BinaryNodeBuild c = linkedNode();
             signal(c != null && c.signal());
         }

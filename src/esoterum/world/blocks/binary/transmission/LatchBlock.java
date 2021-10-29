@@ -41,14 +41,14 @@ public class LatchBlock extends BinaryBlock{
     public class LatchBuild extends BinaryBuild {
         @Override
         public void updateSignal() {
-            if(getSignal(nb[2], this)) signal[0] = getSignal(nb[1], this) | getSignal(nb[3], this);
+            if(getSignal(relnb[2], this)) signal[0] = getSignal(relnb[1], this) | getSignal(relnb[3], this);
         }
 
         @Override
         public void draw() {
             drawBase();
             drawConnections();
-            Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[1], this) | getSignal(nb[2], this) | getSignal(nb[3], this)));
+            Draw.color(Color.white, team.color, Mathf.num(getSignal(relnb[1], this) | getSignal(relnb[2], this) | getSignal(relnb[3], this)));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
             Draw.color(signal[0] ? team.color : Color.white);

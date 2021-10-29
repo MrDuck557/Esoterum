@@ -18,7 +18,7 @@ public class BeamEmitter extends BeamBlock{
         @Override
         public void updateTile() {
             signal[4] = false;
-            for(BinaryBuild b : nb){
+            for(BinaryBuild b : relnb){
                 signal[4] |= getSignal(b, this);
             }
             beamStrength = signal[4] ? 1 : 0;

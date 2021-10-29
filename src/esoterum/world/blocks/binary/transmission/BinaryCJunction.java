@@ -50,10 +50,10 @@ public class BinaryCJunction extends BinaryBlock{
 
         @Override
         public void updateSignal(){
-            signal[0] = getSignal(nb[1], this);
-            signal[1] = getSignal(nb[0], this);
-            signal[2] = getSignal(nb[3], this);
-            signal[3] = getSignal(nb[2], this);
+            signal[0] = getSignal(relnb[1], this);
+            signal[1] = getSignal(relnb[0], this);
+            signal[2] = getSignal(relnb[3], this);
+            signal[3] = getSignal(relnb[2], this);
         }
 
         @Override

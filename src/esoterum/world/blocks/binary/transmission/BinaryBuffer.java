@@ -65,7 +65,7 @@ public class BinaryBuffer extends BinaryBlock{
 
         @Override
         public void updateSignal(){
-            signal[4] = getSignal(nb[configs.first()], this);
+            signal[4] = getSignal(relnb[configs.first()], this);
         }
 
         public float trueDelay(){

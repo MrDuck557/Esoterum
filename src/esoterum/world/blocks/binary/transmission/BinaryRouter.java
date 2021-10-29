@@ -15,7 +15,7 @@ public class BinaryRouter extends BinaryBlock{
         @Override
         public void updateSignal() {
             signal[4] = false;
-            for(BinaryBuild b : nb) signal[4] |= getSignal(b, this);
+            for(BinaryBuild b : relnb) signal[4] |= getSignal(b, this);
             signal(signal[4]);
         }
     }

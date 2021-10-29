@@ -7,6 +7,7 @@ import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.util.io.*;
 import esoterum.util.*;
+import mindustry.Vars;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.logic.*;
@@ -15,8 +16,27 @@ import mindustry.world.*;
 import mindustry.world.meta.*;
 
 public class BinaryBlock extends Block {
-    public TextureRegion topRegion, connectionRegion, baseRegion, highlightRegion, stubRegion, cornerRegion;
-    public TextureRegion[] baseRegions = new TextureRegion[4], highlightRegions = new TextureRegion[4];
+    public TextureRegion topRegion, connectionRegion, baseRegion, highlightRegion, stubRegion, cornerRegion, ultraRegion;
+    public TextureRegion[] baseRegions = new TextureRegion[4], highlightRegions = new TextureRegion[4], allRegions;
+    public int[] tiles = new int[]{
+        39, 36, 39, 36, 27, 16, 27, 24, 39, 36, 39, 36, 27, 16, 27, 24,
+        38, 37, 38, 37, 17, 41, 17, 43, 38, 37, 38, 37, 26, 21, 26, 25,
+        39, 36, 39, 36, 27, 16, 27, 24, 39, 36, 39, 36, 27, 16, 27, 24,
+        38, 37, 38, 37, 17, 41, 17, 43, 38, 37, 38, 37, 26, 21, 26, 25,
+         3,  4,  3,  4, 15, 40, 15, 20,  3,  4,  3,  4, 15, 40, 15, 20,
+         5, 28,  5, 28, 29, 10, 29, 23,  5, 28,  5, 28, 31, 11, 31, 32,
+         3,  4,  3,  4, 15, 40, 15, 20,  3,  4,  3,  4, 15, 40, 15, 20,
+         2, 30,  2, 30,  9, 46,  9, 22,  2, 30,  2, 30, 14, 44, 14,  6,
+        39, 36, 39, 36, 27, 16, 27, 24, 39, 36, 39, 36, 27, 16, 27, 24,
+        38, 37, 38, 37, 17, 41, 17, 43, 38, 37, 38, 37, 26, 21, 26, 25,
+        39, 36, 39, 36, 27, 16, 27, 24, 39, 36, 39, 36, 27, 16, 27, 24,
+        38, 37, 38, 37, 17, 41, 17, 43, 38, 37, 38, 37, 26, 21, 26, 25,
+         3,  0,  3,  0, 15, 42, 15, 12,  3,  0,  3,  0, 15, 42, 15, 12,
+         5,  8,  5,  8, 29, 35, 29, 33,  5,  8,  5,  8, 31, 34, 31,  7,
+         3,  0,  3,  0, 15, 42, 15, 12,  3,  0,  3,  0, 15, 42, 15, 12,
+         2,  1,  2,  1,  9, 45,  9, 19,  2,  1,  2,  1, 14, 18, 14, 13
+    };
+    
     /** in order {front, left, back, right} */
     public boolean[] outputs = new boolean[]{false, false, false, false};
     public boolean[] inputs = new boolean[]{false, false, false, false};
@@ -53,6 +73,34 @@ public class BinaryBlock extends Block {
         topRegion = Core.atlas.find(name, "esoterum-router"); // router supremacy
         stubRegion = Core.atlas.find("esoterum-stub");
         cornerRegion = Core.atlas.find("esoterum-base-corner");
+        allRegions = getRegions(Core.atlas.find("esoterum-base-ultra"), 12, 4);
+    }
+
+    //yoinked from xelo
+    public static TextureRegion[] getRegions(TextureRegion region, int w, int h){
+        int size = w * h;
+        TextureRegion[] regions = new TextureRegion[size];
+
+        float tileW = (region.u2 - region.u) / w;
+        float tileH = (region.v2 - region.v) / h;
+
+        for(int i = 0; i < size; i++){
+            float tileX = ((float)(i % w)) / w;
+            float tileY = ((float)(i / w)) / h;
+            TextureRegion reg = new TextureRegion(region);
+
+            //start coordinate
+            reg.u = Mathf.map(tileX, 0f, 1f, reg.u, reg.u2) + tileW * 0.02f;
+            reg.v = Mathf.map(tileY, 0f, 1f, reg.v, reg.v2) + tileH * 0.02f;
+            //end coordinate
+            reg.u2 = reg.u + tileW * 0.96f;
+            reg.v2 = reg.v + tileH * 0.96f;
+
+            reg.width = reg.height = 32;
+
+            regions[i] = reg;
+        }
+        return regions;
     }
 
     @Override
@@ -71,12 +119,15 @@ public class BinaryBlock extends Block {
     }
 
     public class BinaryBuild extends Building {
-        public BinaryBuild[] nb = new BinaryBuild[]{null, null, null, null};
+        //front, left, back, right
+        public BinaryBuild[] relnb = new BinaryBuild[]{null, null, null, null};
+        //right, topright, top, topleft, left, bottomleft, bottom, bottomright
+        public BinaryBuild[] absnb = new BinaryBuild[]{null, null, null, null, null, null, null, null};
         public boolean[] connections = new boolean[]{false, false, false, false};
 
         public boolean[] signal = new boolean[]{false, false, false, false, false};
 
-        public int corners = 0; //bitmasked corner draw
+        public int mask = 0; //bitmasked draw
 
         // Mindustry saves block placement rotation even for blocks that don't rotate.
         // Usually this doesn't cause any problems, but with the current implementation
@@ -88,6 +139,7 @@ public class BinaryBlock extends Block {
             SignalGraph.addVertex(this);
             updateNeighbours();
             updateConnections();
+            updateMask();
         }
 
         @Override
@@ -95,18 +147,25 @@ public class BinaryBlock extends Block {
             super.updateProximity();
             updateNeighbours();
             updateConnections();
+            updateMask();
             updateSignal();
-            SignalGraph.dfs(this);
-            for(int i=0;i<nb.length;i++) if(nb[i] != null && !outputs(i)){
-                nb[i].updateSignal();
+            for(int i=0;i<4;i++)
+                if(absnb[i*2+1] != null){
+                    absnb[i*2+1].updateNeighbours();
+                    absnb[i*2+1].updateConnections();
+                    absnb[i*2+1].updateMask();
+                };
+            SignalGraph.e.execute(() -> SignalGraph.dfs(this));
+            for(int i=0;i<relnb.length;i++) if(relnb[i] != null && !outputs(i)){
+                relnb[i].updateSignal();
                 int j = i;
-                SignalGraph.e.execute(() -> SignalGraph.dfs(nb[j]));
+                SignalGraph.e.execute(() -> SignalGraph.dfs(relnb[j]));
             }
         }
 
         public void updateConnections(){
             for(int i = 0; i < 4; i++){
-                connections[i] = connectionCheck(nb[i], this);
+                connections[i] = connectionCheck(relnb[i], this);
             }
             SignalGraph.clearEdges(this);
             for(BinaryBuild b : getOutputs()){
@@ -119,48 +178,32 @@ public class BinaryBlock extends Block {
             super.onProximityUpdate();
             updateNeighbours();
             updateConnections();
-            updateCorners();
-            for (BinaryBuild i : nb){
-                if (i != null){
-                    i.updateCorners();
-                }
-            }
+            updateMask();
         }
 
         public void updateNeighbours(){
             //I don't like this
-            nb[0] = checkType(front());
-            nb[1] = checkType(left());
-            nb[2] = checkType(back());
-            nb[3] = checkType(right());
+            relnb[0] = checkType(front());
+            relnb[1] = checkType(left());
+            relnb[2] = checkType(back());
+            relnb[3] = checkType(right());
+            absnb[0] = checkType(Vars.world.build((int)x / 8 + 1, (int)y / 8));
+            absnb[1] = checkType(Vars.world.build((int)x / 8 + 1, (int)y / 8 + 1));
+            absnb[2] = checkType(Vars.world.build((int)x / 8, (int)y / 8 + 1));
+            absnb[3] = checkType(Vars.world.build((int)x / 8 - 1, (int)y / 8 + 1));
+            absnb[4] = checkType(Vars.world.build((int)x / 8 - 1, (int)y / 8));
+            absnb[5] = checkType(Vars.world.build((int)x / 8 - 1, (int)y / 8 - 1));
+            absnb[6] = checkType(Vars.world.build((int)x / 8, (int)y / 8 - 1));
+            absnb[7] = checkType(Vars.world.build((int)x / 8 + 1, (int)y / 8 - 1));
         }
 
-        public void updateCorners(){
-            //top right is 0, bottom right is 1, ect
-            //<block>.nb[(4 - <block>.rotation + 0) % 4] gets absolute right of block
-            corners = 0;
-            boolean result;
-            BinaryBuild temp;
-            BinaryBuild temp2;
-            for (int i = 0; i < 4; i++){
-                corners >>= 1;
-                result = true;
-                temp = this.nb[(4 - this.rotation + i) % 4];
-                if (temp == null){
-                    continue;
-                }
-                result &= (connectionCheck(this, temp) || connectionCheck(temp, this));
-                temp2 = temp.nb[(4 - temp.rotation + i + 1) % 4];
-                result &= (connectionCheck(temp, temp2) || connectionCheck(temp2, temp));
-                temp = this.nb[(4 - this.rotation + i + 1) % 4];
-                if (temp == null){
-                    continue;
-                }
-                result &= (connectionCheck(this, temp) || connectionCheck(temp, this));
-                temp2 = temp.nb[(4 - temp.rotation + i) % 4];
-                result &= (connectionCheck(temp, temp2) || connectionCheck(temp2, temp));
-                if (result){
-                    corners+=8;
+        public void updateMask(){
+            mask = 0;
+            for(int i = 0; i < 8; i++){
+                if(i % 2 == 0){
+                    mask |= (connectionCheck(this, absnb[i]) ? 1 : 0) << i;
+                } else if(absnb[(i-1)%8] != null && absnb[(i+1)%8] != null){
+                    mask |= ((connectionCheck(absnb[(i-1)%8], absnb[(i-1)%8].absnb[(i+1)%8]) && connectionCheck(absnb[(i+1)%8], absnb[(i+1)%8].absnb[(i-1)%8])) ? 1 : 0) << i;
                 }
             }
         }
@@ -168,17 +211,17 @@ public class BinaryBlock extends Block {
         public void updateSignal(){}
 
         public BinaryBuild[] getInputs(){
-            BinaryBuild[] i = new BinaryBuild[nb.length];
+            BinaryBuild[] i = new BinaryBuild[relnb.length];
             int c = 0;
-            for(BinaryBuild b : nb)
+            for(BinaryBuild b : relnb)
                 if (b != null && inputs(c) && connections[c]) i[c] = b;
             return i;
         }
 
         public BinaryBuild[] getOutputs(){
-            BinaryBuild[] o = new BinaryBuild[nb.length];
+            BinaryBuild[] o = new BinaryBuild[relnb.length];
             int c = 0;
-            for(BinaryBuild b : nb){
+            for(BinaryBuild b : relnb){
                 if (b != null && outputs(c) && connections[c]) o[c] = b;
                 c++;
             }
@@ -226,26 +269,20 @@ public class BinaryBlock extends Block {
         }
 
         public void drawBase(){
-            Draw.rect(baseRegion, x, y);
-            for(int i=0;i<4;i++) if(connections[i]) Draw.rect(baseRegions[(i+rotation)%4], x, y);
+            //Draw.rect(baseRegion, x, y);
+            //for(int i=0;i<4;i++) if(connections[i]) Draw.rect(baseRegions[(i+rotation)%4], x, y);
             if(!rotate || !rotatedBase){
                 Draw.rect(highlightRegion, x, y);
             }else{
                 Draw.rect(highlightRegions[rotation], x, y);
             }
-            int temp = corners;
-            for (int i = 0; i < 4; i++){
-                if (temp % 2 == 1){
-                    Draw.rect(cornerRegion, x, y, 90 * i);
-                }
-                temp >>= 1;
-            }
+            Draw.rect(allRegions[tiles[mask]], x, y);
         }
 
         public void drawConnections(){
             for(int i = 0; i < 4; i++){
                 if(connections[i]){
-                    Draw.color(Color.white, team.color, Mathf.num((getSignal(nb[i], this) && nb[i].outputs(EsoUtil.relativeDirection(nb[i], this))) || (signal[i] && nb[i].inputs(EsoUtil.relativeDirection(nb[i], this)))));
+                    Draw.color(Color.white, team.color, Mathf.num((getSignal(relnb[i], this) && relnb[i].outputs(EsoUtil.relativeDirection(relnb[i], this))) || (signal[i] && relnb[i].inputs(EsoUtil.relativeDirection(relnb[i], this)))));
                     Draw.rect(connectionRegion, x, y, rotdeg() + 90 * i);
                 }
             }
@@ -270,7 +307,7 @@ public class BinaryBlock extends Block {
             BinaryBuild b;
             for(int i = 0; i < 4; i++){
                 if(connections[i]){
-                    b = nb[i];
+                    b = relnb[i];
 
                     Draw.z(Layer.overlayUI);
                     Lines.stroke(3f);
@@ -281,7 +318,7 @@ public class BinaryBlock extends Block {
 
             for(int i = 0; i < 4; i++){
                 if(outputs(i) && connections[i]){
-                    b = nb[i];
+                    b = relnb[i];
                     Draw.z(Layer.overlayUI + 1);
                     Drawf.arrow(x, y, b.x, b.y, 2f, 2f, signal() ? team.color : Color.white);
                 }
@@ -289,7 +326,7 @@ public class BinaryBlock extends Block {
 
             for (int i = 0; i < 4; i++){
                 if(connections[i]) {
-                    b = nb[i];
+                    b = relnb[i];
                     Draw.z(Layer.overlayUI + 3);
                     Lines.stroke(1f);
                     Draw.color((outputs(i) ? signal() : getSignal(b, this)) ? team.color : Color.white);

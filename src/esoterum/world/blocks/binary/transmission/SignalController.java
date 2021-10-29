@@ -75,10 +75,10 @@ public class SignalController extends BinaryBlock{
             }
             updateNeighbours();
             updateConnections();
-            signal[4] = (getSignal(nb[0], this) && configs.get(0) == 1)
-                ||  (getSignal(nb[1], this) && configs.get(1) == 1)
-                ||  (getSignal(nb[2], this) && configs.get(2) == 1)
-                ||  (getSignal(nb[3], this) && configs.get(3) == 1);
+            signal[4] = (getSignal(relnb[0], this) && configs.get(0) == 1)
+                ||  (getSignal(relnb[1], this) && configs.get(1) == 1)
+                ||  (getSignal(relnb[2], this) && configs.get(2) == 1)
+                ||  (getSignal(relnb[3], this) && configs.get(3) == 1);
             if(signal() != signal[4]){
                 signal(false);
                 signal[0] = signal[4] && configs.get(0) == 2;
@@ -94,7 +94,7 @@ public class SignalController extends BinaryBlock{
                 int c = configs.get(i);
                 if(c == 0) continue;
                 if(c == 1){
-                    Draw.color(Color.white, team.color, Mathf.num(getSignal(nb[i], this)));
+                    Draw.color(Color.white, team.color, Mathf.num(getSignal(relnb[i], this)));
                     Draw.rect(inputRegion, x, y, i * 90f);
                 }else{
                     Draw.color(Color.white, team.color, Mathf.num(signal()));
