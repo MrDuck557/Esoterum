@@ -60,7 +60,8 @@ public class SignalController extends BinaryBlock{
         public IntSeq configs = IntSeq.with(0, 0, 0, 0);
 
         @Override
-        public void updateSignal(){
+        public void placed(){
+            super.placed();
             if(!rotInit){
                 for(int i = 0; i < rotation; i++){
                     configs = IntSeq.with(
@@ -75,6 +76,12 @@ public class SignalController extends BinaryBlock{
             }
             updateNeighbours();
             updateConnections();
+            updateMask();
+        }
+
+        @Override
+        public void updateSignal(){
+            
             signal[4] = (getSignal(relnb[0], this) && configs.get(0) == 1)
                 ||  (getSignal(relnb[1], this) && configs.get(1) == 1)
                 ||  (getSignal(relnb[2], this) && configs.get(2) == 1)
