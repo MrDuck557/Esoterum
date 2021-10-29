@@ -16,8 +16,8 @@ import mindustry.world.*;
 import mindustry.world.meta.*;
 
 public class BinaryBlock extends Block {
-    public TextureRegion topRegion, connectionRegion, baseRegion, highlightRegion, stubRegion, cornerRegion, ultraRegion;
-    public TextureRegion[] baseRegions = new TextureRegion[4], highlightRegions = new TextureRegion[4], allRegions;
+    public TextureRegion topRegion, connectionRegion, baseRegion, highlightRegion, stubRegion;
+    public TextureRegion[] baseRegions, highlightRegions = new TextureRegion[4];
     public int[] tiles = new int[]{
         39, 36, 39, 36, 27, 16, 27, 24, 39, 36, 39, 36, 27, 16, 27, 24,
         38, 37, 38, 37, 17, 41, 17, 43, 38, 37, 38, 37, 26, 21, 26, 25,
@@ -63,17 +63,15 @@ public class BinaryBlock extends Block {
 
     public void load() {
         super.load();
-        baseRegion = Core.atlas.find("esoterum-base-" + baseType, "esoterum-base-none");
+        baseRegion = Core.atlas.find("esoterum-base-" + baseType);
         highlightRegion = Core.atlas.find("esoterum-base-" + baseHighlight, "esoterum-base-none");
         for(int i = 0; i < 4; i++){
-            baseRegions[i] = Core.atlas.find("esoterum-base-" + baseType + "-" + i, "esoterum-base-none");
             highlightRegions[i] = Core.atlas.find("esoterum-base-" + baseHighlight + "-" + i, "esoterum-base-none");
         }
         connectionRegion = Core.atlas.find(name + "-connection", "esoterum-connection");
         topRegion = Core.atlas.find(name, "esoterum-router"); // router supremacy
         stubRegion = Core.atlas.find("esoterum-stub");
-        cornerRegion = Core.atlas.find("esoterum-base-corner");
-        allRegions = getRegions(Core.atlas.find("esoterum-base-ultra"), 12, 4);
+        baseRegions = getRegions(Core.atlas.find("esoterum-base-ultra"), 12, 4);
     }
 
     //yoinked from xelo
@@ -269,14 +267,12 @@ public class BinaryBlock extends Block {
         }
 
         public void drawBase(){
-            //Draw.rect(baseRegion, x, y);
-            //for(int i=0;i<4;i++) if(connections[i]) Draw.rect(baseRegions[(i+rotation)%4], x, y);
+            Draw.rect(baseRegions[tiles[mask]], x, y);
             if(!rotate || !rotatedBase){
                 Draw.rect(highlightRegion, x, y);
             }else{
                 Draw.rect(highlightRegions[rotation], x, y);
             }
-            Draw.rect(allRegions[tiles[mask]], x, y);
         }
 
         public void drawConnections(){
