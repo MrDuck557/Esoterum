@@ -16,7 +16,7 @@ import static mindustry.Vars.*;
 
 public class BinaryNode extends BinaryBlock{
     public int range;
-    public float curveWidth = 1.5f;
+    public float curveWidth = 2f, triangleRadius = 2f;
 
     public BinaryNode(String name, int linkRange){
         super(name);
@@ -141,12 +141,11 @@ public class BinaryNode extends BinaryBlock{
                 Draw.color(Color.white, team.color, Mathf.num(signal()));
                 EsoDrawf.curvedLine(x, y, c.x, c.y, -curveWidth); //Negative so that it goes clockwise if positive
 
-                float time = (Time.time / 60f) % 3f;
-                Tmp.v1.trns(angleTo(c) - 90f, Mathf.sin(time / 3f * Mathf.PI) * -curveWidth, Mathf.lerp(0f, dst(c), time / 3f));
-                Fill.circle(
+                Tmp.v1.trns(angleTo(c) - 90f, -curveWidth, dst(c) / 2f + ((triangleRadius + triangleRadius /2) / 2 - triangleRadius) / 2);
+                Fill.poly(
                     x + Tmp.v1.x,
                     y + Tmp.v1.y,
-                    1.5f
+                    3, triangleRadius, angleTo(c)
                 );
                 Draw.reset();
             }
