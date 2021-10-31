@@ -1,5 +1,6 @@
 package esoterum.world.blocks.binary.transmission;
 
+import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
@@ -16,7 +17,9 @@ import static mindustry.Vars.*;
 
 public class BinaryNode extends BinaryBlock{
     public int range;
-    public float curveWidth = 2f, triangleRadius = 2f;
+    public float offset;
+
+    public TextureRegion centerRegion;
 
     public BinaryNode(String name, int linkRange){
         super(name);
@@ -47,8 +50,20 @@ public class BinaryNode extends BinaryBlock{
         configClear((BinaryNodeBuild tile) -> tile.link = -1);
     }
 
-    public BinaryNode(String name){
-        this(name, 20);
+    @Override
+    public void load(){
+        super.load();
+
+        centerRegion = Core.atlas.find(name + "-center");
+    }
+
+    @Override
+    protected TextureRegion[] icons(){
+        return new TextureRegion[]{
+            baseRegion,
+            rotate && rotatedBase ? highlightRegions[0] : highlightRegion,
+            topRegion, centerRegion
+        };
     }
 
     @Override
@@ -134,18 +149,16 @@ public class BinaryNode extends BinaryBlock{
             Draw.color(Color.white, team.color, Mathf.num(signal[0]));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
+            Draw.z(Layer.power);
+            Lines.stroke(1f, signal() || signal[0] ? team.color : Color.white);
+            Draw.rect(centerRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
             BinaryNodeBuild c = linkedNode();
             if(c != null){
-                Draw.z(Layer.power);
-                Lines.stroke(1f);
-                Draw.color(Color.white, team.color, Mathf.num(signal()));
-                EsoDrawf.curvedLine(x, y, c.x, c.y, -curveWidth); //Negative so that it goes clockwise if positive
-
-                Tmp.v1.trns(angleTo(c) - 90f, -curveWidth, dst(c) / 2f + ((triangleRadius + triangleRadius /2) / 2 - triangleRadius) / 2);
-                Fill.poly(
-                    x + Tmp.v1.x,
-                    y + Tmp.v1.y,
-                    3, triangleRadius, angleTo(c)
+                Tmp.v1.trns(angleTo(c) + 90f, offset);
+                Lines.line(
+                    x + Tmp.v1.x, y + Tmp.v1.y,
+                    c.x + Tmp.v1.x, c.y + Tmp.v1.y,
+                    false
                 );
                 Draw.reset();
             }
