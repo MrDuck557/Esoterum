@@ -17,7 +17,6 @@ import static mindustry.Vars.*;
 
 public class BinaryNode extends BinaryBlock{
     public int range;
-    public float offset;
 
     public TextureRegion centerRegion;
 
@@ -154,10 +153,9 @@ public class BinaryNode extends BinaryBlock{
             Draw.rect(centerRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
             BinaryNodeBuild c = linkedNode();
             if(c != null){
-                Tmp.v1.trns(angleTo(c) + 90f, offset);
                 Lines.line(
-                    x + Tmp.v1.x, y + Tmp.v1.y,
-                    c.x + Tmp.v1.x, c.y + Tmp.v1.y,
+                    x, y,
+                    c.x, c.y,
                     false
                 );
                 Draw.reset();
