@@ -1,5 +1,6 @@
 package esoterum.world.blocks.binary.transmission;
 
+import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
@@ -16,7 +17,8 @@ import static mindustry.Vars.*;
 
 public class BinaryNode extends BinaryBlock{
     public int range;
-    public float curveWidth = 1.5f;
+
+    public TextureRegion centerRegion;
 
     public BinaryNode(String name, int linkRange){
         super(name);
@@ -47,8 +49,20 @@ public class BinaryNode extends BinaryBlock{
         configClear((BinaryNodeBuild tile) -> tile.link = -1);
     }
 
-    public BinaryNode(String name){
-        this(name, 20);
+    @Override
+    public void load(){
+        super.load();
+
+        centerRegion = Core.atlas.find(name + "-center");
+    }
+
+    @Override
+    protected TextureRegion[] icons(){
+        return new TextureRegion[]{
+            baseRegion,
+            rotate && rotatedBase ? highlightRegions[0] : highlightRegion,
+            topRegion, centerRegion
+        };
     }
 
     @Override
@@ -134,19 +148,15 @@ public class BinaryNode extends BinaryBlock{
             Draw.color(Color.white, team.color, Mathf.num(signal[0]));
             Draw.rect(topRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
 
+            Draw.z(Layer.power);
+            Lines.stroke(1f, signal() || signal[0] ? team.color : Color.white);
+            Draw.rect(centerRegion, x, y, (rotate && drawRot) ? rotdeg() : 0f);
             BinaryNodeBuild c = linkedNode();
             if(c != null){
-                Draw.z(Layer.power);
-                Lines.stroke(1f);
-                Draw.color(Color.white, team.color, Mathf.num(signal()));
-                EsoDrawf.curvedLine(x, y, c.x, c.y, -curveWidth); //Negative so that it goes clockwise if positive
-
-                float time = (Time.time / 60f) % 3f;
-                Tmp.v1.trns(angleTo(c) - 90f, Mathf.sin(time / 3f * Mathf.PI) * -curveWidth, Mathf.lerp(0f, dst(c), time / 3f));
-                Fill.circle(
-                    x + Tmp.v1.x,
-                    y + Tmp.v1.y,
-                    1.5f
+                Lines.line(
+                    x, y,
+                    c.x, c.y,
+                    false
                 );
                 Draw.reset();
             }

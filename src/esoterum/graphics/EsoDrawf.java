@@ -23,7 +23,8 @@ public class EsoDrawf{
             v2.trns(ang, Mathf.sin(p2 * Mathf.PI) * w, Mathf.lerp(0f, dst, p2));
             Lines.line(
                 x + v1.x, y + v1.y,
-                x + v2.x, y + v2.y
+                x + v2.x, y + v2.y,
+                false
             );
         }
     }
