@@ -95,10 +95,10 @@ public class SignalGraph {
                         Edge candidate = new Edge(current.to, next);
                         //Log.info("Candidate " + next.getDisplayName() + " at " + next.x / 8 + ", " + next.y / 8 + " from " + current.to.x / 8 + ", " + current.to.y / 8);
                         if(visited.get(candidate) == null || !visited.get(candidate)){
-                            if(next instanceof BinaryJunction.BinaryJunctionBuild) {
+                            if(current.to instanceof BinaryJunction.BinaryJunctionBuild) {
                                 if(Math.abs(current.from.x - next.x) == 16
                                 || Math.abs(current.from.y - next.y) == 16) stack.push(candidate);
-                            } else if(next instanceof BinaryCJunction.BinaryCJunctionBuild) {
+                            } else if(current.to instanceof BinaryCJunction.BinaryCJunctionBuild) {
                                 if(Math.abs(current.from.x - next.x) == 8
                                 && Math.abs(current.from.y - next.y) == 8) stack.push(candidate);
                             } else if(next.pos() != current.from.pos()) stack.push(candidate);
