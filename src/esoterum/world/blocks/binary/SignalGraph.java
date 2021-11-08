@@ -1,6 +1,7 @@
 package esoterum.world.blocks.binary;
 
 import arc.*;
+import arc.util.Log;
 import esoterum.world.blocks.binary.transmission.*;
 
 import java.util.*;
@@ -19,6 +20,20 @@ public class SignalGraph {
         public Edge(BinaryBlock.BinaryBuild f, BinaryBlock.BinaryBuild t){
             from = f;
             to = t;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if(o == null) return false;
+            if(o instanceof Edge e){
+                return from == e.from && to == e.to;
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode(){
+            return from.hashCode() * to.hashCode();
         }
     }
 
@@ -74,7 +89,7 @@ public class SignalGraph {
             current = stack.pop();
             if(visited.get(current) == null || !visited.get(current)){
                 //Log.info("unvisited");
-                if(current.to.updateSignal())
+                if(current.to.updateSignal() || true)
                     for(BinaryBlock.BinaryBuild next : hm.get(current.to)){
                         //Log.info("subloop");
                         Edge candidate = new Edge(current.to, next);
@@ -94,7 +109,7 @@ public class SignalGraph {
             } //else Log.info("visited");
             
         }
-        //Log.ingo("end");
+        //Log.info("end");
     }
 
     public static void update(){
