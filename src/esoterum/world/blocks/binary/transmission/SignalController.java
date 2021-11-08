@@ -80,8 +80,7 @@ public class SignalController extends BinaryBlock{
         }
 
         @Override
-        public void updateSignal(){
-            
+        public boolean updateSignal(){
             signal[4] = (getSignal(relnb[0], this) && configs.get(0) == 1)
                 ||  (getSignal(relnb[1], this) && configs.get(1) == 1)
                 ||  (getSignal(relnb[2], this) && configs.get(2) == 1)
@@ -92,7 +91,9 @@ public class SignalController extends BinaryBlock{
                 signal[1] = signal[4] && configs.get(1) == 2;
                 signal[2] = signal[4] && configs.get(2) == 2;
                 signal[3] = signal[4] && configs.get(3) == 2;
+                return true;
             }
+            return false;
         }
 
         @Override

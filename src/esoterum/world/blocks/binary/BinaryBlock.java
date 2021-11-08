@@ -7,7 +7,6 @@ import arc.math.*;
 import arc.scene.ui.layout.*;
 import arc.util.io.*;
 import esoterum.util.*;
-import mindustry.Vars;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.logic.*;
@@ -123,7 +122,7 @@ public class BinaryBlock extends Block {
         public BinaryBuild[] absnb = new BinaryBuild[]{null, null, null, null, null, null, null, null};
         public boolean[] connections = new boolean[]{false, false, false, false};
 
-        public boolean[] signal = new boolean[]{false, false, false, false, false};
+        public boolean[] signal = new boolean[]{false, false, false, false, false, false};
 
         public int mask = 0; //bitmasked draw
 
@@ -185,14 +184,14 @@ public class BinaryBlock extends Block {
             relnb[1] = checkType(left());
             relnb[2] = checkType(back());
             relnb[3] = checkType(right());
-            absnb[0] = checkType(Vars.world.build((int)x / 8 + 1, (int)y / 8));
-            absnb[1] = checkType(Vars.world.build((int)x / 8 + 1, (int)y / 8 + 1));
-            absnb[2] = checkType(Vars.world.build((int)x / 8, (int)y / 8 + 1));
-            absnb[3] = checkType(Vars.world.build((int)x / 8 - 1, (int)y / 8 + 1));
-            absnb[4] = checkType(Vars.world.build((int)x / 8 - 1, (int)y / 8));
-            absnb[5] = checkType(Vars.world.build((int)x / 8 - 1, (int)y / 8 - 1));
-            absnb[6] = checkType(Vars.world.build((int)x / 8, (int)y / 8 - 1));
-            absnb[7] = checkType(Vars.world.build((int)x / 8 + 1, (int)y / 8 - 1));
+            absnb[0] = checkType(nearby(1, 0));
+            absnb[1] = checkType(nearby(1, 1));
+            absnb[2] = checkType(nearby(0, 1));
+            absnb[3] = checkType(nearby(-1, 1));
+            absnb[4] = checkType(nearby(-1, 0));
+            absnb[5] = checkType(nearby(-1, -1));
+            absnb[6] = checkType(nearby(0, -1));
+            absnb[7] = checkType(nearby(1, -1));
         }
 
         public void updateMask(){
@@ -206,7 +205,9 @@ public class BinaryBlock extends Block {
             }
         }
 
-        public void updateSignal(){}
+        public boolean updateSignal(){
+            return true;
+        }
 
         public BinaryBuild[] getInputs(){
             BinaryBuild[] i = new BinaryBuild[relnb.length];

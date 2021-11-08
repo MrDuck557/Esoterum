@@ -7,7 +7,6 @@ import arc.math.*;
 import arc.math.geom.*;
 import arc.util.*;
 import arc.util.io.*;
-import esoterum.graphics.*;
 import esoterum.world.blocks.binary.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
@@ -123,11 +122,13 @@ public class BinaryNode extends BinaryBlock{
         }
 
         @Override
-        public void updateSignal(){
+        public boolean updateSignal(){
+            signal[5] = signal[4];
             signal[4] = false;
             for(BinaryBuild b : relnb) signal[4] |= getSignal(b, this);
             BinaryNodeBuild c = linkedNode();
             signal(c != null && c.signal());
+            return signal[5] != signal[4]; 
         }
 
         @Override

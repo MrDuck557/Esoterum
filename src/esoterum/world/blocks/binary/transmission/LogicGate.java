@@ -56,11 +56,13 @@ public class LogicGate extends BinaryBlock{
         public int nextConfig = 1;
 
         @Override
-        public void updateSignal(){
+        public boolean updateSignal(){
+            signal[5] = signal[0];
             signal[0] = operation.get(new boolean[]{
                 getSignal(relnb[configs.first()], this),
                 getSignal(relnb[configs.get(single ? 0 : 1)], this),
             });
+            return signal[5] != signal[0];
         }
 
         @Override

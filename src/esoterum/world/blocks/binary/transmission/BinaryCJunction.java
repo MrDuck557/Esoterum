@@ -49,11 +49,12 @@ public class BinaryCJunction extends BinaryBlock{
         }
 
         @Override
-        public void updateSignal(){
+        public boolean updateSignal(){
             signal[0] = getSignal(relnb[1], this);
             signal[1] = getSignal(relnb[0], this);
             signal[2] = getSignal(relnb[3], this);
             signal[3] = getSignal(relnb[2], this);
+            return true;
         }
 
         @Override

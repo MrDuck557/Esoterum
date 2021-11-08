@@ -40,8 +40,10 @@ public class LatchBlock extends BinaryBlock{
 
     public class LatchBuild extends BinaryBuild {
         @Override
-        public void updateSignal() {
+        public boolean updateSignal() {
+            signal[5] = signal[0];
             if(getSignal(relnb[2], this)) signal[0] = getSignal(relnb[1], this) | getSignal(relnb[3], this);
+            return signal[5] != signal[0];
         }
 
         @Override

@@ -13,10 +13,12 @@ public class BinaryRouter extends BinaryBlock{
 
     public class BinaryRouterBuild extends BinaryBuild {
         @Override
-        public void updateSignal() {
+        public boolean updateSignal() {
+            signal[5] = signal[4];
             signal[4] = false;
             for(BinaryBuild b : relnb) signal[4] |= getSignal(b, this);
             signal(signal[4]);
+            return signal[5] != signal[4];
         }
     }
 }

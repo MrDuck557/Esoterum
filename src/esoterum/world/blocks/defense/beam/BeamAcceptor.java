@@ -12,9 +12,11 @@ public class BeamAcceptor extends BeamBlock{
 
     public class BeamAcceptorBuild extends BeamBuild {
         @Override
-        public void updateSignal(){
+        public boolean updateSignal(){
+            signal[5] = signal();
             super.updateSignal();
             signal(active);
+            return signal[5] != signal();
         }
         
         @Override

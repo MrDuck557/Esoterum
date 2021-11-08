@@ -1,7 +1,6 @@
 package esoterum.world.blocks.binary;
 
 import arc.*;
-import arc.math.geom.*;
 import esoterum.world.blocks.binary.transmission.*;
 
 import java.util.*;
@@ -13,6 +12,15 @@ public class SignalGraph {
     public static boolean run = false;
     public static ForkJoinPool e = ForkJoinPool.commonPool();
     public static int millis = 16, nanos = 666666;
+
+    public static class Edge {
+        public BinaryBlock.BinaryBuild from, to;
+
+        public Edge(BinaryBlock.BinaryBuild f, BinaryBlock.BinaryBuild t){
+            from = f;
+            to = t;
+        }
+    }
 
     public static void addVertex(BinaryBlock.BinaryBuild b){
         hm.put(b, ConcurrentHashMap.newKeySet());
@@ -56,46 +64,37 @@ public class SignalGraph {
     }
 
     public static void dfs(BinaryBlock.BinaryBuild b){
-        Deque<BinaryBlock.BinaryBuild> s = new ArrayDeque<>();
-        Deque<Integer> d = new ArrayDeque<>();
-        HashMap<Integer, Integer> v = new HashMap<>();
-        s.push(b);
-        d.push(5);
-        int p;
         //Log.info("start");
-        while(!s.isEmpty()){
-            b = s.pop();
-            p = d.pop();
-            updateSignal(b);
+        Deque<Edge> stack = new ArrayDeque<>();
+        Edge current;
+        HashMap<Edge, Boolean> visited = new HashMap<>();
+        stack.push(new Edge(b, b));
+        while(!stack.isEmpty()){
             //Log.info("mainloop");
-            //Log.info("Updated " + b.getDisplayName() + " at " + String.valueOf(b.x / 8) + ", " + String.valueOf(b.y / 8) + " from " + String.valueOf(Point2.unpack(p).x) + ", " + String.valueOf(Point2.unpack(p).y));
-            if(v.get(b.pos()) == null || v.get(b.pos()) != p){
+            current = stack.pop();
+            if(visited.get(current) == null || !visited.get(current)){
                 //Log.info("unvisited");
-                v.put(b.pos(), p);
-                //Log.info("condition");
-                if(hm.get(b) != null) 
-                    for(BinaryBlock.BinaryBuild bb : hm.get(b)) {
-                        //Log.info("Candidate " + bb.getDisplayName() + " at " + String.valueOf(bb.x / 8) + ", " + String.valueOf(bb.y / 8) + " in direction " + String.valueOf(EsoUtil.relativeDirection(bb, b)));
-                        if(b instanceof BinaryJunction.BinaryJunctionBuild) {
-                            if(Math.abs(Point2.unpack(p).x - Point2.unpack(bb.pos()).x) == 2
-                            || Math.abs(Point2.unpack(p).y - Point2.unpack(bb.pos()).y) == 2) {
-                                s.push(bb);
-                                d.push(b.pos());
-                            }
-                        } else if(b instanceof BinaryCJunction.BinaryCJunctionBuild) {
-                            if(Math.abs(Point2.unpack(p).x - Point2.unpack(bb.pos()).x) == 1
-                            && Math.abs(Point2.unpack(p).y - Point2.unpack(bb.pos()).y) == 1) {
-                                s.push(bb);
-                                d.push(b.pos());
-                            }
-                        } else if(bb.pos() != p) {
-                            s.push(bb);
-                            d.push(b.pos());
-                        }//Log.info("subloop");
+                if(current.to.updateSignal())
+                    for(BinaryBlock.BinaryBuild next : hm.get(current.to)){
+                        //Log.info("subloop");
+                        Edge candidate = new Edge(current.to, next);
+                        //Log.info("Candidate " + next.getDisplayName() + " at " + next.x / 8 + ", " + next.y / 8 + " from " + current.to.x / 8 + ", " + current.to.y / 8);
+                        if(visited.get(candidate) == null || !visited.get(candidate)){
+                            if(next instanceof BinaryJunction.BinaryJunctionBuild) {
+                                if(Math.abs(current.from.x - next.x) == 16
+                                || Math.abs(current.from.y - next.y) == 16) stack.push(candidate);
+                            } else if(next instanceof BinaryCJunction.BinaryCJunctionBuild) {
+                                if(Math.abs(current.from.x - next.x) == 8
+                                && Math.abs(current.from.y - next.y) == 8) stack.push(candidate);
+                            } else if(next.pos() != current.from.pos()) stack.push(candidate);
+                        }
                     }
-            }// else Log.info("visited");
+                visited.put(current, true);
+                //Log.info("Updated " + current.to.getDisplayName() + " at " + current.to.x / 8 + ", " + current.to.y / 8 + " from " + current.from.x / 8 + ", " + current.from.y / 8);
+            } //else Log.info("visited");
+            
         }
-        //Log.info("end");
+        //Log.ingo("end");
     }
 
     public static void update(){

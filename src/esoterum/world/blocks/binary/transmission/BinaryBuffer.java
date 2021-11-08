@@ -64,8 +64,10 @@ public class BinaryBuffer extends BinaryBlock{
         }
 
         @Override
-        public void updateSignal(){
+        public boolean updateSignal(){
+            signal[5] = signal[4];
             signal[4] = getSignal(relnb[configs.first()], this);
+            return signal[5] != signal[4];
         }
 
         public float trueDelay(){

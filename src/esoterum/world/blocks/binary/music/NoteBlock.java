@@ -98,12 +98,14 @@ public class NoteBlock extends BinaryBlock{
         public IntSeq configs = IntSeq.with(2, 0, 3, 100, 0);
 
         @Override
-        public void updateSignal(){
+        public boolean updateSignal(){
             signal[4] = getSignal(relnb[configs.first()], this);
             if(signal[0] != signal[4]){
                 if(!signal[0] && signal[4]) playSound();
                 signal[0] = signal[4];
+                return false;
             }
+            return true;
         }
 
         @Override
