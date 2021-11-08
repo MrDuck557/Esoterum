@@ -39,7 +39,7 @@ public class ManualDialog extends BaseDialog{
                 content.pane(Styles.defaultPane, t -> {
                     ManualPages.topics[currentTopic][currentPage].addContent(t);
                 }).grow().fill().top().left();
-            }).top().size(Math.min(Core.scene.getWidth() * 0.6f, 2304f), Core.scene.getHeight() * 0.8f).name("content");
+            }).top().size(Core.scene.getWidth() * 0.6f, Core.scene.getHeight() * 0.8f).name("content");
 
             // page number
             main.row();
