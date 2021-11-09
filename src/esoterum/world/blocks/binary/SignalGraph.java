@@ -112,10 +112,44 @@ public class SignalGraph {
         //Log.info("end");
     }
 
-    public static void update(){
+    public static void dfs(){
+        //Log.info("start");
+        Deque<Edge> stack = new ArrayDeque<>();
+        Edge current;
+        HashMap<Edge, Boolean> visited = new HashMap<>();
         for(BinaryBlock.BinaryBuild b : sources){
-            e.execute(() -> dfs(b));
+            stack.push(new Edge(b, b));
         }
+        while(!stack.isEmpty()){
+            //Log.info("mainloop");
+            current = stack.pop();
+            if(visited.get(current) == null || !visited.get(current)){
+                //Log.info("unvisited");
+                if(current.to.updateSignal() || true)
+                    for(BinaryBlock.BinaryBuild next : hm.get(current.to)){
+                        //Log.info("subloop");
+                        Edge candidate = new Edge(current.to, next);
+                        //Log.info("Candidate " + next.getDisplayName() + " at " + next.x / 8 + ", " + next.y / 8 + " from " + current.to.x / 8 + ", " + current.to.y / 8);
+                        if(visited.get(candidate) == null || !visited.get(candidate)){
+                            if(current.to instanceof BinaryJunction.BinaryJunctionBuild) {
+                                if(Math.abs(current.from.x - next.x) == 16
+                                || Math.abs(current.from.y - next.y) == 16) stack.push(candidate);
+                            } else if(current.to instanceof BinaryCJunction.BinaryCJunctionBuild) {
+                                if(Math.abs(current.from.x - next.x) == 8
+                                && Math.abs(current.from.y - next.y) == 8) stack.push(candidate);
+                            } else if(next.pos() != current.from.pos()) stack.push(candidate);
+                        }
+                    }
+                visited.put(current, true);
+                //Log.info("Updated " + current.to.getDisplayName() + " at " + current.to.x / 8 + ", " + current.to.y / 8 + " from " + current.from.x / 8 + ", " + current.from.y / 8);
+            } //else Log.info("visited");
+            
+        }
+        //Log.info("end");
+    }
+
+    public static void update(){
+        dfs();
     }
 
     public static void run(boolean b){
